@@ -21,7 +21,7 @@ Each creature is diploid: every gene holds two alleles `[a, b]` (allele = intege
 | 6 | `aura`      | 4  | variant 0 = none |
 | 7 | `temper`    | 10 | personality, no art |
 
-Variant tables live in `engine-ts/src/catalog.ts` (`CATALOG`) and are mirrored in Swift. Each variant has:
+Variant names/indices match the approved art (`art/render.py`). Variant tables live in `engine-ts/src/catalog.ts` (`CATALOG`) and are mirrored in Swift. Each variant has:
 - `dominance`: integer 1..9 (higher wins)
 - `rarity`: 0 common, 1 uncommon, 2 rare, 3 legendary
 - `mutationOnly`: boolean — never appears in starter creatures; only enters via mutation
@@ -57,11 +57,11 @@ Input: `parentA`, `parentB` (each `{id: string, genome: [[a,b] x 8]}`), `nonce` 
    - `fromA = parentA.genome[g][rng.int(2)]`
    - `fromB = parentB.genome[g][rng.int(2)]`
    - child gene = `[fromA, fromB]`
-4. Mutation: `roll = rng.float()`. If `unlockedMutations` is non-empty and `roll < 0.15`:
+4. Mutation: `roll = rng.float()` (always drawn, even with an empty list). If `unlockedMutations` is non-empty and `roll < 0.15`:
    - `m = unlockedMutations[rng.int(len)]`
    - replace allele index `rng.int(2)` of gene `m.gene` with `m.variant`.
    Otherwise no further rng calls.
-5. Twin palette shift: child carries `paletteShift` per receiving player: `0` for the player owning parentA (after ordering), `1` for the owner of parentB. Rendering shifts hue slightly by `paletteShift`. (Shown in preview.)
+5. Twin palette shift: child carries `paletteShift` keyed by owner (`Parent.owner`, falling back to parent id): `0` for the owner of parentA (after ordering), `1` for the owner of parentB; if both owners are equal only `{owner: 0}`. Rendering shifts hue slightly by `paletteShift`. (Shown in preview.)
 6. Child id = `"c_" + hex8(fnv1a32(seed_hex + "|child"))` where `seed_hex` = 8-char lowercase hex of seed.
 
 ## 5. Rarity

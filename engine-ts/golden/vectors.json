@@ -7,40 +7,40 @@
       "key": "body",
       "variants": [
         {
-          "name": "bean",
-          "dominance": 5,
-          "rarity": 0,
-          "mutationOnly": false
-        },
-        {
           "name": "round",
           "dominance": 6,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "tall",
+          "name": "bean",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "pear",
           "dominance": 4,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "blob",
+          "name": "block",
           "dominance": 3,
           "rarity": 1,
           "mutationOnly": false
         },
         {
-          "name": "star",
-          "dominance": 2,
-          "rarity": 2,
-          "mutationOnly": false
-        },
-        {
-          "name": "crystal",
+          "name": "drop",
           "dominance": 7,
           "rarity": 3,
           "mutationOnly": true
+        },
+        {
+          "name": "mochi",
+          "dominance": 4,
+          "rarity": 1,
+          "mutationOnly": false
         }
       ]
     },
@@ -49,13 +49,13 @@
       "key": "eyes",
       "variants": [
         {
-          "name": "dot",
+          "name": "dots",
           "dominance": 6,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "wide",
+          "name": "big",
           "dominance": 5,
           "rarity": 0,
           "mutationOnly": false
@@ -73,25 +73,25 @@
           "mutationOnly": false
         },
         {
-          "name": "cyclops",
-          "dominance": 2,
+          "name": "sparkle",
+          "dominance": 3,
           "rarity": 1,
           "mutationOnly": false
         },
         {
-          "name": "heart",
-          "dominance": 3,
+          "name": "oval",
+          "dominance": 4,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "starry",
+          "name": "star",
           "dominance": 2,
           "rarity": 2,
           "mutationOnly": false
         },
         {
-          "name": "void",
+          "name": "cyclops",
           "dominance": 8,
           "rarity": 3,
           "mutationOnly": true
@@ -109,7 +109,13 @@
           "mutationOnly": false
         },
         {
-          "name": "ears",
+          "name": "catears",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "bunnyears",
           "dominance": 5,
           "rarity": 0,
           "mutationOnly": false
@@ -117,7 +123,7 @@
         {
           "name": "horns",
           "dominance": 6,
-          "rarity": 0,
+          "rarity": 1,
           "mutationOnly": false
         },
         {
@@ -127,25 +133,19 @@
           "mutationOnly": false
         },
         {
-          "name": "crest",
-          "dominance": 4,
-          "rarity": 1,
-          "mutationOnly": false
-        },
-        {
           "name": "leaf",
           "dominance": 3,
           "rarity": 1,
           "mutationOnly": false
         },
         {
-          "name": "crown",
+          "name": "crest",
           "dominance": 2,
           "rarity": 2,
           "mutationOnly": false
         },
         {
-          "name": "flamehorns",
+          "name": "halo",
           "dominance": 8,
           "rarity": 3,
           "mutationOnly": true
@@ -163,34 +163,34 @@
           "mutationOnly": false
         },
         {
-          "name": "spots",
+          "name": "belly",
           "dominance": 5,
           "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "spots",
+          "dominance": 5,
+          "rarity": 1,
           "mutationOnly": false
         },
         {
           "name": "stripes",
-          "dominance": 5,
+          "dominance": 3,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "belly",
-          "dominance": 3,
-          "rarity": 1,
-          "mutationOnly": false
+          "name": "cap",
+          "dominance": 7,
+          "rarity": 3,
+          "mutationOnly": true
         },
         {
           "name": "freckles",
           "dominance": 2,
           "rarity": 2,
           "mutationOnly": false
-        },
-        {
-          "name": "galaxy",
-          "dominance": 7,
-          "rarity": 3,
-          "mutationOnly": true
         }
       ]
     },
@@ -205,31 +205,31 @@
           "mutationOnly": false
         },
         {
-          "name": "nub",
+          "name": "puff",
           "dominance": 4,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "curl",
+          "name": "curly",
           "dominance": 5,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "fluff",
+          "name": "long",
           "dominance": 4,
           "rarity": 1,
           "mutationOnly": false
         },
         {
-          "name": "spikes",
+          "name": "flame",
           "dominance": 2,
           "rarity": 2,
           "mutationOnly": false
         },
         {
-          "name": "comet",
+          "name": "lightning",
           "dominance": 8,
           "rarity": 3,
           "mutationOnly": true
@@ -247,7 +247,7 @@
           "mutationOnly": false
         },
         {
-          "name": "peach",
+          "name": "bubblegum",
           "dominance": 5,
           "rarity": 0,
           "mutationOnly": false
@@ -259,13 +259,13 @@
           "mutationOnly": false
         },
         {
-          "name": "lilac",
+          "name": "sunny",
           "dominance": 4,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "lemon",
+          "name": "lavender",
           "dominance": 4,
           "rarity": 0,
           "mutationOnly": false
@@ -277,61 +277,61 @@
           "mutationOnly": false
         },
         {
-          "name": "moss",
+          "name": "lime",
           "dominance": 3,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "slate",
+          "name": "aqua",
           "dominance": 3,
           "rarity": 0,
           "mutationOnly": false
         },
         {
-          "name": "berry",
+          "name": "cream",
           "dominance": 5,
           "rarity": 1,
           "mutationOnly": false
         },
         {
-          "name": "ocean",
+          "name": "stone",
           "dominance": 6,
           "rarity": 1,
           "mutationOnly": false
         },
         {
-          "name": "sunset",
+          "name": "rose",
           "dominance": 4,
           "rarity": 1,
           "mutationOnly": false
         },
         {
-          "name": "frost",
+          "name": "cobalt",
           "dominance": 3,
           "rarity": 1,
           "mutationOnly": false
         },
         {
-          "name": "ember",
+          "name": "night",
           "dominance": 2,
           "rarity": 2,
           "mutationOnly": false
         },
         {
-          "name": "midnight",
+          "name": "tangerine",
           "dominance": 2,
           "rarity": 2,
           "mutationOnly": false
         },
         {
-          "name": "gold",
-          "dominance": 8,
-          "rarity": 3,
-          "mutationOnly": true
+          "name": "seafoam",
+          "dominance": 4,
+          "rarity": 1,
+          "mutationOnly": false
         },
         {
-          "name": "prism",
+          "name": "ghost",
           "dominance": 9,
           "rarity": 3,
           "mutationOnly": true
@@ -361,7 +361,7 @@
           "mutationOnly": false
         },
         {
-          "name": "storm",
+          "name": "hearts",
           "dominance": 7,
           "rarity": 3,
           "mutationOnly": true
@@ -707,7 +707,7 @@
           ]
         ],
         "expressed": [
-          1,
+          0,
           5,
           0,
           1,
@@ -735,7 +735,7 @@
           "genome": [
             [
               3,
-              4
+              5
             ],
             [
               5,
@@ -747,15 +747,15 @@
             ],
             [
               2,
-              4
+              5
             ],
             [
               2,
               1
             ],
             [
-              4,
-              10
+              8,
+              12
             ],
             [
               2,
@@ -792,8 +792,8 @@
               4
             ],
             [
-              0,
-              9
+              7,
+              6
             ],
             [
               2,
@@ -810,15 +810,15 @@
         "unlockedMutations": [
           {
             "gene": 0,
-            "variant": 5
+            "variant": 4
           },
           {
             "gene": 3,
-            "variant": 5
+            "variant": 4
           },
           {
-            "gene": 5,
-            "variant": 14
+            "gene": 6,
+            "variant": 3
           }
         ]
       },
@@ -828,7 +828,7 @@
         "genome": [
           [
             2,
-            4
+            5
           ],
           [
             2,
@@ -840,19 +840,19 @@
           ],
           [
             0,
-            4
+            5
           ],
           [
             4,
             1
           ],
           [
-            0,
-            14
+            7,
+            12
           ],
           [
             1,
-            0
+            3
           ],
           [
             8,
@@ -865,8 +865,8 @@
           0,
           0,
           1,
-          14,
-          0,
+          7,
+          3,
           6
         ],
         "rarity": {
@@ -874,8 +874,8 @@
           "tier": "uncommon"
         },
         "mutation": {
-          "gene": 5,
-          "variant": 14,
+          "gene": 6,
+          "variant": 3,
           "allele": 1
         },
         "paletteShift": {
@@ -891,7 +891,7 @@
           "id": "mx-27315",
           "genome": [
             [
-              4,
+              5,
               3
             ],
             [
@@ -911,8 +911,8 @@
               0
             ],
             [
-              8,
-              0
+              1,
+              5
             ],
             [
               0,
@@ -930,7 +930,7 @@
           "genome": [
             [
               1,
-              4
+              5
             ],
             [
               4,
@@ -941,7 +941,7 @@
               1
             ],
             [
-              4,
+              5,
               1
             ],
             [
@@ -949,8 +949,8 @@
               2
             ],
             [
-              12,
-              1
+              13,
+              7
             ],
             [
               0,
@@ -971,8 +971,8 @@
         "seedHex": "95b968c7",
         "genome": [
           [
-            4,
-            4
+            5,
+            5
           ],
           [
             0,
@@ -984,15 +984,15 @@
           ],
           [
             2,
-            4
+            5
           ],
           [
             0,
             2
           ],
           [
-            0,
-            1
+            5,
+            7
           ],
           [
             0,
@@ -1004,12 +1004,12 @@
           ]
         ],
         "expressed": [
-          4,
+          5,
           0,
           1,
           2,
           2,
-          0,
+          5,
           0,
           4
         ],
@@ -1044,7 +1044,7 @@
             ],
             [
               2,
-              4
+              5
             ],
             [
               4,
@@ -1052,7 +1052,7 @@
             ],
             [
               6,
-              9
+              4
             ],
             [
               0,
@@ -1089,8 +1089,8 @@
               4
             ],
             [
-              3,
-              3
+              7,
+              0
             ],
             [
               0,
@@ -1108,10 +1108,6 @@
           {
             "gene": 4,
             "variant": 5
-          },
-          {
-            "gene": 6,
-            "variant": 3
           }
         ]
       },
@@ -1140,8 +1136,8 @@
             4
           ],
           [
-            3,
-            9
+            0,
+            4
           ],
           [
             0,
@@ -1158,12 +1154,12 @@
           5,
           1,
           4,
-          9,
+          0,
           0,
           1
         ],
         "rarity": {
-          "score": 4,
+          "score": 3,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -1181,7 +1177,7 @@
           "genome": [
             [
               2,
-              4
+              5
             ],
             [
               6,
@@ -1193,15 +1189,15 @@
             ],
             [
               1,
-              4
+              5
             ],
             [
               1,
               1
             ],
             [
-              3,
-              12
+              14,
+              10
             ],
             [
               2,
@@ -1219,7 +1215,7 @@
           "genome": [
             [
               1,
-              4
+              5
             ],
             [
               2,
@@ -1239,7 +1235,7 @@
             ],
             [
               6,
-              6
+              14
             ],
             [
               0,
@@ -1272,7 +1268,7 @@
             4
           ],
           [
-            4,
+            5,
             0
           ],
           [
@@ -1280,7 +1276,7 @@
             2
           ],
           [
-            12,
+            10,
             6
           ],
           [
@@ -1298,12 +1294,12 @@
           2,
           0,
           2,
-          6,
+          10,
           1,
           0
         ],
         "rarity": {
-          "score": 3,
+          "score": 4,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -1378,8 +1374,8 @@
               2
             ],
             [
-              9,
-              1
+              4,
+              12
             ],
             [
               2,
@@ -1395,12 +1391,12 @@
         "nonce": "nonce-495586#12",
         "unlockedMutations": [
           {
-            "gene": 1,
-            "variant": 7
-          },
-          {
             "gene": 4,
             "variant": 5
+          },
+          {
+            "gene": 6,
+            "variant": 3
           },
           {
             "gene": 7,
@@ -1430,15 +1426,15 @@
           ],
           [
             1,
-            5
+            0
           ],
           [
-            1,
+            12,
             9
           ],
           [
             2,
-            2
+            3
           ],
           [
             3,
@@ -1450,18 +1446,18 @@
           7,
           2,
           2,
-          5,
+          1,
           9,
-          2,
+          3,
           3
         ],
         "rarity": {
-          "score": 9,
-          "tier": "legendary"
+          "score": 8,
+          "tier": "rare"
         },
         "mutation": {
-          "gene": 4,
-          "variant": 5,
+          "gene": 6,
+          "variant": 3,
           "allele": 1
         },
         "paletteShift": {
@@ -1497,8 +1493,8 @@
               3
             ],
             [
-              0,
-              13
+              7,
+              7
             ],
             [
               1,
@@ -1535,8 +1531,8 @@
               0
             ],
             [
-              5,
-              13
+              6,
+              3
             ],
             [
               1,
@@ -1577,8 +1573,8 @@
             0
           ],
           [
-            13,
-            5
+            7,
+            6
           ],
           [
             2,
@@ -1595,7 +1591,7 @@
           3,
           3,
           0,
-          5,
+          6,
           0,
           7
         ],
@@ -1618,7 +1614,7 @@
           "genome": [
             [
               2,
-              4
+              5
             ],
             [
               2,
@@ -1638,7 +1634,7 @@
             ],
             [
               8,
-              9
+              1
             ],
             [
               1,
@@ -1692,8 +1688,8 @@
         "nonce": "ü-5",
         "unlockedMutations": [
           {
-            "gene": 7,
-            "variant": 9
+            "gene": 0,
+            "variant": 4
           }
         ]
       },
@@ -1745,8 +1741,8 @@
           9
         ],
         "rarity": {
-          "score": 5,
-          "tier": "uncommon"
+          "score": 6,
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -1761,8 +1757,8 @@
           "id": "Creature33",
           "genome": [
             [
-              4,
-              4
+              5,
+              5
             ],
             [
               0,
@@ -1781,8 +1777,8 @@
               3
             ],
             [
-              0,
-              1
+              5,
+              11
             ],
             [
               1,
@@ -1800,7 +1796,7 @@
           "genome": [
             [
               3,
-              4
+              5
             ],
             [
               1,
@@ -1811,7 +1807,7 @@
               5
             ],
             [
-              4,
+              5,
               2
             ],
             [
@@ -1819,8 +1815,8 @@
               3
             ],
             [
-              3,
-              12
+              10,
+              3
             ],
             [
               2,
@@ -1841,7 +1837,7 @@
         "seedHex": "834cc4ec",
         "genome": [
           [
-            4,
+            5,
             3
           ],
           [
@@ -1861,8 +1857,8 @@
             3
           ],
           [
-            1,
-            12
+            11,
+            3
           ],
           [
             1,
@@ -1874,17 +1870,17 @@
           ]
         ],
         "expressed": [
-          3,
+          5,
           0,
           1,
           2,
           3,
-          1,
+          3,
           1,
           7
         ],
         "rarity": {
-          "score": 4,
+          "score": 5,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -1922,7 +1918,7 @@
             ],
             [
               3,
-              3
+              8
             ],
             [
               2,
@@ -1939,7 +1935,7 @@
           "id": "Creature25",
           "genome": [
             [
-              4,
+              5,
               2
             ],
             [
@@ -1959,8 +1955,8 @@
               1
             ],
             [
-              6,
-              13
+              3,
+              3
             ],
             [
               1,
@@ -1976,20 +1972,16 @@
         "nonce": "ü-38#19",
         "unlockedMutations": [
           {
-            "gene": 1,
-            "variant": 7
-          },
-          {
-            "gene": 2,
-            "variant": 7
+            "gene": 4,
+            "variant": 5
           },
           {
             "gene": 5,
-            "variant": 14
+            "variant": 15
           },
           {
-            "gene": 7,
-            "variant": 9
+            "gene": 6,
+            "variant": 3
           }
         ]
       },
@@ -2018,11 +2010,11 @@
             0
           ],
           [
-            14,
-            13
+            8,
+            3
           ],
           [
-            0,
+            3,
             1
           ],
           [
@@ -2036,17 +2028,17 @@
           1,
           2,
           1,
-          14,
-          0,
+          8,
+          3,
           1
         ],
         "rarity": {
-          "score": 3,
+          "score": 5,
           "tier": "uncommon"
         },
         "mutation": {
-          "gene": 5,
-          "variant": 14,
+          "gene": 6,
+          "variant": 3,
           "allele": 0
         },
         "paletteShift": {
@@ -2113,15 +2105,15 @@
             ],
             [
               3,
-              4
+              5
             ],
             [
               3,
               1
             ],
             [
-              13,
-              8
+              1,
+              11
             ],
             [
               2,
@@ -2155,7 +2147,7 @@
           ],
           [
             1,
-            4
+            5
           ],
           [
             3,
@@ -2163,7 +2155,7 @@
           ],
           [
             7,
-            8
+            11
           ],
           [
             3,
@@ -2180,13 +2172,13 @@
           4,
           1,
           3,
-          8,
+          7,
           3,
           3
         ],
         "rarity": {
-          "score": 9,
-          "tier": "legendary"
+          "score": 7,
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -2222,8 +2214,8 @@
               2
             ],
             [
-              7,
-              0
+              10,
+              10
             ],
             [
               0,
@@ -2241,7 +2233,7 @@
           "genome": [
             [
               1,
-              4
+              5
             ],
             [
               4,
@@ -2261,7 +2253,7 @@
             ],
             [
               2,
-              8
+              9
             ],
             [
               1,
@@ -2281,12 +2273,16 @@
             "variant": 7
           },
           {
-            "gene": 2,
-            "variant": 7
+            "gene": 3,
+            "variant": 4
           },
           {
-            "gene": 3,
-            "variant": 5
+            "gene": 6,
+            "variant": 3
+          },
+          {
+            "gene": 7,
+            "variant": 9
           }
         ]
       },
@@ -2295,7 +2291,7 @@
         "seedHex": "925dac33",
         "genome": [
           [
-            4,
+            5,
             1
           ],
           [
@@ -2315,8 +2311,8 @@
             2
           ],
           [
-            8,
-            7
+            9,
+            10
           ],
           [
             1,
@@ -2333,12 +2329,12 @@
           2,
           2,
           2,
-          8,
+          9,
           1,
           6
         ],
         "rarity": {
-          "score": 3,
+          "score": 4,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -2375,8 +2371,8 @@
               3
             ],
             [
-              6,
-              13
+              4,
+              10
             ],
             [
               1,
@@ -2406,15 +2402,15 @@
             ],
             [
               1,
-              4
+              5
             ],
             [
               1,
               0
             ],
             [
-              9,
-              4
+              14,
+              9
             ],
             [
               1,
@@ -2447,7 +2443,7 @@
             4
           ],
           [
-            4,
+            5,
             3
           ],
           [
@@ -2455,8 +2451,8 @@
             3
           ],
           [
-            4,
-            6
+            9,
+            4
           ],
           [
             1,
@@ -2468,17 +2464,17 @@
           ]
         ],
         "expressed": [
-          1,
+          0,
           0,
           4,
           3,
           1,
-          4,
+          9,
           1,
           7
         ],
         "rarity": {
-          "score": 4,
+          "score": 3,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -2507,16 +2503,16 @@
               2
             ],
             [
-              4,
-              4
+              5,
+              5
             ],
             [
               1,
               2
             ],
             [
-              3,
-              8
+              14,
+              10
             ],
             [
               2,
@@ -2553,8 +2549,8 @@
               4
             ],
             [
-              13,
-              1
+              11,
+              14
             ],
             [
               1,
@@ -2571,15 +2567,11 @@
         "unlockedMutations": [
           {
             "gene": 0,
-            "variant": 5
+            "variant": 4
           },
           {
             "gene": 2,
             "variant": 7
-          },
-          {
-            "gene": 3,
-            "variant": 5
           },
           {
             "gene": 6,
@@ -2592,7 +2584,7 @@
         "seedHex": "8d7d464b",
         "genome": [
           [
-            1,
+            4,
             2
           ],
           [
@@ -2600,20 +2592,20 @@
             5
           ],
           [
-            7,
+            1,
             2
           ],
           [
             2,
-            4
+            5
           ],
           [
             4,
             1
           ],
           [
-            13,
-            3
+            11,
+            14
           ],
           [
             1,
@@ -2625,22 +2617,22 @@
           ]
         ],
         "expressed": [
-          1,
+          4,
           3,
-          7,
+          1,
           2,
           1,
-          3,
+          14,
           1,
           5
         ],
         "rarity": {
-          "score": 5,
-          "tier": "uncommon"
+          "score": 7,
+          "tier": "rare"
         },
         "mutation": {
-          "gene": 2,
-          "variant": 7,
+          "gene": 0,
+          "variant": 4,
           "allele": 0
         },
         "paletteShift": {
@@ -2676,8 +2668,8 @@
               1
             ],
             [
-              0,
-              2
+              13,
+              3
             ],
             [
               0,
@@ -2757,7 +2749,7 @@
           ],
           [
             5,
-            0
+            13
           ],
           [
             0,
@@ -2772,15 +2764,15 @@
           1,
           3,
           2,
-          1,
+          4,
           5,
           5,
           0,
           0
         ],
         "rarity": {
-          "score": 3,
-          "tier": "uncommon"
+          "score": 6,
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -2846,7 +2838,7 @@
               0
             ],
             [
-              4,
+              5,
               0
             ],
             [
@@ -2854,8 +2846,8 @@
               2
             ],
             [
-              10,
-              6
+              4,
+              9
             ],
             [
               1,
@@ -2872,15 +2864,11 @@
         "unlockedMutations": [
           {
             "gene": 3,
+            "variant": 4
+          },
+          {
+            "gene": 4,
             "variant": 5
-          },
-          {
-            "gene": 5,
-            "variant": 14
-          },
-          {
-            "gene": 5,
-            "variant": 15
           }
         ]
       },
@@ -2901,16 +2889,16 @@
             3
           ],
           [
-            4,
+            5,
             0
           ],
           [
             2,
-            1
+            5
           ],
           [
-            6,
-            14
+            9,
+            6
           ],
           [
             1,
@@ -2926,18 +2914,18 @@
           1,
           3,
           0,
-          2,
-          14,
+          5,
+          9,
           3,
           2
         ],
         "rarity": {
-          "score": 6,
+          "score": 8,
           "tier": "rare"
         },
         "mutation": {
-          "gene": 5,
-          "variant": 14,
+          "gene": 4,
+          "variant": 5,
           "allele": 1
         },
         "paletteShift": {
@@ -2953,7 +2941,7 @@
           "id": "Creature49",
           "genome": [
             [
-              4,
+              5,
               2
             ],
             [
@@ -2973,8 +2961,8 @@
               0
             ],
             [
-              8,
-              12
+              14,
+              7
             ],
             [
               2,
@@ -3011,8 +2999,8 @@
               1
             ],
             [
-              11,
-              8
+              13,
+              4
             ],
             [
               2,
@@ -3033,7 +3021,7 @@
         "seedHex": "2b51488e",
         "genome": [
           [
-            4,
+            5,
             3
           ],
           [
@@ -3053,8 +3041,8 @@
             1
           ],
           [
-            8,
-            8
+            14,
+            4
           ],
           [
             2,
@@ -3066,18 +3054,18 @@
           ]
         ],
         "expressed": [
-          3,
+          5,
           2,
           1,
           1,
           1,
-          8,
+          4,
           1,
           2
         ],
         "rarity": {
-          "score": 3,
-          "tier": "uncommon"
+          "score": 2,
+          "tier": "common"
         },
         "mutation": null,
         "paletteShift": {
@@ -3106,15 +3094,15 @@
             ],
             [
               2,
-              4
+              5
             ],
             [
               3,
               1
             ],
             [
-              3,
-              12
+              14,
+              6
             ],
             [
               2,
@@ -3151,8 +3139,8 @@
               4
             ],
             [
-              13,
-              6
+              5,
+              2
             ],
             [
               0,
@@ -3168,8 +3156,8 @@
         "nonce": "0c1cd70d22bc250f#5",
         "unlockedMutations": [
           {
-            "gene": 6,
-            "variant": 3
+            "gene": 2,
+            "variant": 7
           }
         ]
       },
@@ -3187,7 +3175,7 @@
           ],
           [
             1,
-            1
+            7
           ],
           [
             2,
@@ -3198,12 +3186,12 @@
             3
           ],
           [
-            6,
-            3
+            2,
+            14
           ],
           [
             0,
-            3
+            2
           ],
           [
             5,
@@ -3213,20 +3201,20 @@
         "expressed": [
           0,
           3,
-          1,
+          7,
           2,
           3,
-          3,
-          3,
+          2,
+          0,
           0
         ],
         "rarity": {
-          "score": 4,
+          "score": 5,
           "tier": "uncommon"
         },
         "mutation": {
-          "gene": 6,
-          "variant": 3,
+          "gene": 2,
+          "variant": 7,
           "allele": 1
         },
         "paletteShift": {
@@ -3261,8 +3249,8 @@
               1
             ],
             [
-              5,
-              7
+              10,
+              0
             ],
             [
               1,
@@ -3279,7 +3267,7 @@
           "id": "m_2",
           "genome": [
             [
-              4,
+              5,
               3
             ],
             [
@@ -3300,7 +3288,7 @@
             ],
             [
               2,
-              2
+              6
             ],
             [
               1,
@@ -3322,7 +3310,7 @@
         "genome": [
           [
             0,
-            4
+            5
           ],
           [
             3,
@@ -3341,7 +3329,7 @@
             0
           ],
           [
-            5,
+            10,
             2
           ],
           [
@@ -3364,7 +3352,7 @@
           4
         ],
         "rarity": {
-          "score": 0,
+          "score": 1,
           "tier": "common"
         },
         "mutation": null,
@@ -3402,7 +3390,7 @@
             ],
             [
               3,
-              13
+              1
             ],
             [
               1,
@@ -3420,7 +3408,7 @@
           "genome": [
             [
               3,
-              4
+              5
             ],
             [
               3,
@@ -3439,8 +3427,8 @@
               2
             ],
             [
-              7,
-              2
+              5,
+              8
             ],
             [
               0,
@@ -3456,12 +3444,12 @@
         "nonce": "n",
         "unlockedMutations": [
           {
-            "gene": 1,
-            "variant": 7
+            "gene": 5,
+            "variant": 15
           },
           {
-            "gene": 7,
-            "variant": 9
+            "gene": 6,
+            "variant": 3
           }
         ]
       },
@@ -3490,7 +3478,7 @@
             0
           ],
           [
-            2,
+            8,
             3
           ],
           [
@@ -3508,12 +3496,12 @@
           1,
           0,
           2,
-          2,
+          8,
           0,
           0
         ],
         "rarity": {
-          "score": 0,
+          "score": 1,
           "tier": "common"
         },
         "mutation": null,
@@ -3588,8 +3576,8 @@
               2
             ],
             [
-              6,
-              5
+              2,
+              4
             ],
             [
               1,
@@ -3631,7 +3619,7 @@
           ],
           [
             4,
-            5
+            4
           ],
           [
             1,
@@ -3643,18 +3631,18 @@
           ]
         ],
         "expressed": [
-          3,
+          4,
           1,
           0,
-          0,
+          4,
           1,
-          5,
+          4,
           1,
           2
         ],
         "rarity": {
-          "score": 2,
-          "tier": "common"
+          "score": 7,
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -3671,7 +3659,7 @@
           "genome": [
             [
               3,
-              4
+              5
             ],
             [
               5,
@@ -3683,15 +3671,15 @@
             ],
             [
               1,
-              4
+              5
             ],
             [
               0,
               1
             ],
             [
-              11,
-              11
+              7,
+              10
             ],
             [
               0,
@@ -3745,12 +3733,12 @@
         "nonce": "nonce-784280#7",
         "unlockedMutations": [
           {
-            "gene": 1,
+            "gene": 2,
             "variant": 7
           },
           {
-            "gene": 2,
-            "variant": 7
+            "gene": 5,
+            "variant": 15
           },
           {
             "gene": 6,
@@ -3771,11 +3759,11 @@
             7
           ],
           [
-            7,
+            1,
             2
           ],
           [
-            4,
+            5,
             5
           ],
           [
@@ -3783,7 +3771,7 @@
             4
           ],
           [
-            11,
+            15,
             13
           ],
           [
@@ -3798,20 +3786,20 @@
         "expressed": [
           3,
           7,
-          7,
+          1,
           5,
           0,
-          11,
+          15,
           3,
           1
         ],
         "rarity": {
-          "score": 14,
+          "score": 12,
           "tier": "legendary"
         },
         "mutation": {
-          "gene": 2,
-          "variant": 7,
+          "gene": 5,
+          "variant": 15,
           "allele": 0
         },
         "paletteShift": {
@@ -3828,7 +3816,7 @@
           "genome": [
             [
               0,
-              4
+              5
             ],
             [
               6,
@@ -3839,7 +3827,7 @@
               2
             ],
             [
-              4,
+              5,
               2
             ],
             [
@@ -3847,8 +3835,8 @@
               2
             ],
             [
-              8,
-              5
+              7,
+              7
             ],
             [
               1,
@@ -3866,7 +3854,7 @@
           "genome": [
             [
               3,
-              4
+              5
             ],
             [
               0,
@@ -3885,8 +3873,8 @@
               3
             ],
             [
-              12,
-              5
+              7,
+              14
             ],
             [
               0,
@@ -3927,8 +3915,8 @@
             4
           ],
           [
-            8,
-            12
+            7,
+            7
           ],
           [
             2,
@@ -3945,12 +3933,12 @@
           3,
           2,
           4,
-          8,
+          7,
           0,
           1
         ],
         "rarity": {
-          "score": 3,
+          "score": 4,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -3967,7 +3955,7 @@
           "id": "é438",
           "genome": [
             [
-              4,
+              5,
               2
             ],
             [
@@ -3987,8 +3975,8 @@
               3
             ],
             [
-              2,
-              7
+              4,
+              14
             ],
             [
               2,
@@ -4025,8 +4013,8 @@
               2
             ],
             [
-              5,
-              5
+              6,
+              14
             ],
             [
               2,
@@ -4041,6 +4029,10 @@
         },
         "nonce": "ü-47",
         "unlockedMutations": [
+          {
+            "gene": 0,
+            "variant": 4
+          },
           {
             "gene": 1,
             "variant": 7
@@ -4080,8 +4072,8 @@
             3
           ],
           [
-            5,
-            2
+            14,
+            4
           ],
           [
             2,
@@ -4098,13 +4090,13 @@
           3,
           1,
           2,
-          2,
+          4,
           2,
           1
         ],
         "rarity": {
-          "score": 2,
-          "tier": "common"
+          "score": 3,
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -4132,7 +4124,7 @@
               4
             ],
             [
-              4,
+              5,
               3
             ],
             [
@@ -4140,8 +4132,8 @@
               4
             ],
             [
-              5,
-              6
+              8,
+              0
             ],
             [
               1,
@@ -4170,7 +4162,7 @@
               0
             ],
             [
-              4,
+              5,
               3
             ],
             [
@@ -4178,8 +4170,8 @@
               0
             ],
             [
-              12,
-              3
+              5,
+              1
             ],
             [
               2,
@@ -4220,8 +4212,8 @@
             4
           ],
           [
-            3,
-            5
+            1,
+            8
           ],
           [
             2,
@@ -4238,13 +4230,13 @@
           4,
           3,
           0,
-          5,
+          1,
           1,
           1
         ],
         "rarity": {
-          "score": 3,
-          "tier": "uncommon"
+          "score": 1,
+          "tier": "common"
         },
         "mutation": null,
         "paletteShift": {
@@ -4318,8 +4310,8 @@
               2
             ],
             [
-              10,
-              0
+              7,
+              5
             ],
             [
               1,
@@ -4335,8 +4327,8 @@
         "nonce": "n#5",
         "unlockedMutations": [
           {
-            "gene": 0,
-            "variant": 5
+            "gene": 3,
+            "variant": 4
           }
         ]
       },
@@ -4345,7 +4337,7 @@
         "seedHex": "eaa95def",
         "genome": [
           [
-            5,
+            1,
             5
           ],
           [
@@ -4357,7 +4349,7 @@
             7
           ],
           [
-            1,
+            4,
             5
           ],
           [
@@ -4365,7 +4357,7 @@
             1
           ],
           [
-            10,
+            7,
             10
           ],
           [
@@ -4378,22 +4370,22 @@
           ]
         ],
         "expressed": [
-          5,
+          1,
           1,
           7,
-          5,
+          4,
           1,
           10,
           0,
           1
         ],
         "rarity": {
-          "score": 10,
-          "tier": "legendary"
+          "score": 7,
+          "tier": "rare"
         },
         "mutation": {
-          "gene": 0,
-          "variant": 5,
+          "gene": 3,
+          "variant": 4,
           "allele": 0
         },
         "paletteShift": {
@@ -4422,15 +4414,15 @@
             ],
             [
               1,
-              4
+              5
             ],
             [
               3,
               1
             ],
             [
-              12,
-              13
+              8,
+              9
             ],
             [
               2,
@@ -4447,7 +4439,7 @@
           "id": "m_301df59a",
           "genome": [
             [
-              4,
+              5,
               1
             ],
             [
@@ -4468,7 +4460,7 @@
             ],
             [
               4,
-              13
+              10
             ],
             [
               1,
@@ -4502,7 +4494,7 @@
           ],
           [
             1,
-            4
+            5
           ],
           [
             4,
@@ -4510,7 +4502,7 @@
           ],
           [
             4,
-            13
+            9
           ],
           [
             1,
@@ -4527,12 +4519,12 @@
           3,
           1,
           3,
-          4,
+          9,
           1,
           6
         ],
         "rarity": {
-          "score": 3,
+          "score": 5,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -4569,8 +4561,8 @@
               4
             ],
             [
-              9,
-              4
+              2,
+              14
             ],
             [
               1,
@@ -4587,7 +4579,7 @@
           "id": "é470",
           "genome": [
             [
-              4,
+              5,
               2
             ],
             [
@@ -4607,8 +4599,8 @@
               1
             ],
             [
-              9,
-              5
+              7,
+              14
             ],
             [
               0,
@@ -4624,8 +4616,8 @@
         "nonce": "nonce-945257",
         "unlockedMutations": [
           {
-            "gene": 1,
-            "variant": 7
+            "gene": 5,
+            "variant": 15
           }
         ]
       },
@@ -4635,7 +4627,7 @@
         "genome": [
           [
             1,
-            4
+            5
           ],
           [
             5,
@@ -4654,8 +4646,8 @@
             0
           ],
           [
-            4,
-            9
+            14,
+            7
           ],
           [
             1,
@@ -4669,15 +4661,15 @@
         "expressed": [
           1,
           5,
-          2,
+          3,
           0,
           0,
-          9,
+          14,
           0,
           0
         ],
         "rarity": {
-          "score": 1,
+          "score": 2,
           "tier": "common"
         },
         "mutation": null,
@@ -4693,7 +4685,7 @@
           "id": "Creature37",
           "genome": [
             [
-              4,
+              5,
               1
             ],
             [
@@ -4713,8 +4705,8 @@
               1
             ],
             [
-              4,
-              10
+              12,
+              8
             ],
             [
               2,
@@ -4773,7 +4765,7 @@
         "seedHex": "fe834824",
         "genome": [
           [
-            4,
+            5,
             1
           ],
           [
@@ -4793,7 +4785,7 @@
             4
           ],
           [
-            10,
+            8,
             5
           ],
           [
@@ -4834,7 +4826,7 @@
           "genome": [
             [
               0,
-              4
+              5
             ],
             [
               3,
@@ -4853,8 +4845,8 @@
               0
             ],
             [
-              4,
-              6
+              11,
+              9
             ],
             [
               0,
@@ -4891,8 +4883,8 @@
               0
             ],
             [
-              12,
-              5
+              14,
+              3
             ],
             [
               0,
@@ -4908,8 +4900,8 @@
         "nonce": "#2",
         "unlockedMutations": [
           {
-            "gene": 4,
-            "variant": 5
+            "gene": 7,
+            "variant": 9
           }
         ]
       },
@@ -4919,7 +4911,7 @@
         "genome": [
           [
             1,
-            4
+            5
           ],
           [
             1,
@@ -4935,11 +4927,11 @@
           ],
           [
             0,
-            5
+            0
           ],
           [
-            5,
-            4
+            3,
+            11
           ],
           [
             0,
@@ -4947,7 +4939,7 @@
           ],
           [
             0,
-            1
+            9
           ]
         ],
         "expressed": [
@@ -4955,18 +4947,18 @@
           1,
           3,
           1,
-          5,
-          5,
           0,
-          1
+          3,
+          0,
+          9
         ],
         "rarity": {
-          "score": 3,
+          "score": 4,
           "tier": "uncommon"
         },
         "mutation": {
-          "gene": 4,
-          "variant": 5,
+          "gene": 7,
+          "variant": 9,
           "allele": 1
         },
         "paletteShift": {
@@ -5021,7 +5013,7 @@
           "genome": [
             [
               2,
-              4
+              5
             ],
             [
               2,
@@ -5040,8 +5032,8 @@
               4
             ],
             [
-              4,
-              11
+              12,
+              8
             ],
             [
               0,
@@ -5062,7 +5054,7 @@
         "seedHex": "d58649e1",
         "genome": [
           [
-            4,
+            5,
             2
           ],
           [
@@ -5082,7 +5074,7 @@
             3
           ],
           [
-            4,
+            12,
             3
           ],
           [
@@ -5098,15 +5090,15 @@
           2,
           2,
           7,
-          5,
+          0,
           3,
           3,
           0,
           9
         ],
         "rarity": {
-          "score": 10,
-          "tier": "legendary"
+          "score": 7,
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -5122,7 +5114,7 @@
           "id": "m_2",
           "genome": [
             [
-              4,
+              5,
               3
             ],
             [
@@ -5134,7 +5126,7 @@
               5
             ],
             [
-              4,
+              5,
               1
             ],
             [
@@ -5142,8 +5134,8 @@
               3
             ],
             [
-              0,
-              12
+              13,
+              10
             ],
             [
               2,
@@ -5160,8 +5152,8 @@
           "id": "mx-38724",
           "genome": [
             [
-              4,
-              4
+              5,
+              5
             ],
             [
               4,
@@ -5180,8 +5172,8 @@
               3
             ],
             [
-              5,
-              11
+              7,
+              7
             ],
             [
               2,
@@ -5197,16 +5189,12 @@
         "nonce": "nonce-332536",
         "unlockedMutations": [
           {
-            "gene": 2,
-            "variant": 7
+            "gene": 3,
+            "variant": 4
           },
           {
-            "gene": 5,
-            "variant": 14
-          },
-          {
-            "gene": 5,
-            "variant": 15
+            "gene": 6,
+            "variant": 3
           }
         ]
       },
@@ -5216,7 +5204,7 @@
         "genome": [
           [
             3,
-            4
+            5
           ],
           [
             5,
@@ -5227,7 +5215,7 @@
             5
           ],
           [
-            4,
+            5,
             1
           ],
           [
@@ -5235,8 +5223,8 @@
             3
           ],
           [
-            0,
-            5
+            13,
+            7
           ],
           [
             2,
@@ -5248,12 +5236,12 @@
           ]
         ],
         "expressed": [
-          3,
-          1,
-          1,
-          1,
-          3,
           5,
+          1,
+          1,
+          1,
+          3,
+          7,
           0,
           0
         ],
@@ -5275,7 +5263,7 @@
           "id": "m_75fc2530",
           "genome": [
             [
-              4,
+              5,
               1
             ],
             [
@@ -5295,8 +5283,8 @@
               0
             ],
             [
-              1,
-              11
+              11,
+              4
             ],
             [
               2,
@@ -5314,7 +5302,7 @@
           "genome": [
             [
               2,
-              4
+              5
             ],
             [
               4,
@@ -5333,8 +5321,8 @@
               4
             ],
             [
-              5,
-              11
+              1,
+              8
             ],
             [
               2,
@@ -5375,8 +5363,8 @@
             1
           ],
           [
-            1,
-            11
+            11,
+            8
           ],
           [
             2,
@@ -5393,12 +5381,12 @@
           0,
           1,
           1,
-          1,
+          8,
           2,
           1
         ],
         "rarity": {
-          "score": 3,
+          "score": 4,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -5436,7 +5424,7 @@
             ],
             [
               13,
-              10
+              11
             ],
             [
               1,
@@ -5453,8 +5441,8 @@
           "id": "m_ab0d4dfb",
           "genome": [
             [
-              4,
-              4
+              5,
+              5
             ],
             [
               2,
@@ -5473,8 +5461,8 @@
               2
             ],
             [
-              7,
-              8
+              13,
+              13
             ],
             [
               0,
@@ -5490,16 +5478,12 @@
         "nonce": "n#1",
         "unlockedMutations": [
           {
-            "gene": 1,
-            "variant": 7
+            "gene": 5,
+            "variant": 15
           },
           {
-            "gene": 2,
-            "variant": 7
-          },
-          {
-            "gene": 3,
-            "variant": 5
+            "gene": 7,
+            "variant": 9
           }
         ]
       },
@@ -5509,10 +5493,10 @@
         "genome": [
           [
             1,
-            4
+            5
           ],
           [
-            7,
+            5,
             3
           ],
           [
@@ -5528,35 +5512,35 @@
             2
           ],
           [
-            10,
-            7
+            11,
+            13
           ],
           [
             1,
             0
           ],
           [
-            3,
+            9,
             5
           ]
         ],
         "expressed": [
           1,
-          7,
+          3,
           3,
           2,
           2,
-          10,
+          11,
           0,
-          3
+          9
         ],
         "rarity": {
-          "score": 4,
-          "tier": "uncommon"
+          "score": 6,
+          "tier": "rare"
         },
         "mutation": {
-          "gene": 1,
-          "variant": 7,
+          "gene": 7,
+          "variant": 9,
           "allele": 0
         },
         "paletteShift": {
@@ -5584,7 +5568,7 @@
               4
             ],
             [
-              4,
+              5,
               1
             ],
             [
@@ -5592,7 +5576,7 @@
               4
             ],
             [
-              11,
+              5,
               1
             ],
             [
@@ -5623,15 +5607,15 @@
             ],
             [
               3,
-              4
+              5
             ],
             [
               4,
               4
             ],
             [
-              2,
-              9
+              12,
+              0
             ],
             [
               1,
@@ -5664,7 +5648,7 @@
             5
           ],
           [
-            4,
+            5,
             3
           ],
           [
@@ -5673,7 +5657,7 @@
           ],
           [
             1,
-            2
+            12
           ],
           [
             2,
@@ -5690,13 +5674,13 @@
           4,
           3,
           4,
-          2,
+          1,
           0,
           1
         ],
         "rarity": {
-          "score": 4,
-          "tier": "uncommon"
+          "score": 2,
+          "tier": "common"
         },
         "mutation": null,
         "paletteShift": {
@@ -5787,8 +5771,8 @@
         "nonce": "nonce-487646",
         "unlockedMutations": [
           {
-            "gene": 1,
-            "variant": 7
+            "gene": 7,
+            "variant": 9
           }
         ]
       },
@@ -5869,7 +5853,7 @@
               2
             ],
             [
-              4,
+              5,
               1
             ],
             [
@@ -5877,8 +5861,8 @@
               1
             ],
             [
-              9,
-              8
+              13,
+              5
             ],
             [
               2,
@@ -5908,14 +5892,14 @@
             ],
             [
               3,
-              4
+              5
             ],
             [
               4,
               1
             ],
             [
-              1,
+              7,
               6
             ],
             [
@@ -5949,7 +5933,7 @@
             2
           ],
           [
-            4,
+            5,
             1
           ],
           [
@@ -5958,7 +5942,7 @@
           ],
           [
             6,
-            8
+            5
           ],
           [
             1,
@@ -5970,17 +5954,17 @@
           ]
         ],
         "expressed": [
+          0,
+          2,
+          1,
           1,
           2,
-          2,
-          1,
-          2,
-          8,
+          5,
           0,
           2
         ],
         "rarity": {
-          "score": 1,
+          "score": 0,
           "tier": "common"
         },
         "mutation": null,
@@ -5997,7 +5981,7 @@
           "id": "m_6",
           "genome": [
             [
-              4,
+              5,
               1
             ],
             [
@@ -6017,8 +6001,8 @@
               3
             ],
             [
-              2,
-              2
+              3,
+              8
             ],
             [
               1,
@@ -6047,7 +6031,7 @@
               3
             ],
             [
-              4,
+              5,
               1
             ],
             [
@@ -6055,8 +6039,8 @@
               1
             ],
             [
-              1,
-              7
+              6,
+              6
             ],
             [
               2,
@@ -6076,8 +6060,8 @@
             "variant": 7
           },
           {
-            "gene": 6,
-            "variant": 3
+            "gene": 3,
+            "variant": 4
           },
           {
             "gene": 7,
@@ -6110,12 +6094,12 @@
             1
           ],
           [
-            2,
-            7
+            3,
+            6
           ],
           [
             1,
-            3
+            2
           ],
           [
             0,
@@ -6126,10 +6110,10 @@
           1,
           3,
           1,
+          4,
+          1,
           3,
           1,
-          2,
-          3,
           0
         ],
         "rarity": {
@@ -6137,8 +6121,8 @@
           "tier": "uncommon"
         },
         "mutation": {
-          "gene": 6,
-          "variant": 3,
+          "gene": 3,
+          "variant": 4,
           "allele": 1
         },
         "paletteShift": {
@@ -6153,8 +6137,8 @@
           "id": "é213",
           "genome": [
             [
-              4,
-              4
+              5,
+              5
             ],
             [
               3,
@@ -6173,8 +6157,8 @@
               1
             ],
             [
-              8,
-              8
+              3,
+              10
             ],
             [
               2,
@@ -6211,8 +6195,8 @@
               1
             ],
             [
-              2,
-              8
+              3,
+              13
             ],
             [
               2,
@@ -6234,7 +6218,7 @@
         "genome": [
           [
             0,
-            4
+            5
           ],
           [
             0,
@@ -6253,8 +6237,8 @@
             1
           ],
           [
-            2,
-            8
+            3,
+            3
           ],
           [
             1,
@@ -6268,10 +6252,10 @@
         "expressed": [
           0,
           0,
-          2,
+          1,
           0,
           1,
-          2,
+          3,
           1,
           6
         ],
@@ -6313,8 +6297,8 @@
               3
             ],
             [
-              7,
-              11
+              6,
+              14
             ],
             [
               2,
@@ -6351,8 +6335,8 @@
               3
             ],
             [
-              7,
-              8
+              2,
+              6
             ],
             [
               1,
@@ -6368,12 +6352,12 @@
         "nonce": "n",
         "unlockedMutations": [
           {
-            "gene": 6,
-            "variant": 3
+            "gene": 3,
+            "variant": 4
           },
           {
-            "gene": 7,
-            "variant": 9
+            "gene": 5,
+            "variant": 15
           }
         ]
       },
@@ -6402,8 +6386,8 @@
             3
           ],
           [
-            7,
-            8
+            6,
+            6
           ],
           [
             1,
@@ -6420,12 +6404,12 @@
           0,
           1,
           3,
-          8,
+          6,
           0,
           1
         ],
         "rarity": {
-          "score": 4,
+          "score": 3,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -6480,7 +6464,7 @@
           "id": "m_4d97446e",
           "genome": [
             [
-              4,
+              5,
               1
             ],
             [
@@ -6492,7 +6476,7 @@
               1
             ],
             [
-              4,
+              5,
               1
             ],
             [
@@ -6500,8 +6484,8 @@
               0
             ],
             [
-              0,
-              7
+              10,
+              13
             ],
             [
               2,
@@ -6534,7 +6518,7 @@
             5
           ],
           [
-            4,
+            5,
             1
           ],
           [
@@ -6542,7 +6526,7 @@
             0
           ],
           [
-            7,
+            13,
             14
           ],
           [
@@ -6555,7 +6539,7 @@
           ]
         ],
         "expressed": [
-          1,
+          0,
           5,
           0,
           1,
@@ -6565,8 +6549,8 @@
           3
         ],
         "rarity": {
-          "score": 4,
-          "tier": "uncommon"
+          "score": 2,
+          "tier": "common"
         },
         "mutation": null,
         "paletteShift": {
@@ -6594,16 +6578,16 @@
               3
             ],
             [
-              4,
-              4
+              5,
+              5
             ],
             [
               4,
               4
             ],
             [
-              10,
-              7
+              7,
+              6
             ],
             [
               1,
@@ -6640,8 +6624,8 @@
               2
             ],
             [
-              9,
-              4
+              14,
+              5
             ],
             [
               0,
@@ -6657,12 +6641,12 @@
         "nonce": "e8c27a877e89efb7#2",
         "unlockedMutations": [
           {
-            "gene": 6,
-            "variant": 3
+            "gene": 1,
+            "variant": 7
           },
           {
-            "gene": 7,
-            "variant": 9
+            "gene": 4,
+            "variant": 5
           }
         ]
       },
@@ -6684,22 +6668,22 @@
           ],
           [
             3,
+            5
+          ],
+          [
+            5,
             4
           ],
           [
-            2,
-            4
-          ],
-          [
-            4,
-            7
+            5,
+            6
           ],
           [
             1,
             0
           ],
           [
-            9,
+            3,
             8
           ]
         ],
@@ -6708,18 +6692,18 @@
           1,
           3,
           3,
-          2,
-          4,
+          5,
+          5,
           0,
-          9
+          3
         ],
         "rarity": {
           "score": 5,
           "tier": "uncommon"
         },
         "mutation": {
-          "gene": 7,
-          "variant": 9,
+          "gene": 4,
+          "variant": 5,
           "allele": 0
         },
         "paletteShift": {
@@ -6735,8 +6719,8 @@
           "id": "mx-48483",
           "genome": [
             [
-              4,
-              4
+              5,
+              5
             ],
             [
               1,
@@ -6755,8 +6739,8 @@
               4
             ],
             [
-              2,
-              2
+              14,
+              8
             ],
             [
               1,
@@ -6816,7 +6800,7 @@
         "genome": [
           [
             1,
-            4
+            5
           ],
           [
             4,
@@ -6836,7 +6820,7 @@
           ],
           [
             11,
-            2
+            8
           ],
           [
             1,
@@ -6853,13 +6837,13 @@
           1,
           1,
           3,
-          2,
+          8,
           1,
           3
         ],
         "rarity": {
-          "score": 2,
-          "tier": "common"
+          "score": 3,
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -6876,7 +6860,7 @@
           "genome": [
             [
               3,
-              4
+              5
             ],
             [
               3,
@@ -6895,7 +6879,7 @@
               4
             ],
             [
-              4,
+              13,
               3
             ],
             [
@@ -6914,7 +6898,7 @@
           "genome": [
             [
               0,
-              4
+              5
             ],
             [
               1,
@@ -6933,8 +6917,8 @@
               4
             ],
             [
-              10,
-              5
+              6,
+              3
             ],
             [
               0,
@@ -6951,15 +6935,15 @@
         "unlockedMutations": [
           {
             "gene": 0,
-            "variant": 5
+            "variant": 4
           },
           {
             "gene": 1,
             "variant": 7
           },
           {
-            "gene": 2,
-            "variant": 7
+            "gene": 7,
+            "variant": 9
           }
         ]
       },
@@ -6968,8 +6952,8 @@
         "seedHex": "5bca0a55",
         "genome": [
           [
-            4,
-            4
+            5,
+            5
           ],
           [
             3,
@@ -6989,7 +6973,7 @@
           ],
           [
             3,
-            5
+            3
           ],
           [
             1,
@@ -7001,18 +6985,18 @@
           ]
         ],
         "expressed": [
-          4,
+          5,
           1,
           5,
           1,
           4,
-          5,
+          3,
           1,
           1
         ],
         "rarity": {
-          "score": 6,
-          "tier": "rare"
+          "score": 5,
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -7040,7 +7024,7 @@
               0
             ],
             [
-              4,
+              5,
               3
             ],
             [
@@ -7048,8 +7032,8 @@
               1
             ],
             [
-              2,
-              1
+              13,
+              14
             ],
             [
               0,
@@ -7066,7 +7050,7 @@
           "id": "ß75",
           "genome": [
             [
-              4,
+              5,
               1
             ],
             [
@@ -7086,8 +7070,8 @@
               2
             ],
             [
-              5,
-              4
+              8,
+              12
             ],
             [
               0,
@@ -7108,7 +7092,7 @@
         "seedHex": "a55f70f6",
         "genome": [
           [
-            4,
+            5,
             0
           ],
           [
@@ -7128,8 +7112,8 @@
             1
           ],
           [
-            4,
-            2
+            12,
+            13
           ],
           [
             0,
@@ -7146,12 +7130,12 @@
           1,
           0,
           1,
-          2,
+          12,
           0,
           1
         ],
         "rarity": {
-          "score": 0,
+          "score": 2,
           "tier": "common"
         },
         "mutation": null,
@@ -7206,7 +7190,7 @@
           "id": "m_bd455511",
           "genome": [
             [
-              4,
+              5,
               1
             ],
             [
@@ -7218,7 +7202,7 @@
               3
             ],
             [
-              4,
+              5,
               1
             ],
             [
@@ -7226,8 +7210,8 @@
               2
             ],
             [
-              10,
-              1
+              6,
+              2
             ],
             [
               1,
@@ -7243,12 +7227,16 @@
         "nonce": "#12",
         "unlockedMutations": [
           {
-            "gene": 3,
-            "variant": 5
+            "gene": 1,
+            "variant": 7
           },
           {
-            "gene": 5,
-            "variant": 14
+            "gene": 6,
+            "variant": 3
+          },
+          {
+            "gene": 7,
+            "variant": 9
           }
         ]
       },
@@ -7261,7 +7249,7 @@
             1
           ],
           [
-            1,
+            7,
             3
           ],
           [
@@ -7269,7 +7257,7 @@
             4
           ],
           [
-            5,
+            4,
             1
           ],
           [
@@ -7278,7 +7266,7 @@
           ],
           [
             8,
-            10
+            6
           ],
           [
             0,
@@ -7291,21 +7279,21 @@
         ],
         "expressed": [
           1,
-          1,
+          7,
           2,
-          5,
+          4,
           2,
           8,
           0,
           3
         ],
         "rarity": {
-          "score": 4,
-          "tier": "uncommon"
+          "score": 7,
+          "tier": "rare"
         },
         "mutation": {
-          "gene": 3,
-          "variant": 5,
+          "gene": 1,
+          "variant": 7,
           "allele": 0
         },
         "paletteShift": {
@@ -7322,7 +7310,7 @@
           "genome": [
             [
               0,
-              4
+              5
             ],
             [
               1,
@@ -7341,8 +7329,8 @@
               3
             ],
             [
-              3,
-              10
+              2,
+              11
             ],
             [
               2,
@@ -7359,7 +7347,7 @@
           "id": "m_7358d512",
           "genome": [
             [
-              4,
+              5,
               1
             ],
             [
@@ -7371,16 +7359,16 @@
               5
             ],
             [
-              4,
-              4
+              5,
+              5
             ],
             [
               2,
               4
             ],
             [
-              13,
-              5
+              8,
+              1
             ],
             [
               1,
@@ -7401,7 +7389,7 @@
         "seedHex": "77a4693c",
         "genome": [
           [
-            4,
+            5,
             0
           ],
           [
@@ -7413,7 +7401,7 @@
             0
           ],
           [
-            4,
+            5,
             2
           ],
           [
@@ -7421,8 +7409,8 @@
             1
           ],
           [
-            13,
-            10
+            8,
+            11
           ],
           [
             1,
@@ -7439,12 +7427,12 @@
           0,
           2,
           2,
-          10,
+          8,
           1,
           6
         ],
         "rarity": {
-          "score": 3,
+          "score": 4,
           "tier": "uncommon"
         },
         "mutation": null,
@@ -7481,8 +7469,8 @@
               4
             ],
             [
-              4,
-              8
+              7,
+              0
             ],
             [
               2,
@@ -7499,7 +7487,7 @@
           "id": "é513",
           "genome": [
             [
-              4,
+              5,
               1
             ],
             [
@@ -7519,7 +7507,7 @@
               1
             ],
             [
-              7,
+              4,
               4
             ],
             [
@@ -7536,12 +7524,12 @@
         "nonce": "",
         "unlockedMutations": [
           {
-            "gene": 0,
-            "variant": 5
+            "gene": 2,
+            "variant": 7
           },
           {
-            "gene": 4,
-            "variant": 5
+            "gene": 5,
+            "variant": 15
           }
         ]
       },
@@ -7559,7 +7547,7 @@
           ],
           [
             4,
-            1
+            7
           ],
           [
             0,
@@ -7570,7 +7558,7 @@
             4
           ],
           [
-            8,
+            0,
             4
           ],
           [
@@ -7583,22 +7571,22 @@
           ]
         ],
         "expressed": [
-          5,
+          2,
           0,
-          1,
+          7,
           0,
           4,
-          8,
+          0,
           1,
           0
         ],
         "rarity": {
-          "score": 7,
+          "score": 6,
           "tier": "rare"
         },
         "mutation": {
-          "gene": 0,
-          "variant": 5,
+          "gene": 2,
+          "variant": 7,
           "allele": 1
         },
         "paletteShift": {
@@ -7633,8 +7621,8 @@
               0
             ],
             [
-              1,
-              8
+              9,
+              12
             ],
             [
               0,
@@ -7651,7 +7639,7 @@
           "id": "m_0",
           "genome": [
             [
-              4,
+              5,
               0
             ],
             [
@@ -7663,7 +7651,7 @@
               6
             ],
             [
-              4,
+              5,
               0
             ],
             [
@@ -7671,8 +7659,8 @@
               0
             ],
             [
-              8,
-              0
+              12,
+              13
             ],
             [
               1,
@@ -7713,8 +7701,8 @@
             0
           ],
           [
-            0,
-            1
+            13,
+            9
           ],
           [
             1,
@@ -7731,12 +7719,12 @@
           3,
           0,
           0,
-          0,
+          9,
           0,
           0
         ],
         "rarity": {
-          "score": 0,
+          "score": 2,
           "tier": "common"
         },
         "mutation": null,
@@ -7754,7 +7742,7 @@
           "genome": [
             [
               3,
-              4
+              5
             ],
             [
               2,
@@ -7766,15 +7754,15 @@
             ],
             [
               1,
-              4
+              5
             ],
             [
               4,
               1
             ],
             [
-              0,
-              2
+              7,
+              11
             ],
             [
               2,
@@ -7828,10 +7816,6 @@
         "nonce": "#0",
         "unlockedMutations": [
           {
-            "gene": 3,
-            "variant": 5
-          },
-          {
             "gene": 5,
             "variant": 15
           },
@@ -7866,7 +7850,7 @@
             3
           ],
           [
-            2,
+            11,
             2
           ],
           [
@@ -7882,15 +7866,15 @@
           3,
           3,
           0,
-          5,
+          1,
           1,
           2,
           3,
           4
         ],
         "rarity": {
-          "score": 7,
-          "tier": "rare"
+          "score": 4,
+          "tier": "uncommon"
         },
         "mutation": {
           "gene": 6,
@@ -7934,8 +7918,8 @@
             0
           ],
           [
-            4,
-            6
+            1,
+            8
           ],
           [
             2,
@@ -7952,7 +7936,7 @@
           3,
           3,
           2,
-          4,
+          1,
           1,
           2
         ],
@@ -7984,14 +7968,14 @@
           ],
           [
             3,
-            4
+            5
           ],
           [
             1,
             4
           ],
           [
-            10,
+            14,
             7
           ],
           [
@@ -8009,13 +7993,13 @@
           2,
           3,
           1,
-          10,
+          14,
           1,
           3
         ],
         "rarity": {
-          "score": 3,
-          "tier": "uncommon"
+          "score": 2,
+          "tier": "common"
         }
       }
     },
@@ -8048,8 +8032,8 @@
             3
           ],
           [
-            12,
-            12
+            2,
+            6
           ],
           [
             2,
@@ -8063,15 +8047,15 @@
         "expressed": [
           2,
           3,
-          2,
+          3,
           1,
           3,
-          12,
+          2,
           2,
           1
         ],
         "rarity": {
-          "score": 5,
+          "score": 4,
           "tier": "uncommon"
         }
       }
@@ -8086,7 +8070,7 @@
         "genome": [
           [
             0,
-            4
+            5
           ],
           [
             3,
@@ -8097,7 +8081,7 @@
             6
           ],
           [
-            4,
+            5,
             2
           ],
           [
@@ -8105,8 +8089,8 @@
             4
           ],
           [
-            1,
-            3
+            5,
+            12
           ],
           [
             2,
@@ -8123,12 +8107,12 @@
           1,
           2,
           1,
-          1,
+          5,
           0,
           0
         ],
         "rarity": {
-          "score": 0,
+          "score": 1,
           "tier": "common"
         }
       }
@@ -8142,8 +8126,8 @@
       "expected": {
         "genome": [
           [
-            4,
-            4
+            5,
+            5
           ],
           [
             3,
@@ -8155,15 +8139,15 @@
           ],
           [
             2,
-            4
+            5
           ],
           [
             3,
             0
           ],
           [
-            8,
-            0
+            13,
+            6
           ],
           [
             1,
@@ -8175,12 +8159,12 @@
           ]
         ],
         "expressed": [
-          4,
+          5,
           0,
           5,
           2,
           3,
-          0,
+          6,
           1,
           0
         ],
@@ -8219,8 +8203,8 @@
             2
           ],
           [
-            8,
-            7
+            14,
+            13
           ],
           [
             2,
@@ -8237,13 +8221,13 @@
           2,
           2,
           2,
-          8,
+          14,
           1,
           1
         ],
         "rarity": {
-          "score": 2,
-          "tier": "common"
+          "score": 3,
+          "tier": "uncommon"
         }
       }
     },
@@ -8276,8 +8260,8 @@
             0
           ],
           [
-            4,
-            1
+            5,
+            6
           ],
           [
             1,
@@ -8289,12 +8273,12 @@
           ]
         ],
         "expressed": [
-          1,
+          0,
           1,
           0,
           1,
           1,
-          1,
+          5,
           1,
           0
         ],
@@ -8313,7 +8297,7 @@
       "expected": {
         "genome": [
           [
-            4,
+            5,
             0
           ],
           [
@@ -8333,7 +8317,7 @@
             4
           ],
           [
-            0,
+            1,
             0
           ],
           [
@@ -8390,8 +8374,8 @@
             3
           ],
           [
-            2,
-            6
+            9,
+            12
           ],
           [
             1,
@@ -8408,13 +8392,13 @@
           1,
           0,
           2,
-          2,
+          9,
           1,
           5
         ],
         "rarity": {
-          "score": 2,
-          "tier": "common"
+          "score": 3,
+          "tier": "uncommon"
         }
       }
     },
@@ -8428,7 +8412,7 @@
         "genome": [
           [
             1,
-            4
+            5
           ],
           [
             5,
@@ -8447,8 +8431,8 @@
             1
           ],
           [
-            13,
-            11
+            14,
+            12
           ],
           [
             1,
@@ -8462,10 +8446,10 @@
         "expressed": [
           1,
           5,
-          2,
+          1,
           1,
           2,
-          11,
+          14,
           1,
           1
         ],
@@ -8484,7 +8468,7 @@
       "expected": {
         "genome": [
           [
-            4,
+            5,
             3
           ],
           [
@@ -8496,7 +8480,7 @@
             0
           ],
           [
-            4,
+            5,
             0
           ],
           [
@@ -8504,8 +8488,8 @@
             1
           ],
           [
-            10,
-            7
+            7,
+            12
           ],
           [
             2,
@@ -8517,12 +8501,12 @@
           ]
         ],
         "expressed": [
-          3,
+          5,
           0,
           3,
           0,
           1,
-          10,
+          7,
           2,
           1
         ],
@@ -8561,8 +8545,8 @@
             2
           ],
           [
-            3,
-            2
+            1,
+            6
           ],
           [
             2,
@@ -8579,12 +8563,12 @@
           3,
           2,
           2,
-          2,
+          1,
           0,
           2
         ],
         "rarity": {
-          "score": 0,
+          "score": 2,
           "tier": "common"
         }
       }
@@ -8611,7 +8595,7 @@
           ],
           [
             3,
-            4
+            5
           ],
           [
             1,
@@ -8619,7 +8603,7 @@
           ],
           [
             8,
-            13
+            6
           ],
           [
             1,
@@ -8641,8 +8625,8 @@
           1
         ],
         "rarity": {
-          "score": 3,
-          "tier": "uncommon"
+          "score": 2,
+          "tier": "common"
         }
       }
     },
@@ -8675,8 +8659,8 @@
             0
           ],
           [
-            6,
-            10
+            4,
+            1
           ],
           [
             1,
@@ -8693,7 +8677,7 @@
           3,
           1,
           0,
-          10,
+          1,
           1,
           0
         ],
@@ -8713,7 +8697,7 @@
         "genome": [
           [
             1,
-            4
+            5
           ],
           [
             4,
@@ -8733,7 +8717,7 @@
           ],
           [
             1,
-            2
+            14
           ],
           [
             2,
@@ -8750,13 +8734,13 @@
           5,
           2,
           3,
-          2,
+          1,
           0,
           3
         ],
         "rarity": {
-          "score": 2,
-          "tier": "common"
+          "score": 3,
+          "tier": "uncommon"
         }
       }
     },
@@ -8781,7 +8765,7 @@
             3
           ],
           [
-            4,
+            5,
             3
           ],
           [
@@ -8789,8 +8773,8 @@
             1
           ],
           [
-            10,
-            10
+            7,
+            6
           ],
           [
             0,
@@ -8807,12 +8791,12 @@
           3,
           3,
           1,
-          10,
+          6,
           0,
           2
         ],
         "rarity": {
-          "score": 2,
+          "score": 1,
           "tier": "common"
         }
       }
@@ -8826,7 +8810,7 @@
       "expected": {
         "genome": [
           [
-            4,
+            5,
             1
           ],
           [
@@ -8846,8 +8830,8 @@
             1
           ],
           [
-            5,
-            0
+            9,
+            8
           ],
           [
             1,
@@ -8864,13 +8848,13 @@
           2,
           2,
           1,
-          5,
+          9,
           1,
           2
         ],
         "rarity": {
-          "score": 1,
-          "tier": "common"
+          "score": 3,
+          "tier": "uncommon"
         }
       }
     },
@@ -8884,7 +8868,7 @@
         "genome": [
           [
             0,
-            4
+            5
           ],
           [
             1,
@@ -8903,8 +8887,8 @@
             0
           ],
           [
-            7,
-            2
+            1,
+            9
           ],
           [
             0,
@@ -8921,12 +8905,12 @@
           3,
           1,
           2,
-          2,
+          9,
           0,
           0
         ],
         "rarity": {
-          "score": 0,
+          "score": 2,
           "tier": "common"
         }
       }
@@ -8960,8 +8944,8 @@
             2
           ],
           [
-            3,
-            6
+            10,
+            11
           ],
           [
             2,
@@ -8973,12 +8957,12 @@
           ]
         ],
         "expressed": [
-          1,
+          0,
           0,
           4,
           1,
           2,
-          3,
+          10,
           2,
           3
         ],
@@ -9009,7 +8993,7 @@
             1
           ],
           [
-            4,
+            5,
             1
           ],
           [
@@ -9017,8 +9001,8 @@
             0
           ],
           [
-            5,
-            1
+            10,
+            2
           ],
           [
             1,
@@ -9035,7 +9019,7 @@
           1,
           1,
           0,
-          5,
+          2,
           1,
           1
         ],

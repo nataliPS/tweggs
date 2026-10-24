@@ -29,10 +29,10 @@ test("catalog has spec variant counts and valid fields", () => {
 });
 
 test("expression: higher dominance wins, tie -> lower index, order independent", () => {
-  // body: bean(5) vs round(6) -> round
-  assert.equal(expressGene(0, [0, 1]), 1);
-  assert.equal(expressGene(0, [1, 0]), 1);
-  // palette mint(5) vs peach(5) tie -> 0
+  // body: round(6) vs bean(5) -> round
+  assert.equal(expressGene(0, [0, 1]), 0);
+  assert.equal(expressGene(0, [1, 0]), 0);
+  // palette mint(5) vs bubblegum(5) tie -> 0
   assert.equal(expressGene(5, [1, 0]), 0);
   assert.equal(expressGene(5, [0, 1]), 0);
   // homozygous
