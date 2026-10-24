@@ -1,0 +1,24 @@
+{
+  "name": "@mixlings/functions",
+  "version": "0.1.0",
+  "description": "Mixlings backend: Cloud Functions (docs/backend-spec.md). Dev mode: local tests only, not deployed.",
+  "private": true,
+  "type": "module",
+  "main": "lib/functions/src/firebase/main.js",
+  "engines": { "node": "22" },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "serve": "npm run build && firebase emulators:start --only functions,firestore",
+    "deploy": "echo 'Deploy requires founder approval (see README).' && exit 1"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.4.0",
+    "firebase-functions": "^6.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,122 @@
+# Mixlings CI (retro T3). Prepared for later: there is no remote repo yet (dev mode).
+# Nothing here deploys or publishes anything.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  engine-ts:
+    name: engine-ts tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.18"
+      - name: Test (node --test, native TS)
+        working-directory: engine-ts
+        run: npm test
+
+  golden:
+    name: golden files up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.18"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Regenerate genome vectors + Swift catalog
+        working-directory: engine-ts
+        run: npm run golden
+      - name: Regenerate art renders
+        working-directory: art
+        run: |
+          pip install pillow
+          python make_golden.py
+          cp golden/renders.json ../MixlingsKit/Tests/MixlingsArtTests/Resources/renders.json
+      - name: Art TS port agrees with Python renders
+        run: node art/ts-port/check.ts
+      - name: Fail if regenerated files differ from committed ones
+        run: |
+          git status --porcelain
+          if ! git diff --exit-code --stat -- \
+              engine-ts/golden \
+              MixlingsKit/Tests/MixlingsGenomeTests/Resources/vectors.json \
+              MixlingsKit/Sources/MixlingsGenome/Catalog.swift \
+              art/golden \
+              MixlingsKit/Tests/MixlingsArtTests/Resources/renders.json; then
+            echo "::error::Golden files are stale. Run 'npm run golden' in engine-ts (and art/make_golden.py) and commit the result."
+            exit 1
+          fi
+
+  functions:
+    name: functions tests
+    runs-on: ubuntu-latest
+    needs: engine-ts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.18"
+      - name: Domain tests (no dependencies needed)
+        working-directory: functions
+        run: npm test
+
+  ios:
+    name: Swift package + iOS app
+    runs-on: macos-15
+    needs: golden
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_16.4.app || sudo xcode-select -s "$(ls -d /Applications/Xcode_16*.app | sort -V | tail -1)"
+          xcodebuild -version
+      - name: swift test (MixlingsKit)
+        working-directory: MixlingsKit
+        run: swift test
+      - name: Install XcodeGen
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+          HOMEBREW_NO_INSTALL_CLEANUP: "1"
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: App
+        run: xcodegen generate --spec project.yml
+      - name: Pick an iPhone simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j \
+            | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; ios=[(k,v) for k,v in d.items() if "iOS" in k]; ios.sort(key=lambda kv: [int(x) for x in kv[0].split("iOS-")[-1].split("-")]); print(next(x["udid"] for k,v in reversed(ios) for x in v if x["name"].startswith("iPhone")))')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: xcodebuild test
+        working-directory: App
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Mixlings.xcodeproj \
+            -scheme Mixlings \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee xcodebuild.log
+      - name: Upload test log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-log
+          path: App/xcodebuild.log
+          retention-days: 7

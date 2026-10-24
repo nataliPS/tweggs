@@ -1,0 +1,59 @@
+rules_version = '2';
+
+// Mixlings Firestore rules (docs/backend-spec.md "Security rules").
+// Clients READ only their own player doc and their own creatures.
+// ALL writes to players / creatures / offers / breeds / combos go through Cloud Functions
+// (Admin SDK bypasses rules). Reports and blocks are client-created and validated here.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isMe(uid) { return signedIn() && request.auth.uid == uid; }
+
+    match /players/{uid} {
+      allow get: if isMe(uid);
+      allow list, create, update, delete: if false;
+    }
+
+    match /creatures/{id} {
+      // `list` is allowed only for queries constrained to ownerUid == caller.
+      allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Offers, previews/breeds and combos are only ever returned by functions.
+    match /offers/{id}  { allow read, write: if false; }
+    match /breeds/{id}  { allow read, write: if false; }
+    match /combos/{key} { allow read, write: if false; }
+
+    // Report a creature name / player (retro C3). Create-only, validated shape; functions read.
+    match /reports/{id} {
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['reporterUid', 'reason', 'target', 'createdAt'])
+        && request.resource.data.reporterUid == request.auth.uid
+        && request.resource.data.reason in ['name', 'spam', 'abuse', 'other']
+        && request.resource.data.target is string
+        && request.resource.data.target.size() > 0
+        && request.resource.data.target.size() <= 128
+        && request.resource.data.createdAt == request.time;
+      allow read, update, delete: if false;
+    }
+
+    // Own block list. Owner may create/delete entries; nobody else sees them.
+    match /blocks/{uid}/list/{blockedUid} {
+      allow get, list: if isMe(uid);
+      allow create: if isMe(uid)
+        && blockedUid != uid
+        && request.resource.data.keys().hasOnly(['reason', 'target', 'createdAt'])
+        && request.resource.data.target == blockedUid
+        && (request.resource.data.reason is string && request.resource.data.reason.size() <= 32)
+        && request.resource.data.createdAt == request.time;
+      allow delete: if isMe(uid);
+      allow update: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
