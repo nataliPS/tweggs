@@ -90,6 +90,16 @@ enum ArtAdapter {
         #endif
     }
 
+    // MARK: Wellbeing (hooks for the artist)
+
+    /// "Breathe with me" frame for `phase` in 0...1 (0 = fully out, 1 = fully in).
+    /// TODO(art): return MixlingsArt breathing frames when they land. Nil = callers use
+    /// `scaleEffect` on the normal sprite.
+    static func breathingFrame(phase: Double, phenotype: Phenotype) -> CGImage? {
+        _ = min(max(phase, 0), 1)
+        return nil
+    }
+
     // MARK: Encodings (fix here if the art changes)
 
     #if MIXLINGS_ART_LIVING
@@ -136,6 +146,7 @@ enum ArtAdapter {
         case .stargazing: return LivingWorld.stargazing
         case .breakfast, .cooking, .dinner: return LivingWorld.breakfast
         case .homework, .backpack: return LivingWorld.homework
+        case .meditating, .windDown: return LivingWorld.napping
         }
     }
     #endif

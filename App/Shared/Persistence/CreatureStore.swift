@@ -40,10 +40,15 @@ struct ActiveSnapshot: Codable, Equatable, Sendable {
     var partner: Creature?
     /// Living world (§1): weather event id -> care item given (drawn while the event lasts).
     var givenItems: [String: Int]
+    /// Wellbeing: calm (meditating) pose until this moment, after a breathing session.
+    var calmUntil: Date?
+    /// Wellbeing: opt-in evening wind-down scene.
+    var windDown: Bool
 
     init(version: Int = ActiveSnapshot.currentVersion, creature: Creature? = nil,
          eggHatchesAt: Date? = nil, lastSurpriseDay: String? = nil, pendingCare: [CareEvent] = [],
-         partner: Creature? = nil, givenItems: [String: Int] = [:]) {
+         partner: Creature? = nil, givenItems: [String: Int] = [:], calmUntil: Date? = nil,
+         windDown: Bool = false) {
         self.version = version
         self.creature = creature
         self.eggHatchesAt = eggHatchesAt
@@ -51,10 +56,13 @@ struct ActiveSnapshot: Codable, Equatable, Sendable {
         self.pendingCare = pendingCare
         self.partner = partner
         self.givenItems = givenItems
+        self.calmUntil = calmUntil
+        self.windDown = windDown
     }
 
     private enum CodingKeys: String, CodingKey {
         case version, creature, eggHatchesAt, lastSurpriseDay, pendingCare, partner, givenItems
+        case calmUntil, windDown
     }
 
     init(from decoder: Decoder) throws {
@@ -67,6 +75,8 @@ struct ActiveSnapshot: Codable, Equatable, Sendable {
         pendingCare = (try? c.decodeIfPresent([LossyEvent].self, forKey: .pendingCare))?.compactMap(\.event) ?? []
         partner = try? c.decodeIfPresent(Creature.self, forKey: .partner)
         givenItems = (try? c.decodeIfPresent([String: Int].self, forKey: .givenItems)) ?? [:]
+        calmUntil = try? c.decodeIfPresent(Date.self, forKey: .calmUntil)
+        windDown = (try? c.decodeIfPresent(Bool.self, forKey: .windDown)) ?? false
     }
 
     private struct LossyEvent: Decodable {
@@ -80,7 +90,9 @@ struct ActiveSnapshot: Codable, Equatable, Sendable {
                   eggHatchesAt: c.flatMap { CareEngine.stage($0, at: now) == .egg ? CareEngine.hatchDate($0) : nil },
                   lastSurpriseDay: save.lastSurpriseDay,
                   partner: HousePair.partner(in: save, now: now),
-                  givenItems: save.living.givenItems)
+                  givenItems: save.living.givenItems,
+                  calmUntil: save.wellbeing.calmUntil,
+                  windDown: save.wellbeing.windDownEnabled)
     }
 }
 

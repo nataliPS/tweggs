@@ -196,7 +196,7 @@ enum LivingEngine {
             switch act.kind {
             case .sleeping: kind = act.scene.map { DiaryEntry.Kind.scene($0) } ?? DiaryEntry.Kind.slept
             case .weather: kind = .weather(act.weather)
-            case .pairScene, .routine, .focus: kind = act.scene.map { DiaryEntry.Kind.scene($0) }
+            case .pairScene, .routine, .focus, .calm: kind = act.scene.map { DiaryEntry.Kind.scene($0) }
             case .idle: kind = nil
             }
             if let kind, kind != last {

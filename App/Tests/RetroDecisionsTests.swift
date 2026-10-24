@@ -284,8 +284,10 @@ final class RetroDecisionsTests: XCTestCase {
         cal.timeZone = utc
         XCTAssertEqual(AgeGate.band(birthYear: 2014, now: noon, calendar: cal), .under13)  // 11 or 12
         XCTAssertEqual(AgeGate.band(birthYear: 2013, now: noon, calendar: cal), .under13)  // 12 or 13 -> safe side
-        XCTAssertEqual(AgeGate.band(birthYear: 2012, now: noon, calendar: cal), .teen13to17)
-        XCTAssertEqual(AgeGate.band(birthYear: 2008, now: noon, calendar: cal), .teen13to17) // 17 or 18
+        XCTAssertEqual(AgeGate.band(birthYear: 2012, now: noon, calendar: cal), .teen13to15) // 13 or 14
+        XCTAssertEqual(AgeGate.band(birthYear: 2010, now: noon, calendar: cal), .teen13to15) // 15 or 16 -> safe side
+        XCTAssertEqual(AgeGate.band(birthYear: 2009, now: noon, calendar: cal), .teen16to17) // 16 or 17
+        XCTAssertEqual(AgeGate.band(birthYear: 2008, now: noon, calendar: cal), .teen16to17) // 17 or 18
         XCTAssertEqual(AgeGate.band(birthYear: 2007, now: noon, calendar: cal), .adult18plus)
         XCTAssertEqual(AgeGate.selectableYears(now: noon, calendar: cal).first, 2026)
     }
@@ -295,7 +297,7 @@ final class RetroDecisionsTests: XCTestCase {
         XCTAssertFalse(save.socialAllowed)
         save.ageBand = .under13
         XCTAssertFalse(save.socialAllowed)
-        save.ageBand = .teen13to17
+        save.ageBand = .teen13to15
         XCTAssertTrue(save.socialAllowed)
     }
 

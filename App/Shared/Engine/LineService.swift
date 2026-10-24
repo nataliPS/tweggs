@@ -309,6 +309,8 @@ enum LineTemplates {
         .backpack: ["{name} packed the backpack.", "Backpack ready. Pencils too!"],
         .homework: ["{name} did homework with a tiny pencil.", "Homework done! High five."],
         .dinner: ["Dinner together. Soup!", "{name} and {other} shared dinner."],
+        .meditating: ["{name} sat very still and breathed slowly.", "A quiet, calm moment for {name}."],
+        .windDown: ["{name} yawned and dimmed the lights.", "A cosy evening. {name} got sleepy."],
     ]
     static let diaryUK: [LifeScene: [String]] = [
         .chess: ["{name} і {other} грали в шахи. Переміг {winner}!", "Довга партія в шахи. Переміг {winner}."],
@@ -322,6 +324,8 @@ enum LineTemplates {
         .backpack: ["{name} зібрав рюкзак.", "Рюкзак готовий. Олівці теж!"],
         .homework: ["{name} робив домашку крихітним олівцем.", "Домашку зроблено! Дай п'ять."],
         .dinner: ["Вечеря разом. Супчик!", "{name} і {other} разом повечеряли."],
+        .meditating: ["{name} тихенько сидів і повільно дихав.", "Тиха спокійна хвилинка для {name}."],
+        .windDown: ["{name} позіхнув і пригасив світло.", "Затишний вечір. {name} захотів спати."],
     ]
 
     static let diaryWeatherEN: [WeatherKind: [String]] = [

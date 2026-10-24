@@ -75,9 +75,17 @@ Build numbers: Xcode Cloud sets `CURRENT_PROJECT_VERSION` itself. Change `MARKET
 ## Living world (MVP, docs/living-world-spec.md)
 
 - `Shared/Engine/ActivityStateMachine.swift`: the one state machine (focus → night → weather → pair scene → daily routine; alive overlay). Pure; feeds Home, House, diary and the widget timeline (30 min × 12 h). Pair scenes are seeded with `fnv1a32("<pairId>|<localDay>")`.
+- **Dev mode weather:** `Shared/Engine/WeatherProvider.swift`. Without the `TWEGGS_WEATHERKIT` compilation flag (default; free Apple ID, WeatherKit entitlement commented out) the app uses `SimulatedWeatherProvider` (deterministic daily pattern seeded by `fnv1a32("sim-weather|<day>")`, sunrise 07:00 / sunset 19:00) and never imports or calls WeatherKit. DEBUG builds get a "Force weather" picker in Living world settings. To go live: re-enable the entitlement and append `TWEGGS_WEATHERKIT` to the app target's `SWIFT_ACTIVE_COMPILATION_CONDITIONS`.
 - `Shared/Engine/WeatherModel.swift` + `Sources/Living/WeatherService.swift`: opt-in WeatherKit, approximate When-In-Use location or a manual city, ≤ 1 fetch / 3 h (app open + BGAppRefresh), cached in the App Group as `weather.json` (the widget reads only the cache). Attribution in Home > More > Living world. Needs the WeatherKit capability + App Service on the App ID.
 - `Shared/Engine/LineService.swift`: en/uk templates + guardrails; on-device Foundation Models only on iOS 26 (`#if canImport(FoundationModels)`), filtered and capped. The AI label shows only for AI lines. ≤ 2 notifications/day (`NudgePlanner`).
 - `Shared/Engine/LivingEngine.swift`: weather care items (reward once per weather event), jump-rope rewards, idea bubbles (≤ 2/day), "While you were away" diary (≤ 6 entries + "…and more"), gene-based likes. New sparks go through `EconomyEngine.grantCappedSparks` (60/day across sources).
 - `Shared/Engine/ArtAdapter.swift`: the ONLY user of MixlingsArt's living-world API. Behind `MIXLINGS_ART_LIVING` (off): add it to SWIFT_ACTIVE_COMPILATION_CONDITIONS of app, widget and tests to draw weather/items/alive frames, rooms, the rope and Lock Screen glyphs; with it off, SwiftUI fallbacks are drawn.
 - Widget: tapping the creature pokes it (`PokeMixlingIntent`, a `pendingCare` event); new "Mixling house" widget (medium + Lock Screen accessories with a scene glyph).
 
+
+## Wellbeing "Хвилинка спокою" (MVP, docs/wellbeing-spec.md)
+
+- `Sources/Wellbeing/`: Calm screen (Home chip), Breathe with me (4-4 / 4-6, 1–2 min, optional haptic; sprite `scaleEffect` until `ArtAdapter.breathingFrame(phase:phenotype:)` returns art), Grounding 5-4-3-2-1 (tap only), "I'm having a hard time" (Home menu, Living world settings, Calm screen: breathe → grounding → helplines), opt-in evening wind-down.
+- Texts: `Resources/Wellbeing/WellbeingContent.json` (id, text_en, text_uk, reviewedBy, reviewedAt). DEBUG shows "Content pending expert review" until every item is signed off.
+- Helplines: `Resources/Wellbeing/Helplines.json`, static and offline. **TODO: verify numbers before release (Щит).** Empty number = not verified; the UI shows the name + https://findahelpline.com.
+- No sparks, items or AI; nothing leaves the device; only anonymous on-device open/completion counts (`SaveData.wellbeing`). After breathing the creature meditates for 30 min (`ActivityKind.calm`, also in the widget).

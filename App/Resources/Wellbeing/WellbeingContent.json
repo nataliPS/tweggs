@@ -1,0 +1,398 @@
+{
+  "_comment": "Wellbeing texts (docs/wellbeing-spec.md). Pipeline: Баланс draft -> research note -> Щит safety/legal -> external psychologist sign-off -> localization -> ship. Set reviewedBy/reviewedAt per item when signed off. DRAFT: not reviewed yet.",
+  "version": 1,
+  "items": [
+    {
+      "id": "calm.title",
+      "text_en": "A calm minute",
+      "text_uk": "Хвилинка спокою",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "calm.subtitle",
+      "text_en": "A little pause with your Mixling.",
+      "text_uk": "Маленька пауза разом із твоїм мікслінгом.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "calm.private",
+      "text_en": "No points, no scores. Just a calm moment that stays on your phone.",
+      "text_uk": "Без балів і рахунків. Лише спокійна хвилинка, яка лишається на твоєму телефоні.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.title",
+      "text_en": "Breathe with me",
+      "text_uk": "Дихай зі мною",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.intro",
+      "text_en": "Watch me puff up as you breathe in, and shrink as you breathe out.",
+      "text_uk": "Дивись: я надуваюся, коли ти вдихаєш, і зменшуюся, коли видихаєш.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.in",
+      "text_en": "Breathe in…",
+      "text_uk": "Вдих…",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.out",
+      "text_en": "Breathe out…",
+      "text_uk": "Видих…",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.rhythm",
+      "text_en": "Rhythm",
+      "text_uk": "Ритм",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.length",
+      "text_en": "Length",
+      "text_uk": "Тривалість",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.minutes1",
+      "text_en": "1 min",
+      "text_uk": "1 хв",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.minutes2",
+      "text_en": "2 min",
+      "text_uk": "2 хв",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.haptic",
+      "text_en": "Gentle vibration",
+      "text_uk": "Легка вібрація",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.start",
+      "text_en": "Start",
+      "text_uk": "Почати",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.stop",
+      "text_en": "Stop",
+      "text_uk": "Зупинити",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "breathe.done",
+      "text_en": "Nice and slow. Thanks for breathing with me.",
+      "text_uk": "Повільно і спокійно. Дякую, що ми подихали разом.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "calmer.question",
+      "text_en": "Feel a bit calmer?",
+      "text_uk": "Трохи спокійніше?",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "calmer.yes",
+      "text_en": "Yes",
+      "text_uk": "Так",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "calmer.no",
+      "text_en": "Not really",
+      "text_uk": "Не дуже",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "calmer.thanks",
+      "text_en": "Thanks for telling me.",
+      "text_uk": "Дякую за відповідь.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.title",
+      "text_en": "Look around with me",
+      "text_uk": "Озирнися зі мною",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.subtitle",
+      "text_en": "5-4-3-2-1",
+      "text_uk": "5-4-3-2-1",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.intro",
+      "text_en": "Let's notice things around us. Tap once for each thing you find. No typing.",
+      "text_uk": "Давай помічати речі довкола. Торкайся раз за кожну знахідку. Нічого писати не треба.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.see",
+      "text_en": "Find 5 things you can see.",
+      "text_uk": "Знайди 5 речей, які ти бачиш.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.touch",
+      "text_en": "Find 4 things you can touch.",
+      "text_uk": "Знайди 4 речі, яких можеш торкнутися.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.hear",
+      "text_en": "Find 3 things you can hear.",
+      "text_uk": "Знайди 3 звуки, які чуєш.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.smell",
+      "text_en": "Find 2 things you can smell.",
+      "text_uk": "Знайди 2 запахи, які відчуваєш.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.taste",
+      "text_en": "Find 1 thing you can taste.",
+      "text_uk": "Знайди 1 смак, який відчуваєш.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.tap",
+      "text_en": "Got one!",
+      "text_uk": "Є!",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "grounding.done",
+      "text_en": "You did it. We're right here, right now.",
+      "text_uk": "Готово. Ми тут, просто зараз.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "hardtime.button",
+      "text_en": "I'm having a hard time",
+      "text_uk": "Мені зараз важко",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "hardtime.intro",
+      "text_en": "I'm here with you. Let's take it one small step at a time.",
+      "text_uk": "Я поруч. Давай крок за кроком, потроху.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "hardtime.talkNow",
+      "text_en": "Talk to a person now",
+      "text_uk": "Поговорити з людиною зараз",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "hardtime.next",
+      "text_en": "Next",
+      "text_uk": "Далі",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "hardtime.skip",
+      "text_en": "Skip",
+      "text_uk": "Пропустити",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "hardtime.close",
+      "text_en": "Close",
+      "text_uk": "Закрити",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "helplines.title",
+      "text_en": "People who can help",
+      "text_uk": "Люди, які можуть допомогти",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "helplines.intro",
+      "text_en": "You don't have to handle this alone. Talking to a trusted adult or one of these lines can help.",
+      "text_uk": "Не треба справлятися з цим самотужки. Поговори з дорослим, якому довіряєш, або з однією з цих ліній.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "helplines.emergency",
+      "text_en": "If you are in danger right now, call the emergency number.",
+      "text_uk": "Якщо тобі зараз загрожує небезпека, телефонуй на номер екстреної допомоги.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "helplines.otherCountries",
+      "text_en": "Other countries",
+      "text_uk": "Інші країни",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "helplines.find",
+      "text_en": "Find a helpline in your country",
+      "text_uk": "Знайти лінію допомоги у твоїй країні",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "helplines.call",
+      "text_en": "Call",
+      "text_uk": "Подзвонити",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "helplines.website",
+      "text_en": "Website",
+      "text_uk": "Сайт",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "helplines.numberPending",
+      "text_en": "Number coming soon. Use the link below.",
+      "text_uk": "Номер скоро додамо. Скористайся посиланням нижче.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "helplines.private",
+      "text_en": "Nothing you do here is saved or shared.",
+      "text_uk": "Нічого з цього не зберігається і нікому не передається.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.title",
+      "text_en": "Evening wind-down",
+      "text_uk": "Вечірнє затишшя",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.toggle",
+      "text_en": "Add to the evening routine",
+      "text_uk": "Додати до вечірнього розпорядку",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.toggleFooter",
+      "text_en": "Around 8 pm your Mixling yawns and gets cosy. Off unless you turn it on.",
+      "text_uk": "Близько 20:00 твій мікслінг позіхає і вмощується. Вимкнено, доки ти не ввімкнеш.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.start",
+      "text_en": "Wind down now",
+      "text_uk": "Затишшя зараз",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.yawn",
+      "text_en": "Yaaawn…",
+      "text_uk": "Позі-і-іх…",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.goodnight",
+      "text_en": "Good night",
+      "text_uk": "На добраніч",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.thought.1",
+      "text_en": "Today was enough. Time to rest.",
+      "text_uk": "Сьогодні було досить. Можна відпочити.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.thought.2",
+      "text_en": "Something small went well today. That counts.",
+      "text_uk": "Сьогодні щось маленьке вдалося. Це важливо.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.thought.3",
+      "text_en": "Tomorrow is a fresh new page.",
+      "text_uk": "Завтра — нова чиста сторінка.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.thought.4",
+      "text_en": "Thank you for looking after me today.",
+      "text_uk": "Дякую за турботу сьогодні.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "winddown.thought.5",
+      "text_en": "Rest helps us grow.",
+      "text_uk": "Відпочинок допомагає рости.",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "review.pending",
+      "text_en": "Content pending expert review",
+      "text_uk": "Вміст очікує на перевірку фахівця",
+      "reviewedBy": null,
+      "reviewedAt": null
+    }
+  ]
+}

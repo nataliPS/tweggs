@@ -8,6 +8,8 @@ enum LifeScene: String, Codable, CaseIterable, Hashable, Sendable {
     case chess, painting, chatting, pillowFort, napping, cooking, stargazing
     // Daily routine (§13)
     case breakfast, backpack, homework, dinner
+    // Wellbeing (docs/wellbeing-spec.md): calm pose after "Breathe with me"; opt-in evening wind-down.
+    case meditating, windDown
 
     /// Daytime pair scenes, in the fixed order used by the seeded schedule. Never reorder
     /// (it would change every player's schedule); append only.
@@ -16,7 +18,7 @@ enum LifeScene: String, Codable, CaseIterable, Hashable, Sendable {
     var isPair: Bool {
         switch self {
         case .chess, .painting, .chatting, .pillowFort, .napping, .cooking, .stargazing: return true
-        case .breakfast, .backpack, .homework, .dinner: return false
+        case .breakfast, .backpack, .homework, .dinner, .meditating, .windDown: return false
         }
     }
 
@@ -33,6 +35,8 @@ enum LifeScene: String, Codable, CaseIterable, Hashable, Sendable {
         case .backpack: return "Packing the backpack"
         case .homework: return "Homework"
         case .dinner: return "Dinner"
+        case .meditating: return "Feeling calm"
+        case .windDown: return "Winding down"
         }
     }
 
@@ -49,6 +53,8 @@ enum LifeScene: String, Codable, CaseIterable, Hashable, Sendable {
         case .backpack: return "backpack.fill"
         case .homework: return "pencil.and.ruler.fill"
         case .dinner: return "fork.knife"
+        case .meditating: return "leaf.fill"
+        case .windDown: return "moon.haze.fill"
         }
     }
 }
@@ -63,7 +69,9 @@ enum AliveFrame: Int, Codable, Hashable, Sendable {
 
 /// What decided the current activity (priority order, §0).
 enum ActivityKind: String, Codable, Hashable, Sendable {
-    case focus, sleeping, weather, pairScene, routine, idle
+    /// `calm`: the creature meditates for `ActivityStateMachine.calmDuration` after a breathing
+    /// session (wellbeing-spec). Never rewarded, never shared.
+    case focus, sleeping, calm, weather, pairScene, routine, idle
 }
 
 struct Activity: Equatable, Hashable, Sendable {
@@ -90,21 +98,29 @@ struct ActivityContext: Sendable {
     var pairId: String?
     /// Focus mode until this moment (Beta, §6). Nil in MVP.
     var focusUntil: Date?
+    /// Calm pose until this moment (set when a breathing session finishes). Local only.
+    var calmUntil: Date?
+    /// Opt-in evening wind-down scene (wellbeing-spec). Off by default.
+    var windDown: Bool
 
     init(timeZone: TimeZone = .current, weather: WeatherSnapshot? = nil, device: DeviceSnapshot? = nil,
-         pairId: String? = nil, focusUntil: Date? = nil) {
+         pairId: String? = nil, focusUntil: Date? = nil, calmUntil: Date? = nil, windDown: Bool = false) {
         self.timeZone = timeZone
         self.weather = weather
         self.device = device
         self.pairId = pairId
         self.focusUntil = focusUntil
+        self.calmUntil = calmUntil
+        self.windDown = windDown
     }
 }
 
 /// The ONE activity state machine (§0). Pure: no clocks, no I/O; the app, the widget timeline,
 /// the diary and the tests all call the same functions.
 ///
-/// Priority: focus → night → weather → pair scene → daily routine (→ idle).
+/// Priority: focus → night → calm → weather → pair scene → daily routine (→ idle).
+/// Calm (after a breathing session) sits right below night: a creature that breathed with you
+/// at bedtime simply falls asleep.
 /// Alive frames (§13) are an overlay: low power nap > morning stretch > charging snack.
 enum ActivityStateMachine {
     /// Fallback night when no sunrise/sunset is cached: 21:00–07:00 local.
@@ -119,6 +135,10 @@ enum ActivityStateMachine {
     static let pairChance = 60
     /// Lower inside routine windows so breakfast / homework / dinner still show up.
     static let pairChanceDuringRoutine = 25
+    /// How long the creature meditates after "Breathe with me" (widget + Home).
+    static let calmDuration: TimeInterval = 30 * 60
+    /// Opt-in evening wind-down hour (local), shown as routine or as the first night scene.
+    static let windDownHour = 20
 
     // MARK: Now
 
@@ -143,22 +163,30 @@ enum ActivityStateMachine {
                localHour(date, context.timeZone) >= 12 {
                 scene = .stargazing
             }
+            if scene == nil, context.windDown, localHour(date, context.timeZone) == windDownHour {
+                scene = .windDown
+            }
             return Activity(kind: .sleeping, scene: scene, weather: .night, isNight: true,
                             alive: alive == .lowPower ? .lowPower : .none, holiday: holiday)
         }
-        // 3. Weather
+        // 3. Calm (after breathing)
+        if let c = context.calmUntil, date < c, c.timeIntervalSince(date) <= calmDuration {
+            return Activity(kind: .calm, scene: .meditating, weather: weatherNow, isNight: false,
+                            alive: alive, holiday: holiday)
+        }
+        // 4. Weather
         if weatherNow != .none {
             return Activity(kind: .weather, scene: nil, weather: weatherNow, isNight: false,
                             alive: alive, holiday: holiday)
         }
-        let routine = routineScene(at: date, timeZone: context.timeZone)
-        // 4. Pair scene
+        let routine = routineScene(at: date, timeZone: context.timeZone, windDown: context.windDown)
+        // 5. Pair scene
         if let pairId = context.pairId,
            let scene = pairScene(pairId: pairId, at: date, timeZone: context.timeZone, inRoutine: routine != nil) {
             return Activity(kind: .pairScene, scene: scene, weather: .none, isNight: false,
                             alive: alive, holiday: holiday)
         }
-        // 5. Daily routine
+        // 6. Daily routine
         if let routine {
             return Activity(kind: .routine, scene: routine, weather: .none, isNight: false,
                             alive: alive, holiday: holiday)
@@ -298,8 +326,8 @@ enum ActivityStateMachine {
     // MARK: Daily routine (§13)
 
     /// Breakfast 07–08 (weekends 07–09), backpack 08–09 on weekdays, homework 15–17 on weekdays,
-    /// dinner 18–20. Local time.
-    static func routineScene(at date: Date, timeZone: TimeZone) -> LifeScene? {
+    /// dinner 18–20, opt-in wind-down 20–21. Local time.
+    static func routineScene(at date: Date, timeZone: TimeZone, windDown: Bool = false) -> LifeScene? {
         var cal = Calendar(identifier: .gregorian)
         cal.timeZone = timeZone
         let h = cal.component(.hour, from: date)
@@ -310,6 +338,7 @@ enum ActivityStateMachine {
         case 8: return weekend ? .breakfast : .backpack
         case 15, 16: return weekend ? nil : .homework
         case 18, 19: return .dinner
+        case windDownHour: return windDown ? .windDown : nil
         default: return nil
         }
     }

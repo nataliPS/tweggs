@@ -1,6 +1,8 @@
 import Foundation
 import CoreLocation
+#if TWEGGS_WEATHERKIT
 import WeatherKit
+#endif
 import BackgroundTasks
 import WidgetKit
 import SwiftUI
@@ -10,7 +12,10 @@ import SwiftUI
 ///   player turns "Use my location" on; coordinates are rounded to 0.1° and never stored or sent
 ///   to our servers. Fallback: a city typed by hand (`ManualCity`, stored on device only).
 ///   No permission and no city = neutral weather.
-/// - Fetch: WeatherKit at most once per 3 h per device (on app open + BGAppRefresh).
+/// - Fetch: through a `WeatherProvider`, at most once per 3 h per device (app open + BGAppRefresh).
+///   `AppleWeatherProvider` (WeatherKit) exists ONLY when compiled with `TWEGGS_WEATHERKIT`;
+///   otherwise (dev mode, free Apple ID) `SimulatedWeatherProvider` is used and WeatherKit is
+///   not even linked, so it can never be called.
 /// - Cache: `weather.json` in the App Group; the widget reads only that cache.
 ///
 /// Named `LivingWeatherService` to avoid clashing with `WeatherKit.WeatherService`.
@@ -43,28 +48,25 @@ final class LivingWeatherService {
         inFlight = true
         defer { inFlight = false }
 
-        let place: (CLLocation, String?)?
-        if settings.useLocation, let loc = await location.currentLocation() {
-            place = (Self.coarse(loc), nil)
+        let provider = WeatherProviders.make()
+        var place: WeatherPlace?
+        // The simulated provider needs no place: never ask Core Location for it.
+        if provider.needsPlace, settings.useLocation, let loc = await location.currentLocation() {
+            let c = Self.coarse(loc)
+            place = WeatherPlace(latitude: c.coordinate.latitude, longitude: c.coordinate.longitude, name: nil)
         } else if let city = settings.manualCity {
-            place = (CLLocation(latitude: city.latitude, longitude: city.longitude), city.name)
-        } else {
-            place = nil
+            place = WeatherPlace(latitude: city.latitude, longitude: city.longitude, name: city.name)
         }
-        guard let place else { return cached }
-        let loc = place.0, name = place.1
+        if provider.needsPlace, place == nil { return cached }
         do {
-            let (current, hourly, daily) = try await WeatherService.shared.weather(
-                for: loc, including: .current, .hourly, .daily)
-            let snap = Self.snapshot(current: current, hourly: Array(hourly.forecast),
-                                     daily: Array(daily.forecast), placeName: name, now: now)
+            let snap = try await provider.snapshot(for: place, now: now, timeZone: .current)
             cache.saveWeather(snap)
             WidgetCenter.shared.reloadAllTimelines()
             scheduleBackgroundRefresh()
             return snap
         } catch {
             #if DEBUG
-            print("Weather fetch failed: \(error)")
+            print("Weather fetch failed (\(provider.kind)): \(error)")
             #endif
             return cached
         }
@@ -93,12 +95,44 @@ final class LivingWeatherService {
         return ManualCity(name: display, latitude: loc.coordinate.latitude, longitude: loc.coordinate.longitude)
     }
 
-    // MARK: Mapping (WeatherKit -> cache)
+    // MARK: Helpers
 
     static func coarse(_ loc: CLLocation) -> CLLocation {
         CLLocation(latitude: (loc.coordinate.latitude * 10).rounded() / 10,
                    longitude: (loc.coordinate.longitude * 10).rounded() / 10)
     }
+}
+
+extension WeatherProviders {
+    /// The provider for one refresh. WeatherKit only with `TWEGGS_WEATHERKIT`; never otherwise.
+    static func make() -> WeatherProvider {
+        #if TWEGGS_WEATHERKIT
+        return AppleWeatherProvider()
+        #else
+        return SimulatedWeatherProvider(forced: SimulatedWeatherOverride.current)
+        #endif
+    }
+}
+
+#if TWEGGS_WEATHERKIT
+/// Apple WeatherKit (§1). Needs the WeatherKit capability + App Service on the App ID and the
+/// `com.apple.developer.weatherkit` entitlement (commented out in project.yml in dev mode).
+struct AppleWeatherProvider: WeatherProvider {
+    struct MissingPlace: Error {}
+
+    var kind: WeatherProviderKind { .apple }
+    var needsPlace: Bool { true }
+
+    func snapshot(for place: WeatherPlace?, now: Date, timeZone: TimeZone) async throws -> WeatherSnapshot {
+        guard let place else { throw MissingPlace() }
+        let loc = CLLocation(latitude: place.latitude, longitude: place.longitude)
+        let (current, hourly, daily) = try await WeatherService.shared.weather(
+            for: loc, including: .current, .hourly, .daily)
+        return Self.snapshot(current: current, hourly: Array(hourly.forecast),
+                             daily: Array(daily.forecast), placeName: place.name, now: now, timeZone: timeZone)
+    }
+
+    // MARK: Mapping (WeatherKit -> cache)
 
     static func snapshot(current: CurrentWeather, hourly: [HourWeather], daily: [DayWeather],
                          placeName: String?, now: Date, timeZone: TimeZone = .current) -> WeatherSnapshot {
@@ -129,6 +163,7 @@ final class LivingWeatherService {
                                placeName: placeName)
     }
 }
+#endif
 
 /// One-shot approximate location, When-In-Use only.
 @MainActor
@@ -191,8 +226,9 @@ final class CoarseLocation: NSObject, CLLocationManagerDelegate {
 }
 
 /// Required WeatherKit attribution (Apple Weather mark + legal link), shown in Settings and
-/// wherever weather data is shown at length.
+/// wherever weather data is shown at length. In dev mode (simulated weather) it says so instead.
 struct WeatherAttributionView: View {
+    #if TWEGGS_WEATHERKIT
     @Environment(\.colorScheme) private var colorScheme
     @State private var attribution: WeatherAttribution?
 
@@ -210,11 +246,18 @@ struct WeatherAttributionView: View {
                 Link("Weather data sources", destination: attribution.legalPageURL)
                     .font(Theme.caption(12))
             } else {
-                Text(verbatim: " Weather").font(Theme.caption(12))
+                Text(verbatim: "\u{F8FF} Weather").font(Theme.caption(12))
             }
         }
         .task {
             attribution = try? await WeatherService.shared.attribution
         }
     }
+    #else
+    var body: some View {
+        Label("Simulated weather (dev mode)", systemImage: "cloud.sun")
+            .font(Theme.caption(12))
+            .foregroundStyle(Theme.inkSoft)
+    }
+    #endif
 }

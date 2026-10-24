@@ -19,7 +19,8 @@ extension GameModel {
         var pairId: String?
         if let a = active, let b = HousePair.partner(in: save, now: now) { pairId = HousePair.pairId(a, b) }
         return ActivityContext(timeZone: .current, weather: save.living.weatherEnabled ? weather : nil,
-                               device: device, pairId: pairId)
+                               device: device, pairId: pairId, calmUntil: save.wellbeing.calmUntil,
+                               windDown: save.wellbeing.windDownEnabled)
     }
 
     func activity(at now: Date = .now) -> Activity {

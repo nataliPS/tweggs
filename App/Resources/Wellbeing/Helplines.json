@@ -1,0 +1,204 @@
+{
+  "_todo": "TODO: verify numbers before release (Щит). Every number, name and website must be re-checked against the official source before each release. Empty number = not verified yet: show name + fallback link only. Never guess a number.",
+  "version": 1,
+  "verified": false,
+  "fallback": {
+    "name": "Find A Helpline",
+    "website": "https://findahelpline.com"
+  },
+  "countries": [
+    {
+      "code": "UA",
+      "emergency": "112",
+      "lines": [
+        {
+          "id": "ua.lifeline",
+          "name": "Lifeline Ukraine",
+          "number": "7333",
+          "website": null,
+          "kind": "crisis"
+        },
+        {
+          "id": "ua.children",
+          "name": "National children's hotline (La Strada-Ukraine)",
+          "number": "",
+          "website": null,
+          "kind": "youth"
+        }
+      ]
+    },
+    {
+      "code": "EE",
+      "emergency": "112",
+      "lines": [
+        {
+          "id": "ee.children",
+          "name": "Lasteabi (child helpline)",
+          "number": "116111",
+          "website": null,
+          "kind": "youth"
+        },
+        {
+          "id": "ee.support",
+          "name": "Emotional support line",
+          "number": "",
+          "website": null,
+          "kind": "crisis"
+        }
+      ]
+    },
+    {
+      "code": "LV",
+      "emergency": "112",
+      "lines": [
+        {
+          "id": "lv.children",
+          "name": "Child and youth helpline",
+          "number": "116111",
+          "website": null,
+          "kind": "youth"
+        },
+        {
+          "id": "lv.support",
+          "name": "Skalbes (emotional support)",
+          "number": "116123",
+          "website": null,
+          "kind": "crisis"
+        }
+      ]
+    },
+    {
+      "code": "LT",
+      "emergency": "112",
+      "lines": [
+        {
+          "id": "lt.children",
+          "name": "Vaikų linija (child helpline)",
+          "number": "116111",
+          "website": null,
+          "kind": "youth"
+        },
+        {
+          "id": "lt.support",
+          "name": "Vilties linija (emotional support)",
+          "number": "116123",
+          "website": null,
+          "kind": "crisis"
+        }
+      ]
+    },
+    {
+      "code": "PL",
+      "emergency": "112",
+      "lines": [
+        {
+          "id": "pl.children",
+          "name": "Telefon Zaufania dla Dzieci i Młodzieży",
+          "number": "116111",
+          "website": null,
+          "kind": "youth"
+        },
+        {
+          "id": "pl.support",
+          "name": "Kryzysowy Telefon Zaufania",
+          "number": "116123",
+          "website": null,
+          "kind": "crisis"
+        }
+      ]
+    },
+    {
+      "code": "DE",
+      "emergency": "112",
+      "lines": [
+        {
+          "id": "de.children",
+          "name": "Nummer gegen Kummer",
+          "number": "116111",
+          "website": null,
+          "kind": "youth"
+        },
+        {
+          "id": "de.support",
+          "name": "TelefonSeelsorge",
+          "number": "08001110111",
+          "website": null,
+          "kind": "crisis"
+        }
+      ]
+    },
+    {
+      "code": "GB",
+      "emergency": "999",
+      "lines": [
+        {
+          "id": "gb.samaritans",
+          "name": "Samaritans",
+          "number": "116123",
+          "website": "https://www.samaritans.org",
+          "kind": "crisis"
+        },
+        {
+          "id": "gb.childline",
+          "name": "Childline",
+          "number": "08001111",
+          "website": "https://www.childline.org.uk",
+          "kind": "youth"
+        }
+      ]
+    },
+    {
+      "code": "US",
+      "emergency": "911",
+      "lines": [
+        {
+          "id": "us.988",
+          "name": "988 Suicide & Crisis Lifeline",
+          "number": "988",
+          "website": "https://988lifeline.org",
+          "kind": "crisis"
+        }
+      ]
+    },
+    {
+      "code": "CA",
+      "emergency": "911",
+      "lines": [
+        {
+          "id": "ca.988",
+          "name": "988 Suicide Crisis Helpline",
+          "number": "988",
+          "website": null,
+          "kind": "crisis"
+        },
+        {
+          "id": "ca.kids",
+          "name": "Kids Help Phone",
+          "number": "18006686868",
+          "website": "https://kidshelpphone.ca",
+          "kind": "youth"
+        }
+      ]
+    },
+    {
+      "code": "AU",
+      "emergency": "000",
+      "lines": [
+        {
+          "id": "au.lifeline",
+          "name": "Lifeline",
+          "number": "131114",
+          "website": "https://www.lifeline.org.au",
+          "kind": "crisis"
+        },
+        {
+          "id": "au.kids",
+          "name": "Kids Helpline",
+          "number": "1800551800",
+          "website": "https://kidshelpline.com.au",
+          "kind": "youth"
+        }
+      ]
+    }
+  ]
+}

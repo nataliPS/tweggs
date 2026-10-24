@@ -3,8 +3,9 @@ import SwiftUI
 struct HomeView: View {
     @Environment(GameModel.self) private var model
 
-    enum Route: Hashable { case club, shop, odds, living }
+    enum Route: Hashable { case club, shop, odds, living, calm }
     @State private var route: Route?
+    @State private var showHardTime = false
 
     var body: some View {
         NavigationStack {
@@ -30,6 +31,14 @@ struct HomeView: View {
                         Button { route = .shop } label: { Label("Spark shop", systemImage: "bag.fill") }
                         Button { route = .odds } label: { Label("Odds", systemImage: "percent") }
                         Button { route = .living } label: { Label("Living world", systemImage: "cloud.sun.fill") }
+                        Divider()
+                        Button { route = .calm } label: {
+                            Label { Text(verbatim: WellbeingContent.shared.text("calm.title")) } icon: { Image(systemName: "leaf.fill") }
+                        }
+                        // Wellbeing: always reachable from the Home menu.
+                        Button { showHardTime = true } label: {
+                            Label { Text(verbatim: WellbeingContent.shared.text("hardtime.button")) } icon: { Image(systemName: "hand.raised.fill") }
+                        }
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .minTapTarget()
@@ -43,8 +52,10 @@ struct HomeView: View {
                 case .shop: CosmeticShopView()
                 case .odds: OddsView()
                 case .living: LivingSettingsView()
+                case .calm: CalmView()
                 }
             }
+            .fullScreenCover(isPresented: $showHardTime) { HardTimeFlow() }
         }
     }
 }
@@ -80,6 +91,8 @@ private struct HomeContent: View {
                     LikesRow(likes: Likes.derive(for: creature))
                     LivingLineBubble(creature: creature, activity: activity, now: now)
                 }
+                // Wellbeing: "Хвилинка спокою" chip near the creature (opt-in, never pushed).
+                CalmChip()
             }
             .card()
 

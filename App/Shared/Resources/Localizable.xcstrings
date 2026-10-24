@@ -967,6 +967,16 @@
         }
       }
     },
+    "Feeling calm": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Спокійно медитує"
+          }
+        }
+      }
+    },
     "Find all variants to earn the badge. Breeding with friends helps!": {
       "localizations": {
         "uk": {
@@ -2534,6 +2544,16 @@
         }
       }
     },
+    "Simulated weather (dev mode)": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Імітована погода (режим розробки)"
+          }
+        }
+      }
+    },
     "Skips 1 day of growing. Once a day.": {
       "localizations": {
         "uk": {
@@ -3112,6 +3132,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Поки тебе не було"
+          }
+        }
+      }
+    },
+    "Winding down": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готується до сну"
           }
         }
       }

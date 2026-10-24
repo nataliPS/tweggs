@@ -77,7 +77,8 @@ struct MixlingProvider: TimelineProvider {
         var pairId: String?
         if let a = snap?.creature, let b = snap?.partner { pairId = HousePair.pairId(a, b) }
         return ActivityContext(timeZone: .current, weather: LivingCache.shared.loadWeather(),
-                               device: LivingCache.shared.loadDevice(), pairId: pairId)
+                               device: LivingCache.shared.loadDevice(), pairId: pairId,
+                               calmUntil: snap?.calmUntil, windDown: snap?.windDown ?? false)
     }
 
     /// Pure, testable timeline builder. `lastSurpriseDay` drives the "surprise waiting" hint,

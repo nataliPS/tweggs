@@ -219,6 +219,8 @@ struct SaveData: Codable, Equatable, Sendable {
     /// Living world (weather items, spark cap, jump rope, pair life, settings). Additive field
     /// with a decode default; no version bump needed.
     var living: LivingState
+    /// Wellbeing (docs/wellbeing-spec.md): on-device only, never rewarded. Additive, decode default.
+    var wellbeing: WellbeingState
 
     init(
         version: Int = SaveData.currentVersion,
@@ -244,7 +246,8 @@ struct SaveData: Codable, Equatable, Sendable {
         reportedOffers: [String] = [],
         giftBabyDueAt: Date? = nil,
         appliedCareEventIds: [String] = [],
-        living: LivingState = LivingState()
+        living: LivingState = LivingState(),
+        wellbeing: WellbeingState = WellbeingState()
     ) {
         self.version = version
         self.playerId = playerId
@@ -270,6 +273,7 @@ struct SaveData: Codable, Equatable, Sendable {
         self.giftBabyDueAt = giftBabyDueAt
         self.appliedCareEventIds = appliedCareEventIds
         self.living = living
+        self.wellbeing = wellbeing
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -279,6 +283,7 @@ struct SaveData: Codable, Equatable, Sendable {
         case firstSharePromptShown, blockedSenders, reportedOffers
         case giftBabyDueAt, appliedCareEventIds
         case living
+        case wellbeing
     }
 
     init(from decoder: Decoder) throws {
@@ -309,6 +314,7 @@ struct SaveData: Codable, Equatable, Sendable {
         appliedCareEventIds = try c.decodeIfPresent([String].self, forKey: .appliedCareEventIds) ?? []
         // A malformed living block must never make the save unreadable.
         living = (try? c.decodeIfPresent(LivingState.self, forKey: .living)) ?? LivingState()
+        wellbeing = (try? c.decodeIfPresent(WellbeingState.self, forKey: .wellbeing)) ?? WellbeingState()
         if version < 2 { migrateToV2() }
         if version < 3 { migrateToV3() }
         // Additive v3 field (no version bump): fill from existing data once, then it is stored.
