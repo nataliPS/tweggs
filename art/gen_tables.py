@@ -6,9 +6,13 @@ import render as R
 ROWS = ["ZZZ_ROWS", "BANG", "BOLT", "SWEAT", "SUN", "MOON", "LEAF", "FLAKE", "UMBRELLA",
         "BOTTLE", "FAN", "SUN_HAT", "BEANIE", "JUICE", "HANDLE", "CLOUD", "PICTURE", "SHELF",
         "PLANT", "LAMP", "CHESS_TABLE", "EASEL", "PAINT_POT", "BUBBLE", "TELESCOPE",
-        "BREAKFAST_TABLE", "PLATE_FOOD", "EGG_PLATE", "DESK", "BIG_CLOUD", "DIZZY", "STARBURST"]
+        "BREAKFAST_TABLE", "PLATE_FOOD", "EGG_PLATE", "DESK", "BIG_CLOUD", "DIZZY", "STARBURST",
+        "CALM_CUSHION", "CALM_LEAF", "CALM_SPARK", "WD_LAMP", "WD_TABLE", "WD_PILLOW", "WD_Z"]
 PTS = ["RAIN_DROPS", "SNOW_FLAKES", "SHEEN", "WIN_STARS", "WIN_RAIN", "WIN_SNOW",
-       "YARD_CLOUDS", "YARD_TUFTS"]
+       "YARD_CLOUDS", "YARD_TUFTS", "CALM_LEAF_PATH", "CALM_SPARKS", "CALM_DOTS", "BREATH_GROW",
+       "WD_FACE"]
+INTS = ["CALM_FLOAT", "BREATH_LEVEL"]
+RGBS = ["CALM_GROUND", "CALM_INK", "WD_GLOW"]
 TRI = ["WIND_LINES", "EASEL_DABS"]
 
 
@@ -46,6 +50,14 @@ def ts():
         o.append(f"export const {n}: RGB = {list(getattr(R, n))!r};")
     o.append(f"export const JR_LOOP: number[][] = {[list(t) for t in R.JR_LOOP]!r};")
     o.append(f"export const JR_HEIGHT: number[] = {R.JR_HEIGHT!r};")
+    for n in INTS:
+        o.append(f"export const {n}: number[] = {getattr(R, n)!r};")
+    for n in RGBS:
+        o.append(f"export const {n}: RGB = {list(getattr(R, n))!r};")
+    o.append("export const WD_DIM: RGB[] = " + repr([list(c) for c in R.WD_DIM]) + ";")
+    o.append("export const CALM_SKY: [number, RGB][] = "
+             + repr([[y, list(c)] for y, c in R.CALM_SKY]) + ";")
+    o.append('export const WD_BULB = "' + "".join(R.WD_BULB[i] for i in range(R.WD_FRAMES)) + '";')
     return "\n".join(o) + "\n"
 
 
@@ -92,6 +104,13 @@ def swift():
         o.append(f"let {n} = {sw_rgb(getattr(R, n))}")
     o.append("let JR_LOOP: [(Int, Int)] = [" + ", ".join(f"({a}, {b})" for a, b in R.JR_LOOP) + "]")
     o.append(f"let JR_HEIGHT: [Int] = {R.JR_HEIGHT!r}")
+    for n in INTS:
+        o.append(f"let {n}: [Int] = {getattr(R, n)!r}")
+    for n in RGBS:
+        o.append(f"let {n} = {sw_rgb(getattr(R, n))}")
+    o.append("let WD_DIM: [RGB] = [" + ", ".join(sw_rgb(c) for c in R.WD_DIM) + "]")
+    o.append("let CALM_SKY: [(Int, RGB)] = [" + ", ".join(f"({y}, {sw_rgb(c)})" for y, c in R.CALM_SKY) + "]")
+    o.append("let WD_BULB: [Character] = [" + ", ".join(f'"{R.WD_BULB[i]}"' for i in range(R.WD_FRAMES)) + "]")
     return "\n".join(o) + "\n"
 
 

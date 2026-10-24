@@ -11,7 +11,7 @@ private struct RenderGolden: Decodable {
         let rgba_hex: String
     }
     struct Scene: Decodable {
-        let kind: String           // "room" | "jumprope" | "glyph"
+        let kind: String           // "room" | "jumprope" | "calm" | "winddown" | "glyph"
         let pair: [Phenotype]?
         let scene: Int?
         let time_of_day: Int?
@@ -63,7 +63,7 @@ final class GoldenRenderTests: XCTestCase {
     func testGoldenRendersPixelIdentical() throws {
         let golden = try loadGolden()
         XCTAssertEqual(golden.size, MixlingsRenderer.size)
-        XCTAssertEqual(golden.cases.count, 215) // 146 approved v2 + 69 living-world
+        XCTAssertEqual(golden.cases.count, 257) // 146 approved v2 + 69 living-world + 42 breathing
         var matched = 0
         for (i, c) in golden.cases.enumerated() {
             guard let want = decodeHex(c.rgba_hex) else {
@@ -89,7 +89,7 @@ final class GoldenRenderTests: XCTestCase {
 
     func testGoldenScenesPixelIdentical() throws {
         let golden = try loadGolden()
-        XCTAssertEqual(golden.scenes.count, 63)
+        XCTAssertEqual(golden.scenes.count, 112) // 55 room/rope + 48 calm/wind-down + 9 glyphs
         var matched = 0
         for (i, sc) in golden.scenes.enumerated() {
             guard let want = decodeHex(sc.rgba_hex) else { XCTFail("scene \(i): bad rgba_hex"); continue }
@@ -102,6 +102,10 @@ final class GoldenRenderTests: XCTestCase {
                                                   furniture: sc.furniture!)
             case "jumprope":
                 got = MixlingsRenderer.renderJumpRope(sc.pheno!, frame: sc.frame!)
+            case "calm":
+                got = MixlingsRenderer.renderCalm(sc.pheno!, frame: sc.frame!)
+            case "winddown":
+                got = MixlingsRenderer.renderWindDown(sc.pheno!, frame: sc.frame!)
             default:
                 got = MixlingsRenderer.renderGlyph(scene: sc.scene!)
             }
@@ -127,6 +131,71 @@ final class GoldenRenderTests: XCTestCase {
         XCTAssertEqual(Set(golden.scenes.filter { $0.kind == "room" }.compactMap { $0.scene }), Set(0..<LivingWorld.sceneCount))
         XCTAssertEqual(Set(golden.scenes.filter { $0.kind == "jumprope" }.compactMap { $0.frame }), Set(0..<LivingWorld.jumpRopeFrames))
         XCTAssertEqual(golden.scenes.filter { $0.kind == "glyph" }.count, LivingWorld.glyphCount)
+    }
+
+    func testGoldenCoversWellbeing() throws {
+        let golden = try loadGolden()
+        XCTAssertEqual(Set(golden.cases.map { $0.pheno.breath }), Set(-1..<LivingWorld.breathPhases))
+        XCTAssertTrue(golden.cases.contains { $0.pheno.breath >= 0 && $0.silhouette == true })
+        XCTAssertEqual(Set(golden.scenes.filter { $0.kind == "calm" }.compactMap { $0.frame }), Set(0..<LivingWorld.calmFrames))
+        XCTAssertEqual(Set(golden.scenes.filter { $0.kind == "winddown" }.compactMap { $0.frame }), Set(0..<LivingWorld.windDownFrames))
+        XCTAssertTrue(golden.scenes.contains { $0.kind == "glyph" && $0.scene == LivingWorld.calmGlyph })
+    }
+
+    func testBreathDefaultsOffAndKeepsV2Render() throws {
+        let p = Phenotype(body: 0, eyes: 1, head: 2, pattern: 3, tail: 1, palette: 4, aura: 2, seed: 5)
+        XCTAssertEqual(p.breath, -1)
+        let json = #"{"body":1,"eyes":2,"head":3,"pattern":4,"tail":5,"palette":6,"aura":1}"#
+        XCTAssertEqual(try JSONDecoder().decode(Phenotype.self, from: Data(json.utf8)).breath, -1)
+        // phases 0 and 7 are the resting body with open eyes: same pixels as breathing off
+        for b in [0, 7] {
+            var q = p
+            q.breath = b
+            XCTAssertEqual(MixlingsRenderer.render(q), MixlingsRenderer.render(p), "phase \(b)")
+        }
+    }
+
+    func testBreathInflatesSymmetrically() {
+        // inhale grows the body (distinct masks, never image scaling) and exhale mirrors it
+        let base = Phenotype(body: 0, eyes: 0, head: 0, pattern: 0, tail: 0, palette: 0, aura: 0)
+        func opaque(_ b: Int) -> Int {
+            var q = base
+            q.breath = b
+            let s = MixlingsRenderer.renderSilhouette(q).rgba
+            return stride(from: 3, to: s.count, by: 4).filter { s[$0] == 255 }.count
+        }
+        let n = (0..<LivingWorld.breathPhases).map(opaque)
+        XCTAssertLessThan(n[0], n[1])
+        XCTAssertLessThan(n[2], n[3])
+        XCTAssertEqual(n[3], n[4])
+        for k in 0..<4 { XCTAssertEqual(n[k], n[7 - k], "exhale mirrors inhale at \(k)") }
+    }
+
+    func testCalmAndWindDownScenes() {
+        let p = Phenotype(body: 2, eyes: 4, head: 1, pattern: 2, tail: 3, palette: 9, aura: 1, seed: 3)
+        for f in 0..<LivingWorld.calmFrames {
+            let c = MixlingsRenderer.renderCalm(p, frame: f)
+            XCTAssertEqual(c.width, 64); XCTAssertEqual(c.height, 48)
+            XCTAssertTrue(stride(from: 3, to: c.rgba.count, by: 4).allSatisfy { c.rgba[$0] == 255 }, "calm is opaque")
+        }
+        XCTAssertNotEqual(MixlingsRenderer.renderCalm(p, frame: 0), MixlingsRenderer.renderCalm(p, frame: 2))
+        var frames: [PixelBuffer] = []
+        for f in 0..<LivingWorld.windDownFrames {
+            let w = MixlingsRenderer.renderWindDown(p, frame: f)
+            XCTAssertEqual(w.rgba.count, 64 * 48 * 4)
+            frames.append(w)
+        }
+        // the room keeps dimming: total brightness falls frame by frame
+        var lum: [Int] = []
+        for b in frames {
+            var sum = 0
+            for i in stride(from: 0, to: b.rgba.count, by: 4) { sum += Int(b.rgba[i]) + Int(b.rgba[i + 1]) + Int(b.rgba[i + 2]) }
+            lum.append(sum)
+        }
+        for k in 1..<lum.count { XCTAssertLessThan(lum[k], lum[k - 1]) }
+        let g = MixlingsRenderer.renderGlyph(scene: LivingWorld.calmGlyph)
+        XCTAssertEqual(g.width, 16)
+        XCTAssertTrue(g.rgba.contains(255))
     }
 
     func testLivingWorldDefaultsKeepV2Render() {

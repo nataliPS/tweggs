@@ -28,6 +28,14 @@ export const LW: Record<string, RGB> = {
   "l": [255, 244, 200],
   "T": [214, 120, 80],
   "U": [170, 88, 60],
+  "v": [214, 202, 246],
+  "V": [178, 162, 226],
+  "h": [255, 236, 188],
+  "H": [255, 214, 150],
+  "d": [176, 170, 190],
+  "D": [128, 122, 146],
+  "f": [168, 214, 176],
+  "F": [116, 176, 134],
 };
 export const ZZZ_ROWS: string[] = ["pppp...", "..p....", ".p.....", "pppp...", "....ppp", ".....p.", "....ppp"];
 export const BANG: string[] = [".ooooo.", "owwrwwo", "owwrwwo", "owwrwwo", "owwwwwo", "owwrwwo", ".ooooo.", "..oo...", ".o....."];
@@ -61,8 +69,15 @@ export const DESK: string[] = ["......ooooo.....", "....oyyyyyo.....", "...oyyyy
 export const BIG_CLOUD: string[] = ["..www...", ".wwwww..", "wwwwwwww"];
 export const DIZZY: string[] = [".y.", "y.y", ".y."];
 export const STARBURST: string[] = ["..y..", "..y..", "yyYyy", "..y..", "..y.."];
+export const CALM_CUSHION: string[] = ["...oooooooooooooooooo...", ".oovvvvvvvvvvvvvvvvvvoo.", "ovvvvvvvvvvvvvvvvvvvvvvo", "oVvvvvvvvvvvvvvvvvvvvvVo", ".oVVVVVVVVVVVVVVVVVVVVo.", "...oooooooooooooooooo..."];
+export const CALM_LEAF: string[] = ["..fF", ".ffF", "ffF.", "F..."];
+export const CALM_SPARK: string[] = [".w.", "whw", ".w."];
+export const WD_LAMP: string[] = ["..ooooo..", ".ohhhhho.", "ohhhhhhho", "ooooooooo", "....o....", "....o....", "....o....", "..ooooo.."];
+export const WD_TABLE: string[] = ["oooooooooooo", "onnnnnnnnnno", "oNNNNNNNNNNo", ".oNo....oNo.", ".oNo....oNo.", ".oNo....oNo.", ".ooo....ooo."];
+export const WD_PILLOW: string[] = [".oooooooooooooooooooooo.", "owwwwwwwwwwwwwwwwwwwwwwo", "oeeeeeeeeeeeeeeeeeeeeeeo", ".oooooooooooooooooooooo."];
+export const WD_Z: string[] = ["vvvv", "..v.", ".v..", "vvvv", "......vvv", ".......v.", "......vvv"];
 export const EMOTES: string[][] = [[".r.r.", "rrrrr", "rrrrr", ".rrr.", "..r.."], ["..PP.", "..P.P", "..P..", "PPP..", "PPP.."], ["..y..", ".yyy.", "yyyyy", ".y.y.", "y...y"], ["k...k", ".....", "k...k", ".kkk.", "....."], [".kkk.", "k...k", "...k.", "..k..", "..k.."], ["g...g", ".g.g.", "..g..", ".g.g.", "g...g"]];
-export const GLYPHS: string[][] = [["................", "......XX........", ".....XXXX.......", "....XXXXXX......", "...XXX.XXXX.....", "..XXXXXXXXXX....", "..XXXXXXXXXX....", "...XX..XXXXX....", ".......XXXXX....", "......XXXXXX....", ".....XXXXXXX....", ".....XXXXXX.....", "....XXXXXXXX....", "...XXXXXXXXXX...", "...XXXXXXXXXX...", "................"], ["................", ".......XX.......", "..XXXXXXXXXXXX..", "..X..........X..", "..X.XX.......X..", "..X.XX...XX..X..", "..X.....XXX..X..", "..X..XXX.....X..", "..X..........X..", "..XXXXXXXXXXXX..", "....XX....XX....", "....XX....XX....", "...XX......XX...", "...XX......XX...", "..XX........XX..", "................"], ["................", ".XXXXXXXX.......", "XXXXXXXXXX......", "XX.X.X.XXX......", "XXXXXXXXXX......", ".XXXXXXXX.......", "..XX....XXXXXXX.", "..X....XXXXXXXXX", ".......XXX.X.XXX", ".......XXXXXXXXX", "........XXXXXXX.", "............XX..", ".............X..", "................", "................", "................"], ["................", ".........XXXXX..", "............X...", "...........X....", "..........XXXXX.", "......XXX.......", ".......X........", "......XXX.......", "................", "................", "..XXXXXXXXXXXX..", ".XXXXXXXXXXXXXX.", ".XX..........XX.", ".XXXXXXXXXXXXXX.", "..XXXXXXXXXXXX..", "................"], ["................", "..........X.....", "....XXX...X.....", "...XXX..XXXXX...", "..XXX.....X.....", "..XXX.....X.....", "..XXX...........", "..XXXX.......X..", "...XXXXX.....X..", "....XXXX...XXXXX", ".............X..", "......X......X..", ".....XXX........", "......X.........", "................", "................"], ["................", "....X..X..X.....", ".....X..X..X....", "....X..X..X.....", "................", "..XXXXXXXXXX....", "..XXXXXXXXXXXXX.", "..XXXXXXXXXX..X.", "..XXXXXXXXXX..X.", "..XXXXXXXXXXXXX.", "..XXXXXXXXXX....", "...XXXXXXXX.....", "XXXXXXXXXXXXXXX.", ".XXXXXXXXXXXXX..", "................", "................"], ["................", "............XX..", "...........XXX..", "..........XXX...", ".........XXX....", "........XXX.....", ".......XX.......", "................", ".XXXXX....XXXXX.", "XX...XX..XX...XX", "XX.XX.XXXX.XX.XX", "XX....XXXX....XX", "XX.XX.XXXX.XX.XX", "XXXXXXXXXXXXXXXX", ".......XX.......", "................"], ["................", ".....XXXXXX.....", "...XX......XX...", "..X..........X..", ".X....XXXX....X.", ".X...XXXXXX...X.", "XX...X.XX.X...XX", "XX...XXXXXX...XX", "XX...XXXXXX...XX", "X....XXXXXX....X", ".....XX..XX.....", "................", "...XXXXXXXXXX...", "................", "................", "................"]];
+export const GLYPHS: string[][] = [["................", "......XX........", ".....XXXX.......", "....XXXXXX......", "...XXX.XXXX.....", "..XXXXXXXXXX....", "..XXXXXXXXXX....", "...XX..XXXXX....", ".......XXXXX....", "......XXXXXX....", ".....XXXXXXX....", ".....XXXXXX.....", "....XXXXXXXX....", "...XXXXXXXXXX...", "...XXXXXXXXXX...", "................"], ["................", ".......XX.......", "..XXXXXXXXXXXX..", "..X..........X..", "..X.XX.......X..", "..X.XX...XX..X..", "..X.....XXX..X..", "..X..XXX.....X..", "..X..........X..", "..XXXXXXXXXXXX..", "....XX....XX....", "....XX....XX....", "...XX......XX...", "...XX......XX...", "..XX........XX..", "................"], ["................", ".XXXXXXXX.......", "XXXXXXXXXX......", "XX.X.X.XXX......", "XXXXXXXXXX......", ".XXXXXXXX.......", "..XX....XXXXXXX.", "..X....XXXXXXXXX", ".......XXX.X.XXX", ".......XXXXXXXXX", "........XXXXXXX.", "............XX..", ".............X..", "................", "................", "................"], ["................", ".........XXXXX..", "............X...", "...........X....", "..........XXXXX.", "......XXX.......", ".......X........", "......XXX.......", "................", "................", "..XXXXXXXXXXXX..", ".XXXXXXXXXXXXXX.", ".XX..........XX.", ".XXXXXXXXXXXXXX.", "..XXXXXXXXXXXX..", "................"], ["................", "..........X.....", "....XXX...X.....", "...XXX..XXXXX...", "..XXX.....X.....", "..XXX.....X.....", "..XXX...........", "..XXXX.......X..", "...XXXXX.....X..", "....XXXX...XXXXX", ".............X..", "......X......X..", ".....XXX........", "......X.........", "................", "................"], ["................", "....X..X..X.....", ".....X..X..X....", "....X..X..X.....", "................", "..XXXXXXXXXX....", "..XXXXXXXXXXXXX.", "..XXXXXXXXXX..X.", "..XXXXXXXXXX..X.", "..XXXXXXXXXXXXX.", "..XXXXXXXXXX....", "...XXXXXXXX.....", "XXXXXXXXXXXXXXX.", ".XXXXXXXXXXXXX..", "................", "................"], ["................", "............XX..", "...........XXX..", "..........XXX...", ".........XXX....", "........XXX.....", ".......XX.......", "................", ".XXXXX....XXXXX.", "XX...XX..XX...XX", "XX.XX.XXXX.XX.XX", "XX....XXXX....XX", "XX.XX.XXXX.XX.XX", "XXXXXXXXXXXXXXXX", ".......XX.......", "................"], ["................", ".....XXXXXX.....", "...XX......XX...", "..X..........X..", ".X....XXXX....X.", ".X...XXXXXX...X.", "XX...X.XX.X...XX", "XX...XXXXXX...XX", "XX...XXXXXX...XX", "X....XXXXXX....X", ".....XX..XX.....", "................", "...XXXXXXXXXX...", "................", "................", "................"], ["................", "............X...", "...X.......XXX..", "..XXX.......X...", "...X............", "......XXXX......", "....XXXXXXXX....", "...XXXXXXXXXX...", "...X.X.XX.X.X...", "...XX.XXXX.XX...", "..XXXXXXXXXXXX..", ".X..XXXXXXXX..X.", "X....XXXXXX....X", ".XXXXXXXXXXXXXX.", "..XXXXXXXXXXXX..", "................"]];
 export const BULBS: string[] = ["r", "y", "b", "g", "m"];
 export const RAIN_DROPS: number[][] = [[2, 3], [7, 9], [12, 1], [27, 4], [22, 0], [29, 12], [3, 17], [25, 18], [18, 6], [5, 24], [28, 23], [10, 13]];
 export const SNOW_FLAKES: number[][] = [[3, 4], [10, 1], [27, 3], [22, 9], [29, 15], [2, 13], [6, 21], [27, 24], [17, 2]];
@@ -72,6 +87,11 @@ export const WIN_RAIN: number[][] = [[27, 5], [31, 8], [35, 6], [29, 11], [37, 1
 export const WIN_SNOW: number[][] = [[27, 6], [32, 5], [36, 8], [29, 10], [34, 12], [37, 14], [26, 14], [31, 13]];
 export const YARD_CLOUDS: number[][] = [[6, 5], [44, 9]];
 export const YARD_TUFTS: number[][] = [[4, 43], [13, 46], [22, 42], [40, 45], [51, 42], [59, 46], [33, 47]];
+export const CALM_LEAF_PATH: number[][] = [[9, 10], [10, 12], [9, 14], [8, 12]];
+export const CALM_SPARKS: number[][] = [[50, 8], [54, 20], [12, 24], [46, 30]];
+export const CALM_DOTS: number[][] = [[6, 6], [58, 5], [31, 2], [3, 34], [60, 36]];
+export const BREATH_GROW: number[][] = [[0, 0], [0, 1], [1, 2]];
+export const WD_FACE: number[][] = [[11, 3], [11, 4], [9, 0], [9, 0]];
 export const WIND_LINES: number[][] = [[0, 8, 6], [1, 15, 4], [0, 21, 5], [2, 26, 3]];
 export const EASEL_DABS: number[][] = [[3, 3, 0], [4, 3, 0], [3, 4, 0], [7, 3, 1], [8, 3, 1], [8, 4, 1], [5, 5, 2], [6, 5, 2], [5, 6, 2], [9, 6, 3], [10, 6, 3], [4, 7, 3]];
 export const YARD_FLOWERS: [number, number, string][] = [[8, 38, "r"], [56, 39, "y"], [47, 44, "m"]];
@@ -105,3 +125,11 @@ export const NIGHT_TINT: RGB = [176, 168, 224];
 export const CREATURE_NIGHT: RGB = [224, 220, 244];
 export const JR_LOOP: number[][] = [[0, 0], [1, 1], [2, 2], [3, 1]];
 export const JR_HEIGHT: number[] = [0, 2, 5];
+export const CALM_FLOAT: number[] = [0, 1, 2, 1];
+export const BREATH_LEVEL: number[] = [0, 1, 1, 2, 2, 1, 1, 0];
+export const CALM_GROUND: RGB = [236, 226, 238];
+export const CALM_INK: RGB = [150, 134, 196];
+export const WD_GLOW: RGB = [255, 232, 176];
+export const WD_DIM: RGB[] = [[236, 228, 244], [210, 200, 232], [178, 166, 216], [140, 128, 196]];
+export const CALM_SKY: [number, RGB][] = [[0, [224, 214, 248]], [12, [232, 220, 248]], [22, [240, 226, 244]], [30, [246, 232, 238]]];
+export const WD_BULB = "HHhd";

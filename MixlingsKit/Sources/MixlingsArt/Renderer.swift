@@ -32,20 +32,24 @@ public struct Phenotype: Hashable, Sendable, Codable {
     /// Widget-alive frame: 0 none, 1 charging (juice box), 2 low power (blanket nap),
     /// 3 morning stretch ("!" bubble).
     public var alive: Int
+    /// Breathing phase (docs/wellbeing-spec.md "Breathe with me"): 0...7 = inhale 0-3,
+    /// exhale 4-7 (the body inflates up to +2 px and the eyes softly close); -1 = off.
+    public var breath: Int
 
     public init(body: Int, eyes: Int, head: Int, pattern: Int, tail: Int,
                 palette: Int, aura: Int, shift: Int = 0, seed: Int = 0,
                 mood: Int = 0, stage: Int = 3,
-                weather: Int = 0, item: Int = 0, alive: Int = 0) {
+                weather: Int = 0, item: Int = 0, alive: Int = 0, breath: Int = -1) {
         self.body = body; self.eyes = eyes; self.head = head; self.pattern = pattern
         self.tail = tail; self.palette = palette; self.aura = aura; self.shift = shift; self.seed = seed
         self.mood = mood; self.stage = stage
         self.weather = weather; self.item = item; self.alive = alive
+        self.breath = breath
     }
 
     private enum CodingKeys: String, CodingKey {
         case body, eyes, head, pattern, tail, palette, aura, shift, seed, mood, stage
-        case weather, item, alive
+        case weather, item, alive, breath
     }
 
     /// Everything after `aura` is optional in JSON (defaults as in Python).
@@ -65,6 +69,7 @@ public struct Phenotype: Hashable, Sendable, Codable {
         weather = try c.decodeIfPresent(Int.self, forKey: .weather) ?? 0
         item = try c.decodeIfPresent(Int.self, forKey: .item) ?? 0
         alive = try c.decodeIfPresent(Int.self, forKey: .alive) ?? 0
+        breath = try c.decodeIfPresent(Int.self, forKey: .breath) ?? -1
     }
 }
 
@@ -188,9 +193,35 @@ func bodyBaby(_ v: Int) -> Mask { // ~60 %
     }
 }
 
-func bodyMask(_ v: Int, _ stage: Int) -> Mask {
+func bodyShape(_ v: Int, _ stage: Int) -> Mask {
     if stage == EGG { return rowsMask(EGG_ROWS.y0, EGG_ROWS.halves) }
-    var m = stage == ADULT ? bodyAdult(v) : (stage == TEEN ? bodyTeen(v) : bodyBaby(v))
+    return stage == ADULT ? bodyAdult(v) : (stage == TEEN ? bodyTeen(v) : bodyBaby(v))
+}
+
+/// Breathing: inflate a mask (a new mask, not image scaling). Feet stay on the ground, the
+/// rows above the middle rise by `dh` (the middle row fills the gap), then every row widens
+/// by `side` px on both sides.
+func growMask(_ m: Mask, _ side: Int, _ dh: Int) -> Mask {
+    let pts = m.sortedPoints()
+    let top = pts.map { $0.y }.min()!, bot = pts.map { $0.y }.max()!
+    let ref = top + floorDiv(bot - top, 2)
+    func add(_ o: inout Mask, _ x: Int, _ y: Int) { if x >= 0 && x < S && y >= 0 && y < S { o.insert(x, y) } }
+    var mid = Mask()
+    for p in pts {
+        if p.y >= ref { add(&mid, p.x, p.y) }
+        if p.y <= ref { add(&mid, p.x, p.y - dh) }
+        if p.y == ref && dh > 1 { for k in 1..<dh { add(&mid, p.x, p.y - k) } }
+    }
+    if side == 0 { return mid }
+    var out = Mask()
+    for p in mid.sortedPoints() { for d in -side...side { add(&out, p.x + d, p.y) } }
+    return out
+}
+
+func bodyMask(_ v: Int, _ stage: Int, _ level: Int = 0) -> Mask {
+    var m = bodyShape(v, stage)
+    if level != 0 { m = growMask(m, BREATH_GROW[level].0, BREATH_GROW[level].1) }
+    if stage == EGG { return m }
     // little feet
     var bottom = -1
     for p in m.sortedPoints() { bottom = max(bottom, p.y) }
@@ -265,6 +296,7 @@ func roleFor(_ ch: Character) -> Role {
     case "K": return .eye
     case "W": return .white
     case "M": return .mouth
+    case "R": return .blush
     default: return .outline
     }
 }
@@ -283,15 +315,22 @@ let EYES: [Int: Sprite] = [
     8: sprite(["..K", "KK.", "..K"]),                                 // squint (heat)
     9: sprite(["K..K", ".KK."]),                                      // closed, asleep
     10: sprite(["K....K", ".KKKK."]),                                 // closed cyclops
+    11: sprite(["KKKK"]),                                             // soft half-closed lid (breathing)
+    12: sprite(["KKKKKK"]),                                           // soft half-closed cyclops
 ]
 let EYE_MIRROR: [Int: Bool] = [0: false, 1: false, 2: true, 3: true, 4: false, 5: false, 6: false, 7: false,
-                               8: true, 9: true, 10: false]
+                               8: true, 9: true, 10: false, 11: true, 12: false]
+/// Single centred eye variants (open, closed, soft half-closed).
+let CYCLOPS_EYES: Set<Int> = [7, 10, 12]
 
 /// Mood layer: (x0, mouth sprite).
 let MOODS: [Int: (x0: Int, spr: Sprite)] = [
     0: (x0: 14, spr: sprite(["M..M", ".MM."])),           // neutral: small smile
     1: (x0: 14, spr: sprite([".MM.", "M..M", ".MM."])),   // "o"
     2: (x0: 13, spr: sprite([".M..M.", "M.MM.M"])),       // hungry wobble
+    // state mouths (wind-down, not genes)
+    3: (x0: 14, spr: sprite([".MM.", "MRRM", "MRRM", ".MM."])),  // big yawn
+    4: (x0: 14, spr: sprite([".MM.", "MRRM", ".MM."])),          // small yawn
 ]
 
 /// A stamped part: top-left x0 (heads: absolute; tails: relative to the tail anchor),
@@ -478,7 +517,7 @@ func eyeLayout(_ v: Int, _ a: Anchors) -> EyeLayout {
 
 func drawEyes(_ c: inout Canvas, _ v: Int, _ a: Anchors) {
     let e = eyeLayout(v, a)
-    if v == 7 || v == 10 { // cyclops (open / closed): one centred eye (x 13..18)
+    if CYCLOPS_EYES.contains(v) { // cyclops (open / closed / soft): one centred eye (x 13..18)
         for s in e.spr { c.put(13 + s.x, e.y0 + s.y, roleFor(s.ch), true, true) }
         return
     }
@@ -497,7 +536,7 @@ func drawFace(_ c: inout Canvas, _ m: Mask, _ eyes: Int, _ mood: Int, _ a: Ancho
     let mouth = MOODS[mood] ?? MOODS[0]!
     for s in mouth.spr { c.put(mouth.x0 + s.x, my + s.y, roleFor(s.ch)) }
     let by = a.eyeY + 2
-    let bx = (eyes != 7 && eyes != 10) ? 16 + e.dx + floorDiv(e.w + 1, 2) + 1 : 21
+    let bx = !CYCLOPS_EYES.contains(eyes) ? 16 + e.dx + floorDiv(e.w + 1, 2) + 1 : 21
     for x in [bx, 31 - bx] where m.contains(x, by) { c.put(x, by, .blush) }
 }
 
@@ -553,10 +592,26 @@ func drawAura(_ v: Int, _ seed: Int) -> [(x: Int, y: Int, role: Role)] {
     return extra
 }
 
+/// Inflate level 0...2 for the breathing phase (0 when off).
+func breathLevel(_ p: Phenotype) -> Int {
+    return p.breath >= 0 ? BREATH_LEVEL[pyIntMod(p.breath, BREATH_LEVEL.count)] : 0
+}
+
+/// The body mask the creature is drawn with (breathing inflates it).
+func creatureMask(_ p: Phenotype) -> Mask { bodyMask(p.body, p.stage, breathLevel(p)) }
+
+/// Inhale softly closes the eyes: level 1 half-closed, level 2 closed.
+func breathEyes(_ eyes: Int, _ level: Int) -> Int {
+    if level == 0 || eyes == 9 || eyes == 10 { return eyes }
+    let cyc = CYCLOPS_EYES.contains(eyes)
+    if level == 1 { return cyc ? 12 : 11 }
+    return cyc ? 10 : 9
+}
+
 /// Python `build`: the role canvas.
 func build(_ p: Phenotype, _ silhouette: Bool, face: (eyes: Int, mood: Int)? = nil) -> Canvas {
     let stage = p.stage
-    let mask = bodyMask(p.body, stage)
+    let mask = creatureMask(p)
     var c = Canvas()
     if stage == EGG {
         for pt in mask.sortedPoints() { c.set(pt.x, pt.y, .base) }
@@ -578,11 +633,15 @@ func build(_ p: Phenotype, _ silhouette: Bool, face: (eyes: Int, mood: Int)? = n
     putMask(&c, mask, .base)
     drawHead(&c, p.head, a, stage, wind)
     for pt in mask.sortedPoints() where !c.has(pt.x, pt.y) { c.set(pt.x, pt.y, .base) } // setdefault
-    applyPattern(&c, mask, p.pattern, a)
+    // breathing: patterns stay put on the resting body; freckles follow the face
+    let pa = (p.breath < 0 || p.pattern == 5) ? a : anchors(bodyMask(p.body, stage))
+    applyPattern(&c, mask, p.pattern, pa)
     shadeBody(&c, mask)
     outline(&c)
+    let faceEyes = eyes
+    if face == nil && p.breath >= 0 { eyes = breathEyes(eyes, breathLevel(p)) }
     drawEyes(&c, eyes, a)
-    if !silhouette { drawFace(&c, mask, eyes, mood, a) }
+    if !silhouette { drawFace(&c, mask, faceEyes, mood, a) }
     return c
 }
 

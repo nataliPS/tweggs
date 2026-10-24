@@ -16,6 +16,7 @@ export interface Pheno {
   weather?: number; // living world: 0 none, 1 rain, 2 heat, 3 snow, 4 wind, 5 night
   item?: number;    // care item 0..9 (see render.py)
   alive?: number;   // widget-alive frame: 0 none, 1 charging, 2 low power, 3 morning
+  breath?: number;  // breathing phase 0..7 (inhale 0-3, exhale 4-7); default -1 = off
 }
 type RGB = [number, number, number];
 type Role = "base" | "shade" | "accent" | "light" | "outline" | "eye" | "white" | "blush" | "mouth";
@@ -205,9 +206,34 @@ function bodyBaby(v: number): Mask {
   return ellipse(16, 25, 7.5, 4);
 }
 
-function bodyMask(v: number, stage: number): Mask {
+function bodyShape(v: number, stage: number): Mask {
   if (stage === EGG) return rowsMask(...EGG_ROWS);
-  const m = stage === ADULT ? bodyAdult(v) : stage === TEEN ? bodyTeen(v) : bodyBaby(v);
+  return stage === ADULT ? bodyAdult(v) : stage === TEEN ? bodyTeen(v) : bodyBaby(v);
+}
+
+/** Breathing: inflate a mask (new mask, not image scaling). Feet stay put, rows above the
+ *  middle rise by dh (the middle row fills the gap), then every row widens by `side`. */
+function growMask(m: Mask, side: number, dh: number): Mask {
+  const pts = sortedPoints(m);
+  const top = Math.min(...pts.map(p => p[1])), bot = Math.max(...pts.map(p => p[1]));
+  const ref = top + floorDiv(bot - top, 2);
+  const mid = newMask();
+  const add = (o: Mask, x: number, y: number) => { if (x >= 0 && x < S && y >= 0 && y < S) o[y * S + x] = true; };
+  for (const [x, y] of pts) {
+    if (y >= ref) add(mid, x, y);
+    if (y <= ref) add(mid, x, y - dh);
+    if (y === ref) for (let k = 1; k < dh; k++) add(mid, x, y - k);
+  }
+  if (!side) return mid;
+  const out = newMask();
+  for (const [x, y] of sortedPoints(mid)) for (let d = -side; d <= side; d++) add(out, x + d, y);
+  return out;
+}
+
+function bodyMask(v: number, stage: number, level = 0): Mask {
+  let m = bodyShape(v, stage);
+  if (level) m = growMask(m, T.BREATH_GROW[level][0], T.BREATH_GROW[level][1]);
+  if (stage === EGG) return m;
   let bottom = -1;
   for (const [, y] of sortedPoints(m)) bottom = Math.max(bottom, y);
   for (const fx of [11, 12, 19, 20]) if (inMask(m, fx, bottom)) { if (bottom + 1 < S) m[(bottom + 1) * S + fx] = true; }
@@ -247,7 +273,7 @@ function sprite(rows: string[]): Sprite {
   rows.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== ".") out.push([x, y, ch]); }));
   return out;
 }
-const ROLE: Record<string, Role> = { B: "base", S: "shade", A: "accent", L: "light", K: "eye", W: "white", M: "mouth", a: "accent" };
+const ROLE: Record<string, Role> = { B: "base", S: "shade", A: "accent", L: "light", K: "eye", W: "white", M: "mouth", a: "accent", R: "blush" };
 
 // Right eye; the left eye is its mirror (x -> 31 - x) when EYE_MIRROR, else a shifted copy.
 const EYES: Record<number, Sprite> = {
@@ -262,12 +288,17 @@ const EYES: Record<number, Sprite> = {
   8: sprite(["..K", "KK.", "..K"]),      // squint (heat) - state eyes, never genes
   9: sprite(["K..K", ".KK."]),           // closed, asleep
   10: sprite(["K....K", ".KKKK."]),      // closed cyclops
+  11: sprite(["KKKK"]),                  // soft half-closed lid (breathing)
+  12: sprite(["KKKKKK"]),                // soft half-closed cyclops
 };
-const EYE_MIRROR: Record<number, boolean> = { 0: false, 1: false, 2: true, 3: true, 4: false, 5: false, 6: false, 7: false, 8: true, 9: true, 10: false };
+const EYE_MIRROR: Record<number, boolean> = { 0: false, 1: false, 2: true, 3: true, 4: false, 5: false, 6: false, 7: false, 8: true, 9: true, 10: false, 11: true, 12: false };
+const CYCLOPS_EYES = [7, 10, 12];
 const MOODS: Record<number, [number, Sprite]> = {
   0: [14, sprite(["M..M", ".MM."])],
   1: [14, sprite([".MM.", "M..M", ".MM."])],
   2: [13, sprite([".M..M.", "M.MM.M"])],
+  3: [14, sprite([".MM.", "MRRM", "MRRM", ".MM."])], // big yawn (wind-down)
+  4: [14, sprite([".MM.", "MRRM", ".MM."])],         // small yawn
 };
 
 type Part = [number, number, string[]];
@@ -426,7 +457,7 @@ function eyeLayout(v: number, a: Anchors): EyeLayout {
 
 function drawEyes(c: Canvas, v: number, a: Anchors) {
   const { spr, x0, y0, w } = eyeLayout(v, a);
-  if (v === 7 || v === 10) {
+  if (CYCLOPS_EYES.includes(v)) {
     for (const [x, y, ch] of spr) c.put(13 + x, y0 + y, ROLE[ch], true, true);
     return;
   }
@@ -443,7 +474,7 @@ function drawFace(c: Canvas, m: Mask, eyes: number, mood: number, a: Anchors) {
   const [mx, mouth] = MOODS[mood] ?? MOODS[0];
   for (const [x, y, ch] of mouth) c.put(mx + x, my + y, ROLE[ch]);
   const by = a.eyeY + 2;
-  const bx = eyes !== 7 && eyes !== 10 ? 16 + dx + floorDiv(w + 1, 2) + 1 : 21;
+  const bx = !CYCLOPS_EYES.includes(eyes) ? 16 + dx + floorDiv(w + 1, 2) + 1 : 21;
   for (const x of [bx, 31 - bx]) if (inMask(m, x, by)) c.put(x, by, "blush");
 }
 
@@ -486,9 +517,21 @@ function drawAura(v: number, seed: number): [number, number, Role][] {
   return extra;
 }
 
+const breathOf = (p: Pheno) => p.breath ?? -1;
+const breathLevel = (p: Pheno) => breathOf(p) >= 0 ? T.BREATH_LEVEL[breathOf(p) % 8] : 0;
+/** The body mask the creature is drawn with (breathing inflates it). */
+const creatureMask = (p: Pheno) => bodyMask(p.body, p.stage ?? ADULT, breathLevel(p));
+/** Inhale softly closes the eyes: level 1 half-closed, level 2 closed. */
+function breathEyes(eyes: number, level: number): number {
+  if (level === 0 || eyes === 9 || eyes === 10) return eyes;
+  const cyc = CYCLOPS_EYES.includes(eyes);
+  if (level === 1) return cyc ? 12 : 11;
+  return cyc ? 10 : 9;
+}
+
 function build(p: Pheno, silhouette: boolean, face?: [number, number]): Canvas {
   const stage = p.stage ?? ADULT;
-  const mask = bodyMask(p.body, stage);
+  const mask = creatureMask(p);
   const c = new Canvas();
   if (stage === EGG) {
     for (const [x, y] of sortedPoints(mask)) c.set(x, y, "base");
@@ -505,11 +548,15 @@ function build(p: Pheno, silhouette: boolean, face?: [number, number]): Canvas {
   for (const [x, y] of sortedPoints(mask)) c.set(x, y, "base");
   drawHead(c, p.head, a, stage, wind);
   for (const [x, y] of sortedPoints(mask)) if (!c.has(x, y)) c.set(x, y, "base");
-  applyPattern(c, mask, p.pattern, a);
+  // breathing: patterns stay put on the resting body; freckles follow the face
+  const pa = breathOf(p) < 0 || p.pattern === 5 ? a : anchors(bodyMask(p.body, stage));
+  applyPattern(c, mask, p.pattern, pa);
   shadeBody(c, mask);
   outline(c);
+  const faceEyes = eyes;
+  if (!face && breathOf(p) >= 0) eyes = breathEyes(eyes, breathLevel(p));
   drawEyes(c, eyes, a);
-  if (!silhouette) drawFace(c, mask, eyes, mood, a);
+  if (!silhouette) drawFace(c, mask, faceEyes, mood, a);
   return c;
 }
 
@@ -695,7 +742,7 @@ function living(p: Pheno, canvas: Canvas): [Canvas, Paint[], Paint[]] {
     if (w === NIGHT) lwSprite(22, 3, T.ZZZ_ROWS, front);
     return [canvas, behind, front];
   }
-  const m = bodyMask(p.body, stage);
+  const m = creatureMask(p);
   const a = anchors(m);
   let bodyFront: Paint[] = [];
   const bodyBehind: Paint[] = [];
@@ -780,6 +827,7 @@ export class Img {
   spr(x0: number, y0: number, rows: string[], tint: RGB | null = null, cmap: Record<string, RGB> = LW) {
     for (const [x, y, ch] of sprite(rows)) this.set(x0 + x, y0 + y, cmap[ch], tint);
   }
+  get(x: number, y: number): RGB | null { return this.px[y * this.w + x]; }
   creature(layers: Paint[], ox: number, oy: number, mirror = false, tint: RGB | null = null) {
     for (const [x, y, rgb] of layers) this.set(ox + (mirror ? 31 - x : x), oy + y, rgb, tint);
   }
@@ -985,7 +1033,7 @@ function drawYard(im: Img) {
 export function renderJumpRope(p: Pheno, frame: number): Uint8Array {
   const im = new Img(RW, RH);
   drawYard(im);
-  const m = bodyMask(p.body, p.stage ?? ADULT);
+  const m = creatureMask(p);
   const a = anchors(m);
   const [lx, rx] = rowExt(m, a.midY);
   const ox = 16, baseOy = YARD_GROUND + 2 - (a.bottom + 1);
@@ -1025,7 +1073,103 @@ export function renderJumpRope(p: Pheno, frame: number): Uint8Array {
   return im.rgba();
 }
 
-/** 16x16 white-on-transparent Lock Screen glyph (scenes 0..6, 7 = jump rope). */
+// ------------------------------------------------------------ wellbeing (64x48)
+export const CALM_FRAMES = 4, WD_FRAMES = 4, GLYPH_CALM = 8;
+const CALM_CMAP: Record<string, RGB> = { ...LW, o: T.CALM_INK };
+
+/** Soft aura ring: integer ellipse band (doubled-coordinate centre), dotted lower half. */
+function calmRing(cx2: number, cy2: number, rx: number, ry: number): [number, number][] {
+  const out: [number, number][] = [];
+  const rx2 = (2 * rx) ** 2, ry2 = (2 * ry) ** 2, one = rx2 * ry2;
+  for (let y = 0; y < RH; y++) for (let x = 0; x < RW; x++) {
+    const dx = 2 * x + 1 - cx2, dy = 2 * y + 1 - cy2;
+    const v = dx * dx * ry2 + dy * dy * rx2;
+    if (one * 10 <= v * 12 && v <= one) {
+      if (2 * y + 1 > cy2 && (x + y) % 2) continue;
+      out.push([x, y]);
+    }
+  }
+  return out;
+}
+
+/** 64x48 meditating "calm" pose (python render_calm(p, frame).tobytes()). */
+export function renderCalm(p: Pheno, frame = 0): Uint8Array {
+  const f = imod(frame, CALM_FRAMES);
+  const im = new Img(RW, RH);
+  for (let y = 0; y < RH; y++) {
+    let c = T.CALM_SKY[0][1];
+    for (const [y0, col] of T.CALM_SKY) if (y >= y0) c = col;
+    for (let x = 0; x < RW; x++) im.set(x, y, y < 38 ? c : T.CALM_GROUND);
+  }
+  for (const [x, y] of T.CALM_DOTS) if ((x + f) % 3) im.set(x, y, LW["w"]);
+  const m = bodyMask(p.body, p.stage ?? ADULT);
+  const a = anchors(m);
+  const pal = palette(p.palette, p.shift);
+  const lift = T.CALM_FLOAT[f];
+  const ox = 16, oy = 36 - (a.bottom + 1) - lift;
+  const cy2 = 2 * (oy + a.top + floorDiv(a.bottom - a.top, 2)) + 1;
+  for (const [x, y] of calmRing(64, cy2, 17, 15)) {
+    const bg = im.get(x, y)!, l = pal.light;
+    im.set(x, y, [floorDiv(bg[0] + 2 * l[0], 3), floorDiv(bg[1] + 2 * l[1], 3), floorDiv(bg[2] + 2 * l[2], 3)]);
+  }
+  im.spr(20, 37, T.CALM_CUSHION, null, CALM_CMAP);
+  const sw = 7 - lift;
+  for (let x = 32 - sw; x < 32 + sw; x++) im.set(x, 36, LW["V"]);
+  const eyes = p.eyes === 7 ? EYE_CLOSED_CYCLOPS : EYE_CLOSED;
+  im.creature(creatureLayers(p, [eyes, 0], true, false), ox, oy);
+  const [lx, ly] = T.CALM_LEAF_PATH[f];
+  im.spr(lx, ly, T.CALM_LEAF, null, CALM_CMAP);
+  const [sx, sy] = T.CALM_SPARKS[f];
+  im.spr(sx - 1, sy - 1, T.CALM_SPARK, null, CALM_CMAP);
+  T.CALM_SPARKS.forEach(([tx, ty], k) => { if (k !== f) im.set(tx, ty, LW["h"]); });
+  return im.rgba();
+}
+
+/** 64x48 evening wind-down frame 0..3 (python render_wind_down(p, frame).tobytes()). */
+export function renderWindDown(p: Pheno, frame = 0): Uint8Array {
+  const f = imod(frame, WD_FRAMES);
+  const LX = 50, LY = 21;
+  const im = new Img(RW, RH);
+  drawRoomBg(im, false);
+  drawWindow(im, "night", NONE);
+  const lit = new Set<number>();
+  const lampOn = f <= 1;
+  if (f <= 2) {
+    const [core, rim] = lampOn ? [36, 72] : [0, 30];
+    for (let y = LY - 9; y < LY + 12; y++) for (let x = LX - 9; x < LX + 18; x++) {
+      const dx = x - (LX + 4), dy = floorDiv((y - (LY + 2)) * 3, 2);
+      const r = dx * dx + dy * dy;
+      if (x < RW && r <= rim && (r <= core || (x + y) % 2 === 0)) {
+        const c = im.get(x, y)!, g = T.WD_GLOW;
+        im.set(x, y, [floorDiv(c[0] + g[0], 2), floorDiv(c[1] + g[1], 2), floorDiv(c[2] + g[2], 2)]);
+        lit.add(y * RW + x);
+      }
+    }
+  }
+  im.spr(LX - 2, LY + 8, T.WD_TABLE, null, CALM_CMAP);
+  im.spr(LX, LY, T.WD_LAMP, null, { ...CALM_CMAP, h: LW[T.WD_BULB[f]] });
+  if (lampOn) for (const [x, y] of sprite(T.WD_LAMP.slice(1, 3))) lit.add((LY + 1 + y) * RW + LX + x);
+  const cord = LX + 7, pull = f === 2 ? 1 : 0;
+  for (let y = LY + 3; y < LY + 6 + pull; y++) im.set(cord, y, LW["D"]);
+  im.set(cord, LY + 6 + pull, lampOn ? LW["h"] : LW["d"]);
+  im.spr(4, 38, T.WD_PILLOW, null, CALM_CMAP);
+  const m = bodyMask(p.body, p.stage ?? ADULT);
+  const a = anchors(m);
+  const oy = 40 - (a.bottom + 1);
+  let [eyes, mood] = T.WD_FACE[f];
+  if (p.eyes === 7) eyes = eyes === 11 ? 12 : EYE_CLOSED_CYCLOPS;
+  im.creature(creatureLayers(p, [eyes, mood], true, false), 4, oy);
+  if (f === 3) im.spr(26, Math.max(1, oy + a.top - 6), T.WD_Z, null, CALM_CMAP);
+  const t = T.WD_DIM[f];
+  for (let y = 0; y < RH; y++) for (let x = 0; x < RW; x++) {
+    const c = im.get(x, y);
+    if (!c || (lampOn && lit.has(y * RW + x))) continue;
+    im.px[y * RW + x] = [floorDiv(c[0] * t[0], 256), floorDiv(c[1] * t[1], 256), floorDiv(c[2] * t[2], 256)];
+  }
+  return im.rgba();
+}
+
+/** 16x16 white-on-transparent Lock Screen glyph (scenes 0..6, 7 = jump rope, 8 = calm). */
 export function renderGlyph(scene: number): Uint8Array {
   const buf = new Uint8Array(16 * 16 * 4);
   for (const [x, y] of sprite(T.GLYPHS[scene])) buf.fill(255, (y * 16 + x) * 4, (y * 16 + x) * 4 + 4);

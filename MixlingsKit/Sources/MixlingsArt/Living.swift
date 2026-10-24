@@ -18,7 +18,14 @@ public enum LivingWorld {
     // renderRoom scenes / renderGlyph indices (glyph 7 = jump rope)
     public static let chess = 0, painting = 1, chatting = 2, napping = 3, stargazing = 4,
                       breakfast = 5, homework = 6, jumpRopeGlyph = 7
-    public static let sceneCount = 7, glyphCount = 8
+    public static let sceneCount = 7, glyphCount = 9
+    /// Wellbeing (docs/wellbeing-spec.md): calm glyph index for `renderGlyph(scene:)`.
+    public static let calmGlyph = 8
+    /// Breathing phases for `Phenotype.breath` (0...3 inhale, 4...7 exhale; -1 = off).
+    public static let breathPhases = 8
+    /// `renderCalm` float-loop frames and `renderWindDown` frames
+    /// (0 big yawn, 1 small yawn, 2 lamp cord pulled, 3 lights off).
+    public static let calmFrames = 4, windDownFrames = 4
     // time of day
     public static let day = 0, nightTime = 1
     /// Jump-rope frames: 0...3 rope loop (over, front, under, behind), 4 trip, 5 cheer.
@@ -223,7 +230,7 @@ func living(_ p: Phenotype, _ canvasIn: Canvas) -> (Canvas, [Paint], [Paint]) {
         if w == NIGHT { lwSprite(22, 3, ZZZ_ROWS, &front) }
         return (canvas, behind, front)
     }
-    let m = bodyMask(p.body, p.stage)
+    let m = creatureMask(p)
     let a = anchors(m)
     var bodyFront: [Paint] = [], bodyBehind: [Paint] = []
     itemLayer(p, it, m, a, &bodyFront, &bodyBehind)
@@ -336,6 +343,8 @@ struct Img {
                       _ cmap: [Character: RGB] = LW) {
         for s in sprite(rows) { set(x0 + s.x, y0 + s.y, cmap[s.ch]!, tint) }
     }
+
+    func get(_ x: Int, _ y: Int) -> RGB? { px[y * w + x] }
 
     mutating func creature(_ layers: [Paint], _ ox: Int, _ oy: Int, mirror: Bool = false, tint: RGB? = nil) {
         for l in layers { set(ox + (mirror ? 31 - l.x : l.x), oy + l.y, l.c, tint) }
@@ -567,7 +576,7 @@ func drawYard(_ im: inout Img) {
 func jumpRopeImg(_ p: Phenotype, _ frame: Int) -> Img {
     var im = Img(RW, RH)
     drawYard(&im)
-    let m = bodyMask(p.body, p.stage)
+    let m = creatureMask(p)
     let a = anchors(m)
     let (lx, rx) = rowExt(m, a.midY)
     let ox = 16, baseOy = YARD_GROUND + 2 - (a.bottom + 1)
@@ -622,6 +631,111 @@ func jumpRopeImg(_ p: Phenotype, _ frame: Int) -> Img {
     return im
 }
 
+// MARK: - wellbeing (64x48): calm pose and evening wind-down
+
+let CALM_CMAP: [Character: RGB] = { var m = LW; m["o"] = CALM_INK; return m }()
+
+/// Soft aura ring: integer ellipse band around a doubled-coordinate centre, dotted lower half.
+func calmRing(_ cx2: Int, _ cy2: Int, _ rx: Int, _ ry: Int) -> [(Int, Int)] {
+    var out: [(Int, Int)] = []
+    let rx2 = (2 * rx) * (2 * rx), ry2 = (2 * ry) * (2 * ry), one = rx2 * ry2
+    for y in 0..<RH {
+        for x in 0..<RW {
+            let dx = 2 * x + 1 - cx2, dy = 2 * y + 1 - cy2
+            let v = dx * dx * ry2 + dy * dy * rx2
+            if one * 10 <= v * 12 && v <= one {
+                if 2 * y + 1 > cy2 && (x + y) % 2 != 0 { continue }
+                out.append((x, y))
+            }
+        }
+    }
+    return out
+}
+
+func calmImg(_ p: Phenotype, _ frame: Int) -> Img {
+    let f = pyIntMod(frame, LivingWorld.calmFrames)
+    var im = Img(RW, RH)
+    for y in 0..<RH {
+        var c = CALM_SKY[0].1
+        for (y0, col) in CALM_SKY where y >= y0 { c = col }
+        for x in 0..<RW { im.set(x, y, y < 38 ? c : CALM_GROUND) }
+    }
+    for (x, y) in CALM_DOTS where (x + f) % 3 != 0 { im.set(x, y, LW["w"]!) }
+    let m = bodyMask(p.body, p.stage)
+    let a = anchors(m)
+    let pal = makePalette(p.palette, p.shift)
+    let lift = CALM_FLOAT[f]
+    let ox = 16, oy = 36 - (a.bottom + 1) - lift
+    let cy2 = 2 * (oy + a.top + floorDiv(a.bottom - a.top, 2)) + 1
+    let l = pal[.light]
+    for (x, y) in calmRing(64, cy2, 17, 15) {
+        let bg = im.get(x, y)!
+        im.set(x, y, RGB(floorDiv(bg.r + 2 * l.r, 3), floorDiv(bg.g + 2 * l.g, 3), floorDiv(bg.b + 2 * l.b, 3)))
+    }
+    im.spr(20, 37, CALM_CUSHION, nil, CALM_CMAP)
+    let sw = 7 - lift
+    for x in (32 - sw)..<(32 + sw) { im.set(x, 36, LW["V"]!) }
+    let eyes = p.eyes == 7 ? EYE_CLOSED_CYCLOPS : EYE_CLOSED
+    im.creature(creatureLayers(p, face: (eyes: eyes, mood: 0), plain: true, aura: false), ox, oy)
+    let (lx, ly) = CALM_LEAF_PATH[f]
+    im.spr(lx, ly, CALM_LEAF, nil, CALM_CMAP)
+    let (sx, sy) = CALM_SPARKS[f]
+    im.spr(sx - 1, sy - 1, CALM_SPARK, nil, CALM_CMAP)
+    for (k, (tx, ty)) in CALM_SPARKS.enumerated() where k != f { im.set(tx, ty, LW["h"]!) }
+    return im
+}
+
+func windDownImg(_ p: Phenotype, _ frame: Int) -> Img {
+    let f = pyIntMod(frame, LivingWorld.windDownFrames)
+    let LX = 50, LY = 21
+    var im = Img(RW, RH)
+    drawRoomBg(&im, false)
+    drawWindow(&im, "night", NONE)
+    var lit = Set<Int>()
+    let lampOn = f <= 1
+    if f <= 2 { // warm pool of light around the shade: solid core, dithered rim
+        let (core, rim) = lampOn ? (36, 72) : (0, 30)
+        for y in (LY - 9)..<(LY + 12) {
+            for x in (LX - 9)..<(LX + 18) {
+                let dx = x - (LX + 4), dy = floorDiv((y - (LY + 2)) * 3, 2)
+                let r = dx * dx + dy * dy
+                if x < RW && r <= rim && (r <= core || (x + y) % 2 == 0) {
+                    let c = im.get(x, y)!, g = WD_GLOW
+                    im.set(x, y, RGB(floorDiv(c.r + g.r, 2), floorDiv(c.g + g.g, 2), floorDiv(c.b + g.b, 2)))
+                    lit.insert(y * RW + x)
+                }
+            }
+        }
+    }
+    im.spr(LX - 2, LY + 8, WD_TABLE, nil, CALM_CMAP)
+    var lampMap = CALM_CMAP
+    lampMap["h"] = LW[WD_BULB[f]]!
+    im.spr(LX, LY, WD_LAMP, nil, lampMap)
+    if lampOn {
+        for s in sprite(Array(WD_LAMP[1..<3])) { lit.insert((LY + 1 + s.y) * RW + LX + s.x) }
+    }
+    let cord = LX + 7, pull = f == 2 ? 1 : 0
+    for y in (LY + 3)..<(LY + 6 + pull) { im.set(cord, y, LW["D"]!) }
+    im.set(cord, LY + 6 + pull, lampOn ? LW["h"]! : LW["d"]!)
+    im.spr(4, 38, WD_PILLOW, nil, CALM_CMAP)
+    let m = bodyMask(p.body, p.stage)
+    let a = anchors(m)
+    let oy = 40 - (a.bottom + 1)
+    let (e0, mood) = WD_FACE[f]
+    let eyes = p.eyes == 7 ? (e0 == 11 ? 12 : EYE_CLOSED_CYCLOPS) : e0
+    im.creature(creatureLayers(p, face: (eyes: eyes, mood: mood), plain: true, aura: false), 4, oy)
+    if f == 3 { im.spr(26, max(1, oy + a.top - 6), WD_Z, nil, CALM_CMAP) }
+    let t = WD_DIM[f]
+    for y in 0..<RH {
+        for x in 0..<RW {
+            guard let c = im.get(x, y) else { continue }
+            if lampOn && lit.contains(y * RW + x) { continue }
+            im.px[y * RW + x] = RGB(floorDiv(c.r * t.r, 256), floorDiv(c.g * t.g, 256), floorDiv(c.b * t.b, 256))
+        }
+    }
+    return im
+}
+
 // MARK: - public API
 
 extension MixlingsRenderer {
@@ -654,8 +768,23 @@ extension MixlingsRenderer {
         return jumpRopeImg(p, frame).buffer()
     }
 
+    /// 64x48 meditating "calm" pose (wellbeing): eyes closed, gentle smile, floating above a
+    /// cushion in a soft aura ring (the creature's light colour), a drifting leaf and a resting
+    /// sparkle. Frames 0...3 loop the float; widgets use frame 0. Opaque.
+    /// Pixel-identical to Python `render_calm(p, frame)`.
+    public static func renderCalm(_ p: Phenotype, frame: Int = 0) -> PixelBuffer {
+        return calmImg(p, frame).buffer()
+    }
+
+    /// 64x48 evening wind-down frame (opt-in routine): 0 big yawn by a lit bedside lamp,
+    /// 1 small yawn, 2 pulls the lamp cord, 3 lights off, eyes closed, sleepy "z"; the room
+    /// dims step by step. Opaque. Pixel-identical to Python `render_wind_down(p, frame)`.
+    public static func renderWindDown(_ p: Phenotype, frame: Int = 0) -> PixelBuffer {
+        return windDownImg(p, frame).buffer()
+    }
+
     /// 16x16 one-colour Lock Screen glyph (white on transparent) for a scene
-    /// (`LivingWorld.chess` ... `.homework`, 7 = jump rope).
+    /// (`LivingWorld.chess` ... `.homework`, 7 = jump rope, 8 = calm).
     public static func renderGlyph(scene: Int) -> PixelBuffer {
         var buf = [UInt8](repeating: 0, count: 16 * 16 * 4)
         guard scene >= 0 && scene < GLYPHS.count else { return PixelBuffer(width: 16, height: 16, rgba: buf) }

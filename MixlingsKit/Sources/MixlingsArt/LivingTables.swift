@@ -29,6 +29,14 @@ let LW: [Character: RGB] = [
     "l": RGB(255, 244, 200),
     "T": RGB(214, 120, 80),
     "U": RGB(170, 88, 60),
+    "v": RGB(214, 202, 246),
+    "V": RGB(178, 162, 226),
+    "h": RGB(255, 236, 188),
+    "H": RGB(255, 214, 150),
+    "d": RGB(176, 170, 190),
+    "D": RGB(128, 122, 146),
+    "f": RGB(168, 214, 176),
+    "F": RGB(116, 176, 134),
 ]
 let ZZZ_ROWS: [String] = ["pppp...", "..p....", ".p.....", "pppp...", "....ppp", ".....p.", "....ppp"]
 let BANG: [String] = [".ooooo.", "owwrwwo", "owwrwwo", "owwrwwo", "owwwwwo", "owwrwwo", ".ooooo.", "..oo...", ".o....."]
@@ -62,6 +70,13 @@ let DESK: [String] = ["......ooooo.....", "....oyyyyyo.....", "...oyyyyyyyo...."
 let BIG_CLOUD: [String] = ["..www...", ".wwwww..", "wwwwwwww"]
 let DIZZY: [String] = [".y.", "y.y", ".y."]
 let STARBURST: [String] = ["..y..", "..y..", "yyYyy", "..y..", "..y.."]
+let CALM_CUSHION: [String] = ["...oooooooooooooooooo...", ".oovvvvvvvvvvvvvvvvvvoo.", "ovvvvvvvvvvvvvvvvvvvvvvo", "oVvvvvvvvvvvvvvvvvvvvvVo", ".oVVVVVVVVVVVVVVVVVVVVo.", "...oooooooooooooooooo..."]
+let CALM_LEAF: [String] = ["..fF", ".ffF", "ffF.", "F..."]
+let CALM_SPARK: [String] = [".w.", "whw", ".w."]
+let WD_LAMP: [String] = ["..ooooo..", ".ohhhhho.", "ohhhhhhho", "ooooooooo", "....o....", "....o....", "....o....", "..ooooo.."]
+let WD_TABLE: [String] = ["oooooooooooo", "onnnnnnnnnno", "oNNNNNNNNNNo", ".oNo....oNo.", ".oNo....oNo.", ".oNo....oNo.", ".ooo....ooo."]
+let WD_PILLOW: [String] = [".oooooooooooooooooooooo.", "owwwwwwwwwwwwwwwwwwwwwwo", "oeeeeeeeeeeeeeeeeeeeeeeo", ".oooooooooooooooooooooo."]
+let WD_Z: [String] = ["vvvv", "..v.", ".v..", "vvvv", "......vvv", ".......v.", "......vvv"]
 let EMOTES: [[String]] = [[".r.r.", "rrrrr", "rrrrr", ".rrr.", "..r.."], ["..PP.", "..P.P", "..P..", "PPP..", "PPP.."], ["..y..", ".yyy.", "yyyyy", ".y.y.", "y...y"], ["k...k", ".....", "k...k", ".kkk.", "....."], [".kkk.", "k...k", "...k.", "..k..", "..k.."], ["g...g", ".g.g.", "..g..", ".g.g.", "g...g"]]
 let GLYPHS: [[String]] = [
     ["................", "......XX........", ".....XXXX.......", "....XXXXXX......", "...XXX.XXXX.....", "..XXXXXXXXXX....", "..XXXXXXXXXX....", "...XX..XXXXX....", ".......XXXXX....", "......XXXXXX....", ".....XXXXXXX....", ".....XXXXXX.....", "....XXXXXXXX....", "...XXXXXXXXXX...", "...XXXXXXXXXX...", "................"],
@@ -72,6 +87,7 @@ let GLYPHS: [[String]] = [
     ["................", "....X..X..X.....", ".....X..X..X....", "....X..X..X.....", "................", "..XXXXXXXXXX....", "..XXXXXXXXXXXXX.", "..XXXXXXXXXX..X.", "..XXXXXXXXXX..X.", "..XXXXXXXXXXXXX.", "..XXXXXXXXXX....", "...XXXXXXXX.....", "XXXXXXXXXXXXXXX.", ".XXXXXXXXXXXXX..", "................", "................"],
     ["................", "............XX..", "...........XXX..", "..........XXX...", ".........XXX....", "........XXX.....", ".......XX.......", "................", ".XXXXX....XXXXX.", "XX...XX..XX...XX", "XX.XX.XXXX.XX.XX", "XX....XXXX....XX", "XX.XX.XXXX.XX.XX", "XXXXXXXXXXXXXXXX", ".......XX.......", "................"],
     ["................", ".....XXXXXX.....", "...XX......XX...", "..X..........X..", ".X....XXXX....X.", ".X...XXXXXX...X.", "XX...X.XX.X...XX", "XX...XXXXXX...XX", "XX...XXXXXX...XX", "X....XXXXXX....X", ".....XX..XX.....", "................", "...XXXXXXXXXX...", "................", "................", "................"],
+    ["................", "............X...", "...X.......XXX..", "..XXX.......X...", "...X............", "......XXXX......", "....XXXXXXXX....", "...XXXXXXXXXX...", "...X.X.XX.X.X...", "...XX.XXXX.XX...", "..XXXXXXXXXXXX..", ".X..XXXXXXXX..X.", "X....XXXXXX....X", ".XXXXXXXXXXXXXX.", "..XXXXXXXXXXXX..", "................"],
 ]
 let BULBS: [Character] = ["r", "y", "b", "g", "m"]
 let RAIN_DROPS: [(Int, Int)] = [(2, 3), (7, 9), (12, 1), (27, 4), (22, 0), (29, 12), (3, 17), (25, 18), (18, 6), (5, 24), (28, 23), (10, 13)]
@@ -82,6 +98,11 @@ let WIN_RAIN: [(Int, Int)] = [(27, 5), (31, 8), (35, 6), (29, 11), (37, 12), (33
 let WIN_SNOW: [(Int, Int)] = [(27, 6), (32, 5), (36, 8), (29, 10), (34, 12), (37, 14), (26, 14), (31, 13)]
 let YARD_CLOUDS: [(Int, Int)] = [(6, 5), (44, 9)]
 let YARD_TUFTS: [(Int, Int)] = [(4, 43), (13, 46), (22, 42), (40, 45), (51, 42), (59, 46), (33, 47)]
+let CALM_LEAF_PATH: [(Int, Int)] = [(9, 10), (10, 12), (9, 14), (8, 12)]
+let CALM_SPARKS: [(Int, Int)] = [(50, 8), (54, 20), (12, 24), (46, 30)]
+let CALM_DOTS: [(Int, Int)] = [(6, 6), (58, 5), (31, 2), (3, 34), (60, 36)]
+let BREATH_GROW: [(Int, Int)] = [(0, 0), (0, 1), (1, 2)]
+let WD_FACE: [(Int, Int)] = [(11, 3), (11, 4), (9, 0), (9, 0)]
 let WIND_LINES: [(Int, Int, Int)] = [(0, 8, 6), (1, 15, 4), (0, 21, 5), (2, 26, 3)]
 let EASEL_DABS: [(Int, Int, Int)] = [(3, 3, 0), (4, 3, 0), (3, 4, 0), (7, 3, 1), (8, 3, 1), (8, 4, 1), (5, 5, 2), (6, 5, 2), (5, 6, 2), (9, 6, 3), (10, 6, 3), (4, 7, 3)]
 let YARD_FLOWERS: [(Int, Int, Character)] = [(8, 38, "r"), (56, 39, "y"), (47, 44, "m")]
@@ -115,3 +136,11 @@ let NIGHT_TINT = RGB(176, 168, 224)
 let CREATURE_NIGHT = RGB(224, 220, 244)
 let JR_LOOP: [(Int, Int)] = [(0, 0), (1, 1), (2, 2), (3, 1)]
 let JR_HEIGHT: [Int] = [0, 2, 5]
+let CALM_FLOAT: [Int] = [0, 1, 2, 1]
+let BREATH_LEVEL: [Int] = [0, 1, 1, 2, 2, 1, 1, 0]
+let CALM_GROUND = RGB(236, 226, 238)
+let CALM_INK = RGB(150, 134, 196)
+let WD_GLOW = RGB(255, 232, 176)
+let WD_DIM: [RGB] = [RGB(236, 228, 244), RGB(210, 200, 232), RGB(178, 166, 216), RGB(140, 128, 196)]
+let CALM_SKY: [(Int, RGB)] = [(0, RGB(224, 214, 248)), (12, RGB(232, 220, 248)), (22, RGB(240, 226, 244)), (30, RGB(246, 232, 238))]
+let WD_BULB: [Character] = ["H", "H", "h", "d"]

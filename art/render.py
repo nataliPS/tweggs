@@ -197,10 +197,46 @@ def body_baby(v):  # ~60 %
     return ellipse(16, 25, 7.5, 4)
 
 
-def body_mask(v: int, stage: int = ADULT) -> set:
+def body_shape(v: int, stage: int) -> set:
     if stage == EGG:
         return rows_mask(*EGG_ROWS)
-    m = body_adult(v) if stage == ADULT else body_teen(v) if stage == TEEN else body_baby(v)
+    return body_adult(v) if stage == ADULT else body_teen(v) if stage == TEEN else body_baby(v)
+
+
+# Breathing (docs/wellbeing-spec.md "Breathe with me"): phase 0..7 -> inflate level 0..2
+# (inhale 0-3, exhale 4-7); level -> (px added on each side, px added on top).
+BREATH_PHASES = 8
+BREATH_LEVEL = [0, 1, 1, 2, 2, 1, 1, 0]
+BREATH_GROW = [(0, 0), (0, 1), (1, 2)]
+
+
+def grow_mask(m: set, side: int, dh: int) -> set:
+    """Inflate a body mask (a new mask, not image scaling): feet stay on the ground, the
+    rows above the middle rise by dh (the middle row fills the gap), then every row
+    widens by `side` px on both sides."""
+    p = pts(m)
+    top = min(y for _, y in p)
+    ref = top + (max(y for _, y in p) - top) // 2
+    out = set()
+    for (x, y) in p:
+        if y >= ref:
+            out.add((x, y))
+        if y <= ref:
+            out.add((x, y - dh))
+        if y == ref:
+            for k in range(1, dh):
+                out.add((x, y - k))
+    if side:
+        out = {(x + d, y) for (x, y) in out for d in range(-side, side + 1)}
+    return {(x, y) for (x, y) in out if 0 <= x < S and 0 <= y < S}
+
+
+def body_mask(v: int, stage: int = ADULT, level: int = 0) -> set:
+    m = body_shape(v, stage)
+    if level:
+        m = grow_mask(m, *BREATH_GROW[level])
+    if stage == EGG:
+        return m
     # little feet
     bottom = max(y for _, y in pts(m))
     for fx in (11, 12, 19, 20):
@@ -237,7 +273,7 @@ def sprite(rows):
 
 
 ROLE = {"B": "base", "S": "shade", "A": "accent", "L": "light", "K": "eye",
-        "W": "white", "M": "mouth", "a": "accent"}
+        "W": "white", "M": "mouth", "a": "accent", "R": "blush"}
 
 # Eye sprites describe the RIGHT eye; the left eye is its mirror image
 # (x -> 31 - x), except glints stay top-left on both (`EYE_MIRROR` False).
@@ -253,15 +289,21 @@ EYES = {
     # state eyes (living world, not genes): never chosen by the genome
     8: sprite(["..K", "KK.", "..K"]),                     # squint > < (heat)
     9: sprite(["K..K", ".KK."]),                          # closed, asleep (night)
+    # 10 = closed cyclops (living world section)
+    11: sprite(["KKKK"]),                                 # soft half-closed lid (breathing)
+    12: sprite(["KKKKKK"]),                               # soft half-closed cyclops
 }
 EYE_MIRROR = {0: False, 1: False, 2: True, 3: True, 4: False, 5: False, 6: False, 7: False,
-              8: True, 9: True}
+              8: True, 9: True, 11: True, 12: False}
 
 # Mood layer (not a gene): mouth sprites centred on x 15.5, drawn under the eyes.
 MOODS = {
     0: (14, sprite(["M..M", ".MM."])),        # neutral: small smile
     1: (14, sprite([".MM.", "M..M", ".MM."])),  # "o"
     2: (13, sprite([".M..M.", "M.MM.M"])),     # hungry wobble
+    # state mouths (wind-down, not genes)
+    3: (14, sprite([".MM.", "MRRM", "MRRM", ".MM."])),  # big yawn
+    4: (14, sprite([".MM.", "MRRM", ".MM."])),          # small yawn
 }
 
 # Heads per stage: variant -> (x0, dy0 from body top, rows). Symmetric about x=15.5
@@ -519,7 +561,7 @@ def eye_layout(v, a):
 
 def draw_eyes(canvas, v, a):
     spr, x0, y0, w, h, dx = eye_layout(v, a)
-    if v in (7, 10):  # cyclops (open / closed): one centred eye (x 13..18)
+    if v in CYCLOPS_EYES:  # cyclops (open / closed / soft): one centred eye (x 13..18)
         for (x, y, ch) in spr:
             put(canvas, 13 + x, y0 + y, ROLE[ch], knock=True)
         return
@@ -529,15 +571,19 @@ def draw_eyes(canvas, v, a):
         put(canvas, lx, y0 + y, ROLE[ch], knock=True)
 
 
+CYCLOPS_EYES = (7, 10, 12)
+
+
 def draw_face(canvas, mask, eyes, mood, a):
-    """Mood mouth + blush (colour mode only)."""
+    """Mood mouth + blush (colour mode only). `eyes` = the open eyes the face is laid out
+    for (breathing closes the eyes without moving the mouth)."""
     spr, x0, y0, w, h, dx = eye_layout(eyes, a)
     my = y0 + h + (1 if h >= 3 else 2)
     mx, mouth = MOODS.get(mood, MOODS[0])
     for (x, y, ch) in mouth:
         put(canvas, mx + x, my + y, ROLE[ch])
     by = a["eye_y"] + 2
-    bx = 16 + dx + (w + 1) // 2 + 1 if eyes not in (7, 10) else 21
+    bx = 16 + dx + (w + 1) // 2 + 1 if eyes not in CYCLOPS_EYES else 21
     for x in (bx, 31 - bx):
         if (x, by) in mask:
             put(canvas, x, by, "blush")
@@ -597,12 +643,32 @@ class Pheno:
     item: int = 0     # care item: 0 none, 1 umbrella, 2 bottle, 3 fan, 4 sun hat, 5 scarf,
     #                   6 beanie, 7 blanket, 8 jump rope, 9 juice box
     alive: int = 0    # widget-alive frame: 0 none, 1 charging, 2 low power, 3 morning
+    breath: int = -1  # breathing phase 0..7 (inhale 0-3, exhale 4-7); -1 = off
+
+
+def breath_level(p) -> int:
+    return BREATH_LEVEL[p.breath % BREATH_PHASES] if p.breath >= 0 else 0
+
+
+def creature_mask(p) -> set:
+    """The body mask the creature is drawn with (breathing inflates it)."""
+    return body_mask(p.body, p.stage, breath_level(p))
+
+
+def breath_eyes(eyes, level):
+    """Inhale softly closes the eyes: level 1 half-closed, level 2 closed."""
+    if level == 0 or eyes in (9, 10):
+        return eyes
+    cyc = eyes in CYCLOPS_EYES
+    if level == 1:
+        return 12 if cyc else 11
+    return 10 if cyc else 9
 
 
 def build(p: Pheno, silhouette: bool = False, face=None) -> dict:
     """The role canvas: {(x, y): Px}. `face` = (eyes, mood) override (scenes)."""
     stage = p.stage
-    mask = body_mask(p.body, stage)
+    mask = creature_mask(p)
     canvas: dict = {}
     if stage == EGG:
         for pt in pts(mask):
@@ -624,12 +690,18 @@ def build(p: Pheno, silhouette: bool = False, face=None) -> dict:
     draw_head(canvas, p.head, a, stage, wind)
     for pt in pts(mask):  # body over head base so ears tuck behind
         canvas.setdefault(pt, Px("base", True))
-    apply_pattern(canvas, mask, p.pattern, a)
+    # breathing: patterns stay where they are on the resting body (they must not slide
+    # while it inflates); freckles follow the face
+    pa = a if p.breath < 0 or p.pattern == 5 else anchors(body_mask(p.body, stage))
+    apply_pattern(canvas, mask, p.pattern, pa)
     shade_body(canvas, mask)
     outline(canvas)
+    face_eyes = eyes
+    if face is None and p.breath >= 0:
+        eyes = breath_eyes(eyes, breath_level(p))
     draw_eyes(canvas, eyes, a)
     if not silhouette:
-        draw_face(canvas, mask, eyes, mood, a)
+        draw_face(canvas, mask, face_eyes, mood, a)
     return canvas
 
 
@@ -701,6 +773,9 @@ LW = {
     "m": (255, 176, 204), "M": (230, 120, 160),
     "l": (255, 244, 200),
     "T": (214, 120, 80), "U": (170, 88, 60),
+    # wellbeing (calm / wind-down): soft, low-contrast tones
+    "v": (214, 202, 246), "V": (178, 162, 226), "h": (255, 236, 188), "H": (255, 214, 150),
+    "d": (176, 170, 190), "D": (128, 122, 146), "f": (168, 214, 176), "F": (116, 176, 134),
 }
 
 
@@ -932,7 +1007,7 @@ def living(p: Pheno, canvas: dict):
         if w == NIGHT:
             lw_sprite(22, 3, ZZZ_ROWS, front)
         return canvas, behind, front
-    mask = body_mask(p.body, p.stage)
+    mask = creature_mask(p)
     a = anchors(mask)
     body_front, body_behind = [], []
     item_layer(p, it, mask, a, body_front, body_behind)
@@ -1464,7 +1539,7 @@ def render_jump_rope(p: Pheno, frame: int) -> Image.Image:
     """64x48 yard frame of the jump-rope mini-game."""
     im = Img(RW, RH)
     draw_yard(im)
-    mask = body_mask(p.body, p.stage)
+    mask = creature_mask(p)
     a = anchors(mask)
     lx, rx = row_ext(mask, a["mid_y"])
     ox = 16
@@ -1655,6 +1730,23 @@ GLYPHS = [
      "................",
      "................"],
 ]
+GLYPH_CALM = 8  # calm (meditating creature + breath ring); wellbeing, not a pair scene
+GLYPHS.append(["................",  # calm: meditating creature, closed eyes, sparkles, cushion
+               "............X...",
+               "...X.......XXX..",
+               "..XXX.......X...",
+               "...X............",
+               "......XXXX......",
+               "....XXXXXXXX....",
+               "...XXXXXXXXXX...",
+               "...X.X.XX.X.X...",
+               "...XX.XXXX.XX...",
+               "..XXXXXXXXXXXX..",
+               ".X..XXXXXXXX..X.",
+               "X....XXXXXX....X",
+               ".XXXXXXXXXXXXXX.",
+               "..XXXXXXXXXXXX..",
+               "................"])
 GLYPH_SIZE = 16
 
 
@@ -1664,6 +1756,178 @@ def render_glyph(scene: int) -> Image.Image:
     for (x, y, ch) in sprite(GLYPHS[scene]):
         px[x, y] = (255, 255, 255, 255)
     return img
+
+
+# ---------------------------------------------------------------- wellbeing (64x48)
+# docs/wellbeing-spec.md: "calm" activity scene (the creature meditates; also the widget
+# pose after breathing) and the evening wind-down. Same rules as the scenes above.
+CALM_FRAMES = 4                      # gentle float loop
+CALM_FLOAT = [0, 1, 2, 1]            # px above the cushion
+CALM_SKY = [(0, (224, 214, 248)), (12, (232, 220, 248)), (22, (240, 226, 244)),
+            (30, (246, 232, 238))]   # (from y, colour) soft lavender -> blush bands
+CALM_GROUND = (236, 226, 238)
+CALM_CUSHION = ["...oooooooooooooooooo...",
+                ".oovvvvvvvvvvvvvvvvvvoo.",
+                "ovvvvvvvvvvvvvvvvvvvvvvo",
+                "oVvvvvvvvvvvvvvvvvvvvvVo",
+                ".oVVVVVVVVVVVVVVVVVVVVo.",
+                "...oooooooooooooooooo..."]
+CALM_LEAF = ["..fF", ".ffF", "ffF.", "F..."]
+CALM_SPARK = [".w.", "whw", ".w."]
+CALM_LEAF_PATH = [(9, 10), (10, 12), (9, 14), (8, 12)]     # drifts down and sways
+CALM_SPARKS = [(50, 8), (54, 20), (12, 24), (46, 30)]      # (x, y); one rests per frame
+CALM_DOTS = [(6, 6), (58, 5), (31, 2), (3, 34), (60, 36)]  # tiny far twinkles
+CALM_INK = (150, 134, 196)           # soft outline for calm props (no harsh ink)
+
+
+def calm_cmap():
+    return {**LW, "o": CALM_INK}
+
+
+def calm_ring(cx2, cy2, rx, ry):
+    """Soft aura ring: integer ellipse band around the half-pixel centre (cx2, cy2 are
+    doubled coordinates). Points where 1 - band <= (dx/rx)^2 + (dy/ry)^2 <= 1, in exact
+    integer maths; dotted on the lower half so it reads as a glow, not a line."""
+    out = []
+    rx2, ry2 = (2 * rx) ** 2, (2 * ry) ** 2
+    for y in range(RH):
+        for x in range(RW):
+            dx, dy = 2 * x + 1 - cx2, 2 * y + 1 - cy2
+            v = dx * dx * ry2 + dy * dy * rx2   # (dx/rx)^2 + (dy/ry)^2, scaled by `one`
+            one = rx2 * ry2
+            if one * 10 <= v * 12 and v <= one:  # band: v/one in [10/12, 1]
+                if 2 * y + 1 > cy2 and (x + y) % 2:
+                    continue
+                out.append((x, y))
+    return out
+
+
+def render_calm(p: Pheno, frame: int = 0) -> Image.Image:
+    """64x48 meditating "calm" pose: eyes closed, gentle smile, floating above a cushion
+    inside a soft aura ring, a leaf drifting by and a resting sparkle. Opaque.
+    Frames 0..3 loop the float (widgets use frame 0)."""
+    f = frame % CALM_FRAMES
+    im = Img(RW, RH)
+    for y in range(RH):
+        c = CALM_SKY[0][1]
+        for (y0, col) in CALM_SKY:
+            if y >= y0:
+                c = col
+        for x in range(RW):
+            im.set(x, y, c if y < 38 else CALM_GROUND)
+    for (x, y) in CALM_DOTS:
+        if (x + f) % 3:
+            im.set(x, y, LW["w"])
+    mask = body_mask(p.body, p.stage)
+    a = anchors(mask)
+    pal = palette(p.palette, p.shift)
+    lift = CALM_FLOAT[f]
+    ox, oy = 16, 36 - (a["bottom"] + 1) - lift
+    # aura ring around the creature (behind), in its own light colour
+    cy2 = 2 * (oy + a["top"] + (a["bottom"] - a["top"]) // 2) + 1
+    ring = calm_ring(64, cy2, 17, 15)
+    for (x, y) in ring:  # two thirds of the way from the sky to the creature's light colour
+        bg = im.get(x, y)
+        im.set(x, y, tuple((bg[i] + 2 * pal["light"][i]) // 3 for i in range(3)))
+    # cushion + soft shadow that shrinks as the creature rises
+    cm = calm_cmap()
+    im.spr(20, 37, CALM_CUSHION, None, cm)
+    sw = 7 - lift
+    for x in range(32 - sw, 32 + sw):
+        im.set(x, 36, LW["V"])
+    eyes = EYE_CLOSED_CYCLOPS if p.eyes == 7 else EYE_CLOSED
+    im.creature(creature_layers(p, face=(eyes, 0), plain=True, aura=False), ox, oy)
+    lx, ly = CALM_LEAF_PATH[f]
+    im.spr(lx, ly, CALM_LEAF, None, cm)
+    sx, sy = CALM_SPARKS[f]
+    im.spr(sx - 1, sy - 1, CALM_SPARK, None, cm)
+    for (k, (tx, ty)) in enumerate(CALM_SPARKS):
+        if k != f:
+            im.set(tx, ty, LW["h"])
+    return im.image()
+
+
+# Evening wind-down: 0 big yawn (lamp on), 1 small yawn, 2 pulls the lamp cord (bulb
+# fading), 3 lamp off, eyes closed, sleepy "z". The dim overlay deepens every frame.
+WD_FRAMES = 4
+WD_DIM = [(236, 228, 244), (210, 200, 232), (178, 166, 216), (140, 128, 196)]  # x/256
+WD_FACE = [(11, 3), (11, 4), (9, 0), (9, 0)]   # (eyes, mood) for non-cyclops creatures
+WD_LAMP = ["..ooooo..",
+           ".ohhhhho.",
+           "ohhhhhhho",
+           "ooooooooo",
+           "....o....",
+           "....o....",
+           "....o....",
+           "..ooooo.."]
+WD_TABLE = ["oooooooooooo",
+            "onnnnnnnnnno",
+            "oNNNNNNNNNNo",
+            ".oNo....oNo.",
+            ".oNo....oNo.",
+            ".oNo....oNo.",
+            ".ooo....ooo."]
+WD_BULB = {0: "H", 1: "H", 2: "h", 3: "d"}     # lamp shade colour per frame
+WD_PILLOW = [".oooooooooooooooooooooo.",
+             "owwwwwwwwwwwwwwwwwwwwwwo",
+             "oeeeeeeeeeeeeeeeeeeeeeeo",
+             ".oooooooooooooooooooooo."]
+WD_Z = ["vvvv", "..v.", ".v..", "vvvv", "......vvv", ".......v.", "......vvv"]
+WD_LAMP_X, WD_LAMP_Y = 50, 21
+WD_GLOW = (255, 232, 176)
+
+
+def render_wind_down(p: Pheno, frame: int = 0) -> Image.Image:
+    """64x48 evening wind-down frame (opt-in routine): the creature yawns by a bedside lamp,
+    the room dims step by step and the lamp switches off. Opaque."""
+    f = frame % WD_FRAMES
+    im = Img(RW, RH)
+    draw_room_bg(im, False, True)
+    draw_window(im, "night", NONE)
+    cm = calm_cmap()
+    lit = set()
+    lamp_on = f <= 1
+    if f <= 2:  # warm pool of light around the shade: solid core, dithered rim
+        core, rim = (36, 72) if lamp_on else (0, 30)
+        for y in range(WD_LAMP_Y - 9, WD_LAMP_Y + 12):
+            for x in range(WD_LAMP_X - 9, WD_LAMP_X + 18):
+                dx, dy = x - (WD_LAMP_X + 4), (y - (WD_LAMP_Y + 2)) * 3 // 2
+                r = dx * dx + dy * dy
+                if x < RW and r <= rim and (r <= core or (x + y) % 2 == 0):
+                    c = im.get(x, y)
+                    im.set(x, y, tuple((c[i] + WD_GLOW[i]) // 2 for i in range(3)))
+                    lit.add((x, y))
+    im.spr(WD_LAMP_X - 2, WD_LAMP_Y + 8, WD_TABLE, None, cm)
+    im.spr(WD_LAMP_X, WD_LAMP_Y, WD_LAMP, None, {**cm, "h": LW[WD_BULB[f]]})
+    if lamp_on:
+        for (x, y, _) in sprite(WD_LAMP[1:3]):
+            lit.add((WD_LAMP_X + x, WD_LAMP_Y + 1 + y))
+    # cord: hangs from the shade; pulled down one px in frame 2
+    cord = WD_LAMP_X + 7
+    for y in range(WD_LAMP_Y + 3, WD_LAMP_Y + 6 + (1 if f == 2 else 0)):
+        im.set(cord, y, LW["D"])
+    im.set(cord, WD_LAMP_Y + 6 + (1 if f == 2 else 0), LW["h"] if lamp_on else LW["d"])
+    # pillow and the creature lying on it
+    im.spr(4, 38, WD_PILLOW, None, cm)
+    mask = body_mask(p.body, p.stage)
+    a = anchors(mask)
+    oy = 40 - (a["bottom"] + 1)
+    eyes, mood = WD_FACE[f]
+    if p.eyes == 7:
+        eyes = 12 if eyes == 11 else EYE_CLOSED_CYCLOPS
+    layers = creature_layers(p, face=(eyes, mood), plain=True, aura=False)
+    im.creature(layers, 4, oy)
+    if f == 3:
+        im.spr(26, max(1, oy + a["top"] - 6), WD_Z, None, cm)
+    # dim overlay (lit pixels keep the lamp's warmth while it is on)
+    t = WD_DIM[f]
+    for y in range(RH):
+        for x in range(RW):
+            c = im.get(x, y)
+            if c is None or (lamp_on and (x, y) in lit):
+                continue
+            im.px[y * RW + x] = tuple((c[i] * t[i]) // 256 for i in range(3))
+    return im.image()
 
 
 # ---------------------------------------------------------------- app icon
@@ -1958,9 +2222,42 @@ def jumprope_sheet(path: str, scale: int = 4):
     _paste_grid(path, imgs, 6, scale, labels)
 
 
+def calm_sheet(path: str, scale: int = 4):
+    """Review: breathing strip (phases 0..7) for several creatures / stages, calm pose
+    loop, wind-down frames and the calm glyph."""
+    six = _review_six()
+    names = ["in 0", "in 1", "in 2", "in 3", "out 4", "out 5", "out 6", "out 7"]
+    strip = [Pheno(**{**six[0].__dict__, "stage": st}) for st in (3, 2, 1, 0)]
+    strip += [six[2], six[5], Pheno(**{**six[3].__dict__, "eyes": 7})]
+    rows, labels = [], []
+    for p in strip:
+        for b in range(BREATH_PHASES):
+            q = Pheno(**{**p.__dict__, "breath": b})
+            rows.append(render_raw(q))
+            labels.append(names[b])
+    _paste_grid(path.replace(".png", "_breath.png"), rows, 8, 5, labels)
+    imgs, labels = [], []
+    for p in (six[0], six[2], six[5]):
+        for f in range(CALM_FRAMES):
+            imgs.append(render_calm(p, f))
+            labels.append(f"calm {f}")
+    for p in (six[1], six[4]):
+        for f in range(WD_FRAMES):
+            imgs.append(render_wind_down(p, f))
+            labels.append(["yawn", "small yawn", "lamp click", "lights off"][f])
+    _paste_grid(path, imgs, 4, scale, labels)
+    g = render_glyph(GLYPH_CALM)
+    big = g.resize((128, 128), Image.NEAREST)
+    gs = Image.new("RGB", (168, 200), (20, 18, 28))
+    gs.paste(big, (20, 20), big)
+    sm = g.resize((32, 32), Image.NEAREST)
+    gs.paste(sm, (68, 158), sm)
+    gs.save(path.replace(".png", "_glyph.png"))
+
+
 def glyphs_sheet(path: str, scale: int = 8):
     imgs = [render_glyph(i) for i in range(len(GLYPHS))]
-    names = SCENE_NAMES + ["jump rope"]
+    names = SCENE_NAMES + ["jump rope", "calm"]
     w = 16 * scale
     gap = 20
     sheet = Image.new("RGB", (gap + len(imgs) * (w + gap), w + 2 * gap + 60 + w // 4 + gap),
@@ -1990,4 +2287,5 @@ if __name__ == "__main__":
     rooms_sheet(f"{outdir}/rooms.png")
     jumprope_sheet(f"{outdir}/jumprope.png")
     glyphs_sheet(f"{outdir}/glyphs.png")
+    calm_sheet(f"{outdir}/calm.png")
     print("saved", outdir)

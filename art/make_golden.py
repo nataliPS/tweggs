@@ -9,7 +9,8 @@ import json
 import random
 
 from render import (S, Pheno, random_pheno, render_raw, render_room, render_jump_rope,
-                    render_glyph, GLYPHS, JR_FRAMES)
+                    render_glyph, GLYPHS, JR_FRAMES, render_calm, render_wind_down, CALM_FRAMES,
+                    WD_FRAMES, BREATH_PHASES)
 
 cases = []  # (pheno, silhouette)
 rnd = random.Random(99)
@@ -66,11 +67,40 @@ for i in range(6):  # silhouettes ignore living-world layers
     p = random_pheno(lw, 1200 + i)
     p.weather, p.item, p.alive = i, i + 1, i % 4
     cases.append((p, True))
+# ---- wellbeing (appended): breathing phases on every body / stage / pattern, cyclops,
+# with living-world layers, and in silhouette
+wb = random.Random(3033)
+for b in range(BREATH_PHASES):
+    for k, st in enumerate((3, 2, 1, 0)):
+        p = random_pheno(wb, 1250 + b * 10 + k)
+        p.breath, p.stage = b, st
+        p.body, p.pattern = (b + k) % 6, (b + 2 * k) % 6
+        if k == 0 and b % 3 == 0:
+            p.eyes = 7
+        cases.append((p, False))
+for i in range(6):
+    p = random_pheno(wb, 1340 + i)
+    p.breath, p.body = (1, 3, 2, 6, 0, 3)[i], i
+    p.weather, p.item, p.alive = (1, 3, 0, 5, 0, 2)[i], (1, 5, 8, 0, 9, 4)[i], (0, 0, 0, 0, 1, 0)[i]
+    cases.append((p, False))
+for i in range(4):
+    p = random_pheno(wb, 1360 + i)
+    p.breath, p.body, p.stage = 3, i, 3 - i % 2
+    cases.append((p, True))
+
+
+def pd(p):
+    """Pheno as JSON; `breath` only when on (keeps the pre-wellbeing cases byte-identical)."""
+    d = dict(p.__dict__)
+    if d.get("breath", -1) < 0:
+        d.pop("breath", None)
+    return d
+
 
 out = []
 for p, sil in cases:
     raw = render_raw(p, silhouette=sil).tobytes()
-    out.append({"pheno": p.__dict__, "silhouette": sil,
+    out.append({"pheno": pd(p), "silhouette": sil,
                 "sha256": hashlib.sha256(raw).hexdigest(), "rgba_hex": raw.hex()})
 
 # ---- scenes: rooms (64x48), jump rope (64x48), glyphs (16x16)
@@ -91,12 +121,12 @@ for scene in range(7):
             a.stage = (3, 2, 1, 3)[len(scenes) % 4]
             b.eyes = 7 if len(scenes) % 5 == 0 else b.eyes
             furn = [1, 1, 1, 1, 1, 1] if len(scenes) % 3 else [1, 0, 1, 0, 1, 0]
-            scene_case("room", {"pair": [a.__dict__, b.__dict__], "scene": scene,
+            scene_case("room", {"pair": [pd(a), pd(b)], "scene": scene,
                                 "time_of_day": tod, "weather": w, "furniture": furn},
                        render_room((a, b), scene, tod, w, tuple(furn)))
 for w in (2, 4, 5):
     a, b = random_pheno(sr, 1500 + w), random_pheno(sr, 1600 + w)
-    scene_case("room", {"pair": [a.__dict__, b.__dict__], "scene": 2, "time_of_day": 0,
+    scene_case("room", {"pair": [pd(a), pd(b)], "scene": 2, "time_of_day": 0,
                         "weather": w, "furniture": [1, 1, 1, 1, 1, 1]},
                render_room((a, b), 2, 0, w))
 for k, st in enumerate((3, 3, 2, 1)):
@@ -105,7 +135,17 @@ for k, st in enumerate((3, 3, 2, 1)):
     if k == 1:
         p.eyes = 7
     for f in range(JR_FRAMES):
-        scene_case("jumprope", {"pheno": p.__dict__, "frame": f}, render_jump_rope(p, f))
+        scene_case("jumprope", {"pheno": pd(p), "frame": f}, render_jump_rope(p, f))
+cr = random.Random(5150)
+for k, st in enumerate((3, 3, 2, 1, 3, 2)):
+    p = random_pheno(cr, 1800 + k)
+    p.stage, p.body = st, k % 6
+    if k == 4:
+        p.eyes = 7
+    for f in range(CALM_FRAMES):
+        scene_case("calm", {"pheno": pd(p), "frame": f}, render_calm(p, f))
+    for f in range(WD_FRAMES):
+        scene_case("winddown", {"pheno": pd(p), "frame": f}, render_wind_down(p, f))
 for g in range(len(GLYPHS)):
     scene_case("glyph", {"scene": g}, render_glyph(g))
 
