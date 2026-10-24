@@ -1,0 +1,5 @@
+node_modules/
+.build/
+*.xcodeproj/xcuserdata/
+.DS_Store
+art/out/
