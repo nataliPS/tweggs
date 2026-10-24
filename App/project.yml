@@ -27,6 +27,8 @@ settings:
     SWIFT_EMIT_LOC_STRINGS: YES
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     DEAD_CODE_STRIPPING: YES
+    # Art v2 is shipped in MixlingsArt (Phenotype.mood/.stage, renderSilhouette): hooks enabled.
+    SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) MIXLINGS_ART_V2"
 
 packages:
   MixlingsKit:
@@ -40,6 +42,9 @@ targets:
       - path: Sources
       - path: Shared
       - path: Resources
+      # C1: privacy manifest (one per target; must be copied as a resource).
+      - path: Privacy/App/PrivacyInfo.xcprivacy
+        buildPhase: resources
     dependencies:
       - package: MixlingsKit
         product: MixlingsGenome
@@ -90,6 +95,8 @@ targets:
     sources:
       - path: MixlingsWidget
       - path: Shared
+      - path: Privacy/Widget/PrivacyInfo.xcprivacy
+        buildPhase: resources
     dependencies:
       - package: MixlingsKit
         product: MixlingsGenome

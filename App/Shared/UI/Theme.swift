@@ -42,6 +42,8 @@ enum Theme {
     static func rarity(score: Int) -> Color { rarity(Genetics.tier(forScore: score)) }
 
     static let cornerRadius: CGFloat = 18
+    /// U1: Apple HIG minimum hit target.
+    static let minTapTarget: CGFloat = 44
 
     static func title(_ size: CGFloat = 24) -> Font { .system(size: size, weight: .heavy, design: .rounded) }
     static func body(_ size: CGFloat = 16) -> Font { .system(size: size, weight: .semibold, design: .rounded) }
@@ -69,7 +71,7 @@ extension View {
     func card(fill: Color = Theme.card) -> some View { modifier(CardBackground(fill: fill)) }
 }
 
-/// Chunky pill button used for care actions.
+/// Chunky pill button used for care actions. Always at least 44 pt tall (U1 tap targets).
 struct PixelButtonStyle: ButtonStyle {
     var tint: Color = Theme.accent
     func makeBody(configuration: Configuration) -> some View {
@@ -78,7 +80,8 @@ struct PixelButtonStyle: ButtonStyle {
             .foregroundStyle(Theme.ink)
             .padding(.vertical, 10)
             .padding(.horizontal, 14)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: Theme.minTapTarget)
+            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             .background(
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(tint.opacity(configuration.isPressed ? 0.45 : 0.28))
@@ -121,5 +124,39 @@ struct StatBar: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(label))
         .accessibilityValue(Text("\(value) percent"))
+    }
+}
+
+extension View {
+    /// U1: pads small controls (icons, chips) out to a 44 x 44 pt hit area.
+    func minTapTarget() -> some View {
+        frame(minWidth: Theme.minTapTarget, minHeight: Theme.minTapTarget).contentShape(Rectangle())
+    }
+}
+
+/// Friendly empty state used by Collection, Sanctuary and Breed.
+struct EmptyStateCard: View {
+    let systemImage: String
+    let title: LocalizedStringKey
+    let message: Text
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Image(systemName: systemImage)
+                .font(.system(size: 34))
+                .foregroundStyle(Theme.accent)
+            Text(title)
+                .font(Theme.title(18))
+                .foregroundStyle(Theme.ink)
+                .multilineTextAlignment(.center)
+            message
+                .font(Theme.body(14))
+                .foregroundStyle(Theme.inkSoft)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 8)
+        .card()
+        .accessibilityElement(children: .combine)
     }
 }

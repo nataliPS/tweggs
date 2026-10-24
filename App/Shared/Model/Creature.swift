@@ -82,6 +82,11 @@ struct Creature: Codable, Identifiable, Equatable, Sendable {
     /// TODO(server): global serial issued by the server.
     var serial: Int?
 
+    // MARK: Slots (added in save v3)
+
+    /// G5: resting in the free, unlimited sanctuary instead of an active slot. Never deleted.
+    var inSanctuary: Bool
+
     init(
         id: String,
         name: String,
@@ -97,7 +102,8 @@ struct Creature: Codable, Identifiable, Equatable, Sendable {
         generation: Int = 0,
         parentIds: [String]? = nil,
         discoveredFirst: Bool = false,
-        serial: Int? = nil
+        serial: Int? = nil,
+        inSanctuary: Bool = false
     ) {
         self.id = id
         self.name = name
@@ -114,11 +120,13 @@ struct Creature: Codable, Identifiable, Equatable, Sendable {
         self.parentIds = parentIds
         self.discoveredFirst = discoveredFirst
         self.serial = serial
+        self.inSanctuary = inSanctuary
     }
 
     private enum CodingKeys: String, CodingKey {
         case id, name, genome, origin, paletteShift, bornAt, hatchedAt, mood, hunger, joy, lastUpdated
         case generation, parentIds, discoveredFirst, serial
+        case inSanctuary
     }
 
     /// Tolerant decoding: fields added after v1 fall back to defaults.
@@ -139,6 +147,7 @@ struct Creature: Codable, Identifiable, Equatable, Sendable {
         parentIds = try c.decodeIfPresent([String].self, forKey: .parentIds)
         discoveredFirst = try c.decodeIfPresent(Bool.self, forKey: .discoveredFirst) ?? false
         serial = try c.decodeIfPresent(Int.self, forKey: .serial)
+        inSanctuary = try c.decodeIfPresent(Bool.self, forKey: .inSanctuary) ?? false
     }
 
     /// Look key for discovery / encyclopedia (genome-spec §8). Nil for a corrupt genome.
@@ -149,11 +158,13 @@ struct Creature: Codable, Identifiable, Equatable, Sendable {
     var joyValue: Int { Int(joy.rounded()) }
 }
 
-/// Everything persisted by `CreatureStore`. Versioned for future migrations.
+/// Everything persisted by `CreatureStore` (collection.json). Versioned for future migrations.
 /// v2 (collecting): sparks, daily surprise, cosmetics, hatch counter, discovery log,
 /// season badges, trade offers. Every v2 field has a decode default, so v1 files load.
+/// v3 (retro 2026-10-24): persisted starter genomes (T2), sanctuary flag on creatures (G5),
+/// age band (C2), spark sinks (G6), pity counter (G7), first-share flag (U1), report/block (C3).
 struct SaveData: Codable, Equatable, Sendable {
-    static let currentVersion = 2
+    static let currentVersion = 3
 
     var version: Int
     /// Random local player id (UUID string). Used as `starter(playerId, slot)` input and as
@@ -177,6 +188,28 @@ struct SaveData: Codable, Equatable, Sendable {
     /// Trade offers created on this device. TODO(server): offers live on the server.
     var tradeOffers: [TradeOffer]
 
+    // MARK: v3
+
+    /// T2: starter genomes by slot ("0" onboarding egg, "1" gift adult, "2" day-2 baby).
+    /// Written once and never re-derived, so a future change to `Genetics.starter` can't
+    /// silently change a player's starters.
+    var starterGenomes: [String: Genome]
+    /// C2: coarse age band from the neutral age screen. Only the band is stored, never the year.
+    var ageBand: AgeBand?
+    /// Mix Club (subscription) flag. TODO(storekit): derive from `Transaction.currentEntitlements`.
+    var isClubMember: Bool
+    /// G7: breeds in a row whose child did not fill a missing season entry.
+    var breedsWithoutNewEntry: Int
+    /// G6: local day of the last hatch-rush (max 1 per day).
+    var lastHatchRushDay: String?
+    /// G6: gene hints already paid for (`SparkSinks.geneHintKey`); re-opening one is free.
+    var geneHintKeys: [String]
+    /// U1/H3: the "Make a baby with a friend" prompt was shown after onboarding.
+    var firstSharePromptShown: Bool
+    /// C3: offer ids / sender keys the player blocked or reported. TODO(server): send reports.
+    var blockedSenders: [String]
+    var reportedOffers: [String]
+
     init(
         version: Int = SaveData.currentVersion,
         playerId: String = UUID().uuidString.lowercased(),
@@ -189,7 +222,16 @@ struct SaveData: Codable, Equatable, Sendable {
         hatchCounter: Int = 0,
         discoveries: DiscoveryLog = DiscoveryLog(),
         seasonBadges: [String] = [],
-        tradeOffers: [TradeOffer] = []
+        tradeOffers: [TradeOffer] = [],
+        starterGenomes: [String: Genome] = [:],
+        ageBand: AgeBand? = nil,
+        isClubMember: Bool = false,
+        breedsWithoutNewEntry: Int = 0,
+        lastHatchRushDay: String? = nil,
+        geneHintKeys: [String] = [],
+        firstSharePromptShown: Bool = false,
+        blockedSenders: [String] = [],
+        reportedOffers: [String] = []
     ) {
         self.version = version
         self.playerId = playerId
@@ -203,11 +245,22 @@ struct SaveData: Codable, Equatable, Sendable {
         self.discoveries = discoveries
         self.seasonBadges = seasonBadges
         self.tradeOffers = tradeOffers
+        self.starterGenomes = starterGenomes
+        self.ageBand = ageBand
+        self.isClubMember = isClubMember
+        self.breedsWithoutNewEntry = breedsWithoutNewEntry
+        self.lastHatchRushDay = lastHatchRushDay
+        self.geneHintKeys = geneHintKeys
+        self.firstSharePromptShown = firstSharePromptShown
+        self.blockedSenders = blockedSenders
+        self.reportedOffers = reportedOffers
     }
 
     private enum CodingKeys: String, CodingKey {
         case version, playerId, creatures, activeCreatureId, onboardingComplete
         case sparks, lastSurpriseDay, cosmetics, hatchCounter, discoveries, seasonBadges, tradeOffers
+        case starterGenomes, ageBand, isClubMember, breedsWithoutNewEntry, lastHatchRushDay, geneHintKeys
+        case firstSharePromptShown, blockedSenders, reportedOffers
     }
 
     init(from decoder: Decoder) throws {
@@ -224,7 +277,18 @@ struct SaveData: Codable, Equatable, Sendable {
         discoveries = try c.decodeIfPresent(DiscoveryLog.self, forKey: .discoveries) ?? DiscoveryLog()
         seasonBadges = try c.decodeIfPresent([String].self, forKey: .seasonBadges) ?? []
         tradeOffers = try c.decodeIfPresent([TradeOffer].self, forKey: .tradeOffers) ?? []
+        starterGenomes = try c.decodeIfPresent([String: Genome].self, forKey: .starterGenomes) ?? [:]
+        // Unknown future band values must not make the whole save unreadable.
+        ageBand = try? c.decodeIfPresent(AgeBand.self, forKey: .ageBand)
+        isClubMember = try c.decodeIfPresent(Bool.self, forKey: .isClubMember) ?? false
+        breedsWithoutNewEntry = try c.decodeIfPresent(Int.self, forKey: .breedsWithoutNewEntry) ?? 0
+        lastHatchRushDay = try c.decodeIfPresent(String.self, forKey: .lastHatchRushDay)
+        geneHintKeys = try c.decodeIfPresent([String].self, forKey: .geneHintKeys) ?? []
+        firstSharePromptShown = try c.decodeIfPresent(Bool.self, forKey: .firstSharePromptShown) ?? false
+        blockedSenders = try c.decodeIfPresent([String].self, forKey: .blockedSenders) ?? []
+        reportedOffers = try c.decodeIfPresent([String].self, forKey: .reportedOffers) ?? []
         if version < 2 { migrateToV2() }
+        if version < 3 { migrateToV3() }
     }
 
     /// v1 -> v2: give existing creatures serials (in save order) and seed the discovery log.
@@ -237,10 +301,45 @@ struct SaveData: Codable, Equatable, Sendable {
         version = 2
     }
 
+    /// v2 -> v3 (T2): capture the starter genomes that are already in the save, so they are
+    /// never re-derived. Matches the deterministic starter ids first, then falls back to origin
+    /// (very old saves used other ids): first `.hatched` -> slot 0, first `.starter` -> slot 1.
+    /// The age band stays nil, so the app asks once (C2). Everything else uses decode defaults.
+    mutating func migrateToV3() {
+        for slot in 0...2 {
+            let key = String(slot)
+            guard starterGenomes[key] == nil,
+                  let c = creature(id: CreatureFactory.starterId(playerId: playerId, slot: slot)) else { continue }
+            starterGenomes[key] = c.genome
+        }
+        if starterGenomes["0"] == nil, let c = creatures.first(where: { $0.origin == .hatched }) {
+            starterGenomes["0"] = c.genome
+        }
+        if starterGenomes["1"] == nil, let c = creatures.first(where: { $0.origin == .starter }) {
+            starterGenomes["1"] = c.genome
+        }
+        version = 3
+    }
+
+    /// T2: the persisted starter genome for `slot`, deriving and storing it on first use only.
+    mutating func starterGenome(slot: Int) -> Genome? {
+        let key = String(slot)
+        if let g = starterGenomes[key] { return g }
+        guard let g = try? Genetics.starter(playerId: playerId, slot: slot) else { return nil }
+        starterGenomes[key] = g
+        return g
+    }
+
+    /// The Home creature: the selected one, else the first creature in an active slot.
     var activeCreature: Creature? {
         if let id = activeCreatureId, let c = creatures.first(where: { $0.id == id }) { return c }
-        return creatures.first
+        return creatures.first(where: { !$0.inSanctuary }) ?? creatures.first
     }
+
+    /// Creatures in active slots (G5).
+    var activeSlotCreatures: [Creature] { creatures.filter { !$0.inSanctuary } }
+    /// Creatures resting in the sanctuary (G5).
+    var sanctuaryCreatures: [Creature] { creatures.filter(\.inSanctuary) }
 
     func creature(id: String) -> Creature? {
         creatures.first(where: { $0.id == id })

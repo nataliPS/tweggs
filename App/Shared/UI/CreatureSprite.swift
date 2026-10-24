@@ -10,24 +10,43 @@ struct CreatureSprite: View {
     let creature: Creature
     let stage: Stage
     var silhouette: Bool = false
+    /// Mood expression layer (A1). Ignored until MixlingsArt supports it.
+    var condition: Condition? = nil
 
     var body: some View {
         Group {
             if stage == .egg {
                 EggView(traits: PhenotypeMapper.traits(for: creature))
+                    .modifier(SilhouetteModifier(enabled: silhouette))
             } else {
-                // Babies are drawn smaller; same art for now.
-                // TODO(art): per-stage art (baby/teen proportions) once MixlingsArt supports it.
-                MixlingView(PhenotypeMapper.phenotype(for: creature))
-                    .scaleEffect(scale)
+                spriteBody
             }
         }
         .aspectRatio(1, contentMode: .fit)
-        .modifier(SilhouetteModifier(enabled: silhouette))
         .accessibilityHidden(true)
     }
 
+    @ViewBuilder
+    private var spriteBody: some View {
+        let p = PhenotypeMapper.phenotype(for: creature, stage: stage, condition: condition)
+        #if MIXLINGS_ART_V2
+        if silhouette, let cg = PhenotypeMapper.silhouetteImage(p) {
+            Rectangle().fill(.primary).mask {
+                Image(decorative: cg, scale: 1).interpolation(.none).resizable().aspectRatio(1, contentMode: .fit)
+            }
+        } else {
+            MixlingView(p).modifier(SilhouetteModifier(enabled: silhouette))
+        }
+        #else
+        // Babies are drawn smaller; same art until MixlingsArt draws stages (see PhenotypeMapper).
+        MixlingView(p)
+            .scaleEffect(scale)
+            .modifier(SilhouetteModifier(enabled: silhouette))
+        #endif
+    }
+
     private var scale: CGFloat {
+        if PhenotypeMapper.artDrawsStages { return 1 }
         switch stage {
         case .egg: return 1
         case .baby: return 0.72

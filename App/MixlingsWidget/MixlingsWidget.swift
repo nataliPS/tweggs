@@ -44,18 +44,19 @@ struct MixlingProvider: TimelineProvider {
         Self.entry(for: Self.sampleCreature, at: .now)
     }
 
+    // T4: the widget reads ONLY active.json (never the full collection, never Firebase).
     func getSnapshot(in context: Context, completion: @escaping (MixlingEntry) -> Void) {
-        let save = CreatureStore.shared.load()
-        var creature: Creature? = save.activeCreature
+        let snap = CreatureStore.shared.loadActive()
+        var creature: Creature? = snap?.creature
         if context.isPreview && creature == nil {
             creature = Self.sampleCreature // widget gallery before onboarding
         }
-        completion(Self.entry(for: creature, at: .now, lastSurpriseDay: save.lastSurpriseDay))
+        completion(Self.entry(for: creature, at: .now, lastSurpriseDay: snap?.lastSurpriseDay))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<MixlingEntry>) -> Void) {
-        let save = CreatureStore.shared.load()
-        completion(Self.timeline(for: save.activeCreature, from: .now, lastSurpriseDay: save.lastSurpriseDay))
+        let snap = CreatureStore.shared.loadActive()
+        completion(Self.timeline(for: snap?.creature, from: .now, lastSurpriseDay: snap?.lastSurpriseDay))
     }
 
     /// Pure, testable timeline builder. `lastSurpriseDay` drives the "surprise waiting" hint,

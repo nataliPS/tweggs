@@ -5,12 +5,13 @@ import MixlingsArt
 /// Collection tab: segmented "Колекція / Енциклопедія / Сезон".
 struct CollectionView: View {
     enum Segment: String, CaseIterable, Identifiable {
-        case collection, encyclopedia, season
+        case collection, sanctuary, encyclopedia, season
         var id: String { rawValue }
 
         var title: LocalizedStringKey {
             switch self {
             case .collection: return "Collection"
+            case .sanctuary: return "Sanctuary"
             case .encyclopedia: return "Encyclopedia"
             case .season: return "Season"
             }
@@ -32,6 +33,7 @@ struct CollectionView: View {
 
                     switch segment {
                     case .collection: CollectionGrid()
+                    case .sanctuary: SanctuaryGrid()
                     case .encyclopedia: EncyclopediaView()
                     case .season: SeasonAlbumView()
                     }
@@ -41,6 +43,15 @@ struct CollectionView: View {
             .background(Theme.background.ignoresSafeArea())
             .navigationTitle("Collection")
             .toolbarBackground(Theme.background, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink { ClubView() } label: {
+                        Image(systemName: "crown.fill")
+                            .minTapTarget()
+                            .accessibilityLabel(Text("Mix Club"))
+                    }
+                }
+            }
             .navigationDestination(for: String.self) { id in
                 CreatureDetailView(creatureId: id)
             }
@@ -55,12 +66,64 @@ private struct CollectionGrid: View {
     private let columns = [GridItem(.adaptive(minimum: 104), spacing: 12)]
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 12) {
-            ForEach(model.creatures) { creature in
-                NavigationLink(value: creature.id) {
-                    CollectionCell(creature: creature, isActive: creature.id == model.active?.id)
+        let active = model.save.activeSlotCreatures
+        VStack(alignment: .leading, spacing: 10) {
+            // G5: slot counter. Club link when full.
+            HStack {
+                Text("\(active.count) of \(model.slotLimit) slots")
+                    .font(Theme.caption(13))
+                    .foregroundStyle(Theme.inkSoft)
+                Spacer()
+                if !model.save.isClubMember && active.count >= model.slotLimit {
+                    NavigationLink { ClubView() } label: {
+                        Label("More slots", systemImage: "crown.fill").font(Theme.caption(13)).minTapTarget()
+                    }
                 }
-                .buttonStyle(.plain)
+            }
+            if active.isEmpty {
+                // U1 empty state.
+                EmptyStateCard(systemImage: "oval.portrait",
+                               title: "No Mixlings here yet",
+                               message: Text("Hatch an egg or breed with a friend to start your collection."))
+            } else {
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(active) { creature in
+                        NavigationLink(value: creature.id) {
+                            CollectionCell(creature: creature, isActive: creature.id == model.active?.id)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// G5: free, unlimited sanctuary. Creatures rest here (no care decay shown, no breeding) and
+/// can come back any time a slot is free. Nothing is ever deleted.
+private struct SanctuaryGrid: View {
+    @Environment(GameModel.self) private var model
+    private let columns = [GridItem(.adaptive(minimum: 104), spacing: 12)]
+
+    var body: some View {
+        let resting = model.save.sanctuaryCreatures
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Free and unlimited. Mixlings here rest safely and never leave.")
+                .font(Theme.caption(13))
+                .foregroundStyle(Theme.inkSoft)
+            if resting.isEmpty {
+                EmptyStateCard(systemImage: "leaf",
+                               title: "The sanctuary is empty",
+                               message: Text("Move a Mixling here from its page to free up a slot."))
+            } else {
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(resting) { creature in
+                        NavigationLink(value: creature.id) {
+                            CollectionCell(creature: creature, isActive: false)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
             }
         }
     }
@@ -92,6 +155,7 @@ private struct CollectionCell: View {
                         .foregroundStyle(Theme.rarityLegendary)
                         .accessibilityLabel(Text("Discoverer"))
                 }
+                GenerationBadgeIcons(generation: creature.generation)
             }
         }
         .frame(maxWidth: .infinity)
@@ -110,6 +174,9 @@ struct CreatureDetailView: View {
 
     @State private var showCard = false
     @State private var showTrade = false
+    @State private var showRename = false
+    @State private var newName = ""
+    @State private var slotMessage: LocalizedStringResource?
 
     var body: some View {
         if let creature = model.save.creature(id: creatureId) {
@@ -129,6 +196,7 @@ struct CreatureDetailView: View {
                             Pill(text: Text("Gen \(creature.generation)"))
                             if creature.discoveredFirst { Pill(text: Text("Discoverer")) }
                         }
+                        GenerationBadgeRow(generation: creature.generation)
                     }
                     .frame(maxWidth: .infinity)
                     .card()
@@ -141,7 +209,7 @@ struct CreatureDetailView: View {
                         }
                         .buttonStyle(PixelButtonStyle(tint: Theme.rarity(tier)))
 
-                        if creature.id != model.active?.id {
+                        if creature.id != model.active?.id && !creature.inSanctuary {
                             Button {
                                 model.select(creature)
                             } label: {
@@ -150,13 +218,47 @@ struct CreatureDetailView: View {
                             .buttonStyle(PixelButtonStyle(tint: Theme.joy))
                         }
 
-                        if stage != .egg {
+                        if stage != .egg && model.socialAllowed && !creature.inSanctuary {
                             Button {
                                 showTrade = true
                             } label: {
                                 Label("Trade", systemImage: "arrow.left.arrow.right")
                             }
                             .buttonStyle(PixelButtonStyle(tint: Theme.mood))
+                        }
+
+                        Button {
+                            newName = creature.name
+                            showRename = true
+                        } label: {
+                            Label("Rename", systemImage: "pencil")
+                        }
+                        .buttonStyle(PixelButtonStyle(tint: Theme.cardStroke))
+
+                        // G5: sanctuary in / out. Never delete.
+                        if creature.inSanctuary {
+                            Button {
+                                if case .failure(.slotsFull) = model.moveToActive(creature) {
+                                    slotMessage = "All slots are full. Move someone to the sanctuary first."
+                                }
+                            } label: {
+                                Label("Bring back", systemImage: "arrow.uturn.left")
+                            }
+                            .buttonStyle(PixelButtonStyle(tint: Theme.joy))
+                        } else {
+                            Button {
+                                if case .failure(.lastActive) = model.moveToSanctuary(creature) {
+                                    slotMessage = "Keep at least one Mixling with you."
+                                }
+                            } label: {
+                                Label("Move to sanctuary", systemImage: "leaf.fill")
+                            }
+                            .buttonStyle(PixelButtonStyle(tint: Theme.joy))
+                        }
+                        if let slotMessage {
+                            Text(slotMessage)
+                                .font(Theme.caption(12))
+                                .foregroundStyle(Theme.inkSoft)
                         }
                     }
                 }
@@ -171,6 +273,15 @@ struct CreatureDetailView: View {
             .sheet(isPresented: $showTrade) {
                 TradeView(creature: creature)
                     .presentationDetents([.medium, .large])
+            }
+            .alert("Rename", isPresented: $showRename) {
+                TextField("Name", text: $newName)
+                Button("Save") {
+                    slotMessage = NameFilter.message(for: model.rename(creature, to: newName))
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Friends can see this name.")
             }
         } else {
             Text("This Mixling is no longer here.")
@@ -312,6 +423,15 @@ private struct SeasonSlot: View {
                 .foregroundStyle(found ? Theme.ink : Theme.inkSoft)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+            if !found {
+                // U1: "???" tiles say which body part to look for and how rare it is.
+                Text(SeasonHint.text(for: entry))
+                    .font(Theme.caption(9))
+                    .foregroundStyle(Theme.inkSoft)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.7)
+            }
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 4)
@@ -324,7 +444,63 @@ private struct SeasonSlot: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(found
             ? Text(verbatim: CollectingNames.variant(gene: entry.gene, variant: entry.variant))
-            : Text("Not found yet"))
+            : Text("Not found yet. \(Text(SeasonHint.text(for: entry)))"))
+    }
+}
+
+/// U1: hint for a missing season entry: which part, and how rare.
+enum SeasonHint {
+    static func part(gene: Int) -> LocalizedStringResource {
+        switch gene {
+        case PhenotypeMapper.Gene.body: return "Body"
+        case PhenotypeMapper.Gene.eyes: return "Eyes"
+        case PhenotypeMapper.Gene.head: return "Head"
+        case PhenotypeMapper.Gene.pattern: return "Pattern"
+        case PhenotypeMapper.Gene.tail: return "Tail"
+        case PhenotypeMapper.Gene.palette: return "Colour"
+        case PhenotypeMapper.Gene.aura: return "Aura"
+        default: return "Temper"
+        }
+    }
+
+    static func text(for entry: Collecting.SeasonEntry) -> LocalizedStringResource {
+        let rarity: Int = Catalog.genes.indices.contains(entry.gene)
+            && Catalog.genes[entry.gene].variants.indices.contains(entry.variant)
+            ? Catalog.genes[entry.gene].variants[entry.variant].rarity : 0
+        let tier = Genetics.tier(forScore: rarity)
+        return "\(String(localized: part(gene: entry.gene))) · \(String(localized: tier.title))"
+    }
+}
+
+/// G8: generation ladder badges (gen 5, gen 10).
+struct GenerationBadgeIcons: View {
+    let generation: Int
+    var body: some View {
+        ForEach(EconomyEngine.genBadges(generation: generation), id: \.self) { level in
+            Image(systemName: level >= 10 ? "crown.fill" : "medal.fill")
+                .font(.system(size: 9))
+                .foregroundStyle(level >= 10 ? Theme.rarityLegendary : Theme.rarityRare)
+                .accessibilityLabel(Text("Generation \(level) badge"))
+        }
+    }
+}
+
+struct GenerationBadgeRow: View {
+    let generation: Int
+    var body: some View {
+        let badges = EconomyEngine.genBadges(generation: generation)
+        if !badges.isEmpty {
+            HStack(spacing: 6) {
+                ForEach(badges, id: \.self) { level in
+                    Label("Gen \(level) badge", systemImage: level >= 10 ? "crown.fill" : "medal.fill")
+                        .font(Theme.caption(11))
+                        .foregroundStyle(Theme.ink)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Capsule().fill(level >= 10 ? Theme.rarityLegendary.opacity(0.3) : Theme.rarityRare.opacity(0.2)))
+                }
+            }
+        }
     }
 }
 

@@ -31,8 +31,8 @@ struct TradeView: View {
                 if let offer, offer.status == .draft {
                     ShareLink(
                         item: offer.url,
-                        subject: Text("Trade Mixlings?"),
-                        message: Text("Want to swap Mixlings? I'm offering \(creature.name).")
+                        subject: Text(ShareCopy.tradeSubject),
+                        message: Text(ShareCopy.tradeMessage(name: creature.name))
                     ) {
                         Label("Share trade link", systemImage: "square.and.arrow.up")
                     }

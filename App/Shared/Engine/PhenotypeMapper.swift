@@ -1,6 +1,9 @@
 import Foundation
 import MixlingsGenome
 import MixlingsArt
+#if MIXLINGS_ART_V2
+import CoreGraphics
+#endif
 
 /// Art-independent view of what a genome expresses. Kept separate from `MixlingsArt.Phenotype`
 /// so mapping logic is testable even if the renderer's API shifts.
@@ -71,6 +74,54 @@ enum PhenotypeMapper {
     static func phenotype(for c: Creature) -> Phenotype {
         phenotype(traits(for: c))
     }
+
+    // MARK: Art v2 adapter (retro A1 mood layer, A3 growth stages, A4 silhouettes)
+    //
+    // TODO(art): MixlingsArt is adding `Phenotype.mood`, `Phenotype.stage` (with defaults) and
+    // `MixlingsRenderer.renderSilhouette`. Until that lands, these hooks compile to the old
+    // behaviour. Enable by adding `MIXLINGS_ART_V2` to SWIFT_ACTIVE_COMPILATION_CONDITIONS in
+    // project.yml. If the field types differ (e.g. enums instead of Int), fix ONLY `artStage`,
+    // `artMood` and `silhouetteImage` below.
+
+    /// Phenotype for drawing `c` at `stage` with an optional mood expression.
+    static func phenotype(for c: Creature, stage: Stage, condition: Condition? = nil) -> Phenotype {
+        #if MIXLINGS_ART_V2
+        var p = phenotype(for: c)
+        p.stage = artStage(stage)
+        p.mood = artMood(condition)
+        return p
+        #else
+        return phenotype(for: c)
+        #endif
+    }
+
+    /// True once MixlingsArt draws per-stage proportions itself (no SwiftUI scaling needed).
+    static var artDrawsStages: Bool {
+        #if MIXLINGS_ART_V2
+        return true
+        #else
+        return false
+        #endif
+    }
+
+    #if MIXLINGS_ART_V2
+    /// Assumed art encoding: 0 egg, 1 baby, 2 teen, 3 adult (same as `Stage.rawValue`).
+    static func artStage(_ s: Stage) -> Int { s.rawValue }
+
+    /// Assumed art encoding: 0 neutral/smile, 1 "o" (surprised/okay), 2 hungry wobble (sleepy).
+    static func artMood(_ c: Condition?) -> Int {
+        switch c {
+        case .happy?, nil: return 0
+        case .okay?: return 1
+        case .sleepy?: return 2
+        }
+    }
+
+    /// Lock Screen silhouette straight from the renderer (no aura, knocked-out eyes).
+    static func silhouetteImage(_ p: Phenotype) -> CGImage? {
+        MixlingsRenderer.renderSilhouette(p).cgImage(scale: 1)
+    }
+    #endif
 
     static func temperName(_ t: ExpressedTraits) -> String {
         let variants = Catalog.genes[Gene.temper].variants

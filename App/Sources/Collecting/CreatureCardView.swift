@@ -18,7 +18,7 @@ struct CreatureCardFace: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(verbatim: "MIXLINGS")
+                Text(verbatim: ShareCopy.brand.uppercased())
                     .font(.system(size: 11, weight: .heavy, design: .monospaced))
                     .kerning(2)
                     .foregroundStyle(Theme.cardLabel)
@@ -49,10 +49,16 @@ struct CreatureCardFace: View {
                 CreatureSprite(creature: creature, stage: stage)
                     .padding(14)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                if creature.discoveredFirst {
-                    DiscovererBadge()
-                        .padding(8)
+                VStack(alignment: .trailing, spacing: 4) {
+                    if creature.discoveredFirst {
+                        DiscovererBadge()
+                    }
+                    // G8: generation ladder badges.
+                    ForEach(EconomyEngine.genBadges(generation: creature.generation), id: \.self) { level in
+                        GenerationCardBadge(level: level)
+                    }
                 }
+                .padding(8)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 210)
@@ -141,6 +147,22 @@ struct CreatureCardFace: View {
     }
 }
 
+/// G8: "GEN 5" / "GEN 10" card badge.
+struct GenerationCardBadge: View {
+    let level: Int
+    var body: some View {
+        Text("Gen \(level)")
+            .font(.system(size: 11, weight: .heavy, design: .monospaced))
+            .textCase(.uppercase)
+            .foregroundStyle(Theme.cardFace)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(level >= 10 ? Theme.rarityLegendary : Theme.cardLabel))
+            .accessibilityLabel(Text("Generation \(level) badge"))
+    }
+}
+
 /// "Відкривач" badge (first local discovery of this look).
 struct DiscovererBadge: View {
     var body: some View {
@@ -186,12 +208,12 @@ struct CardShareCanvas: View {
             switch layout {
             case .story:
                 VStack(spacing: 18) {
-                    Text(verbatim: "Mixlings")
+                    Text(verbatim: ShareCopy.brand)
                         .font(Theme.title(28))
                         .foregroundStyle(Theme.ink)
                     CreatureCardFace(creature: creature, parents: parents, now: now)
                         .frame(width: 300, height: 500)
-                    Text("Hatch yours in Mixlings")
+                    Text(ShareCopy.cardFooter)
                         .font(Theme.body(14))
                         .foregroundStyle(Theme.inkSoft)
                 }
@@ -231,6 +253,7 @@ struct CreatureCardScreen: View {
 
     @State private var storyImage: Image?
     @State private var squareImage: Image?
+    @State private var showClip = false
 
     private var parents: [Creature?] {
         (creature.parentIds ?? []).map { model.save.creature(id: $0) }
@@ -249,20 +272,33 @@ struct CreatureCardScreen: View {
                             .foregroundStyle(Theme.inkSoft)
                             .multilineTextAlignment(.center)
                     }
-                    VStack(spacing: 10) {
-                        if let storyImage {
-                            ShareLink(item: storyImage,
-                                      preview: SharePreview(creature.name, image: storyImage)) {
-                                Label("Share to Stories", systemImage: "rectangle.portrait.on.rectangle.portrait")
+                    // C2: no sharing in offline mode (under 13).
+                    if model.socialAllowed {
+                        VStack(spacing: 10) {
+                            if let storyImage {
+                                ShareLink(item: storyImage,
+                                          message: Text(ShareCopy.cardMessage(name: creature.name)),
+                                          preview: SharePreview(creature.name, image: storyImage)) {
+                                    Label("Share to Stories", systemImage: "rectangle.portrait.on.rectangle.portrait")
+                                }
+                                .buttonStyle(PixelButtonStyle(tint: Theme.rarityRare))
                             }
-                            .buttonStyle(PixelButtonStyle(tint: Theme.rarityRare))
-                        }
-                        if let squareImage {
-                            ShareLink(item: squareImage,
-                                      preview: SharePreview(creature.name, image: squareImage)) {
-                                Label("Square card for chat", systemImage: "square.on.square")
+                            if let squareImage {
+                                ShareLink(item: squareImage,
+                                          message: Text(ShareCopy.cardMessage(name: creature.name)),
+                                          preview: SharePreview(creature.name, image: squareImage)) {
+                                    Label("Square card for chat", systemImage: "square.on.square")
+                                }
+                                .buttonStyle(PixelButtonStyle(tint: Theme.cardStroke))
                             }
-                            .buttonStyle(PixelButtonStyle(tint: Theme.cardStroke))
+                            if CareEngine.stage(creature, at: .now) != .egg {
+                                Button {
+                                    showClip = true
+                                } label: {
+                                    Label("Record hatch video", systemImage: "video.fill")
+                                }
+                                .buttonStyle(PixelButtonStyle(tint: Theme.accent))
+                            }
                         }
                     }
                 }
@@ -279,6 +315,9 @@ struct CreatureCardScreen: View {
             }
             .task(id: creature) {
                 await renderShareImages()
+            }
+            .sheet(isPresented: $showClip) {
+                HatchClipScreen(creature: creature)
             }
         }
     }

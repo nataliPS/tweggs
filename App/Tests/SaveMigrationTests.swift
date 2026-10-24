@@ -50,6 +50,12 @@ final class SaveMigrationTests: XCTestCase {
         XCTAssertEqual(save.hatchCounter, 2)
         XCTAssertEqual(save.discoveries.count, 2)
         XCTAssertFalse(save.creatures.contains { $0.discoveredFirst })
+
+        // v3 (T2): starter genomes captured from the save (origin fallback; old ids aren't derived).
+        XCTAssertEqual(save.starterGenomes["0"], mixy.genome)
+        XCTAssertEqual(save.starterGenomes["1"], save.creature(id: "s_99887766")?.genome)
+        XCTAssertNil(save.ageBand, "age screen is asked once after the update")
+        XCTAssertFalse(save.creatures.contains { $0.inSanctuary })
     }
 
     func testMigratedSaveRoundTripsWithoutRemigrating() throws {

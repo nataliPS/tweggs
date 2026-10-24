@@ -7,6 +7,7 @@ import Foundation
 /// - Mixlings NEVER die. Stats decay gently and are floored at `floor` (a "sleepy / sad" state).
 /// - Eggs don't decay and can't be fed or played with (petting an egg is allowed and just keeps it warm).
 /// - Growth (from the design doc): egg -> baby on day 1, teen on day 3, adult on day 7.
+/// - Breeding (retro G4): teens and adults can breed, i.e. from day 3.
 ///   The schedule is anchored on the hatch moment: natural hatch = bornAt + 1 day; if the egg is
 ///   hatched early (onboarding tap), the rest of the schedule moves with it.
 enum CareEngine {
@@ -75,6 +76,20 @@ enum CareEngine {
         out.hatchedAt = now
         out.lastUpdated = now
         return out
+    }
+
+    // MARK: Breeding (G4)
+
+    /// Teens can breed from day 3 of life; adults (day 7) of course too.
+    static let minimumBreedingStage: Stage = .teen
+
+    static func canBreed(_ c: Creature, at now: Date) -> Bool {
+        stage(c, at: now) >= minimumBreedingStage
+    }
+
+    /// When the creature can first breed.
+    static func breedingDate(_ c: Creature) -> Date {
+        date(of: minimumBreedingStage, for: c)
     }
 
     // MARK: Decay

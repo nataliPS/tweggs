@@ -3,6 +3,9 @@ import SwiftUI
 struct HomeView: View {
     @Environment(GameModel.self) private var model
 
+    enum Route: Hashable { case club, shop, odds }
+    @State private var route: Route?
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -17,6 +20,29 @@ struct HomeView: View {
             .background(Theme.background.ignoresSafeArea())
             .navigationTitle("Mixlings")
             .toolbarBackground(Theme.background, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    SparkBalance(sparks: model.save.sparks)
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button { route = .club } label: { Label("Mix Club", systemImage: "crown.fill") }
+                        Button { route = .shop } label: { Label("Spark shop", systemImage: "bag.fill") }
+                        Button { route = .odds } label: { Label("Odds", systemImage: "percent") }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .minTapTarget()
+                            .accessibilityLabel(Text("More"))
+                    }
+                }
+            }
+            .navigationDestination(item: $route) { r in
+                switch r {
+                case .club: ClubView()
+                case .shop: CosmeticShopView()
+                case .odds: OddsView()
+                }
+            }
         }
     }
 }
@@ -33,7 +59,7 @@ private struct HomeContent: View {
 
         VStack(spacing: 16) {
             VStack(spacing: 8) {
-                CreatureSprite(creature: creature, stage: stage)
+                CreatureSprite(creature: creature, stage: stage, condition: condition)
                     .frame(maxWidth: 260, maxHeight: 260)
                     .frame(maxWidth: .infinity)
                     .opacity(condition == .sleepy ? 0.85 : 1)
@@ -43,8 +69,10 @@ private struct HomeContent: View {
                 HStack(spacing: 8) {
                     Pill(text: Text(stage.title))
                     Pill(text: Text(condition.title))
-                    Pill(text: Text(PhenotypeMapper.temperName(PhenotypeMapper.traits(for: creature)).capitalized))
+                    Pill(text: Text(verbatim: CollectingNames.variant(gene: PhenotypeMapper.Gene.temper,
+                                                                      variant: PhenotypeMapper.traits(for: creature).temper)))
                 }
+                PersonalityLine(creature: creature, condition: condition)
             }
             .card()
 
@@ -69,7 +97,14 @@ private struct HomeContent: View {
 
             growthCard(stage: stage)
 
+            HatchRushButton(creature: creature, now: now)
+
             DailySurpriseCard(now: now)
+
+            HStack {
+                Spacer()
+                OddsLink()
+            }
 
             if condition == .sleepy {
                 Text("\(creature.name) is feeling sleepy. A little care will cheer them up!")
@@ -94,6 +129,11 @@ private struct HomeContent: View {
                     .font(Theme.body(14))
                     .foregroundStyle(Theme.ink)
             }
+            if stage == .teen {
+                Text("Can breed")
+                    .font(Theme.caption(11))
+                    .foregroundStyle(Theme.joy)
+            }
             Spacer()
         }
         .card()
@@ -110,5 +150,35 @@ struct Pill: View {
             .padding(.vertical, 4)
             .background(Capsule().fill(Theme.background))
             .overlay(Capsule().strokeBorder(Theme.cardStroke, lineWidth: 1))
+    }
+}
+
+/// One personality line + C6 note that lines are AI-written on device.
+/// TODO(ai): lines come from the on-device model (Foundation Models) with ONLY the creature's
+/// traits as input. Never send personal data (name typed by the player is fine, nothing else).
+/// Until then this is a fixed local line.
+struct PersonalityLine: View {
+    let creature: Creature
+    let condition: Condition
+
+    var body: some View {
+        VStack(spacing: 2) {
+            Text(line)
+                .font(Theme.body(14))
+                .italic()
+                .foregroundStyle(Theme.ink)
+                .multilineTextAlignment(.center)
+            Text("Lines are written by on-device AI")
+                .font(Theme.caption(10))
+                .foregroundStyle(Theme.inkSoft)
+        }
+    }
+
+    private var line: LocalizedStringResource {
+        switch condition {
+        case .happy: return "Best day ever! Let's play again."
+        case .okay: return "Hmm… a snack would be nice."
+        case .sleepy: return "So sleepy… a little cuddle?"
+        }
     }
 }

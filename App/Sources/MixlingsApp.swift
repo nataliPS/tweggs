@@ -27,7 +27,10 @@ struct RootView: View {
     var body: some View {
         @Bindable var model = model
         Group {
-            if model.needsOnboarding {
+            if model.needsAgeCheck {
+                // C2: asked once, before anything else (also for players from older saves).
+                AgeGateView()
+            } else if model.needsOnboarding {
                 OnboardingView()
             } else {
                 MainTabs()
@@ -35,29 +38,75 @@ struct RootView: View {
         }
         .tint(Theme.accent)
         .sheet(item: $model.incomingOffer) { offer in
-            IncomingOfferView(offer: offer)
+            if model.socialAllowed {
+                IncomingOfferView(offer: offer)
+                    .presentationDetents([.medium, .large])
+            } else {
+                // C2 offline mode: links from friends don't open social flows.
+                OfflineModeNote()
+                    .padding(24)
+                    .presentationDetents([.medium])
+            }
+        }
+        .sheet(item: $model.newGift) { gift in
+            DayTwoGiftView(gift: gift)
                 .presentationDetents([.medium])
         }
     }
 }
 
 struct MainTabs: View {
+    @Environment(GameModel.self) private var model
+
     var body: some View {
         TabView {
             HomeView()
                 .tabItem { Label("Home", systemImage: "house.fill") }
             CollectionView()
                 .tabItem { Label("Collection", systemImage: "square.grid.2x2.fill") }
-            BreedView()
-                .tabItem { Label("Breed", systemImage: "heart.circle.fill") }
+            // C2: no Breed tab in offline mode (under 13).
+            if model.socialAllowed {
+                BreedView()
+                    .tabItem { Label("Breed", systemImage: "heart.circle.fill") }
+            }
         }
     }
 }
 
-/// Stub for an opened breeding link.
+/// G4: the day-2 starter baby.
+struct DayTwoGiftView: View {
+    let gift: Creature
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("A new baby arrived!")
+                .font(Theme.title(24))
+                .foregroundStyle(Theme.ink)
+            CreatureSprite(creature: gift, stage: .baby)
+                .frame(width: 140, height: 140)
+                .card()
+            Text("\(gift.name) can breed once it's a teen, in 2 days.")
+                .font(Theme.body(15))
+                .foregroundStyle(Theme.inkSoft)
+                .multilineTextAlignment(.center)
+            Button("Yay!") { dismiss() }
+                .buttonStyle(PixelButtonStyle())
+                .frame(maxWidth: 200)
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Theme.background)
+    }
+}
+
+/// Stub for an opened breeding link, with C3 safety entry points (Report / Block).
 struct IncomingOfferView: View {
+    @Environment(GameModel.self) private var model
     let offer: GameModel.IncomingOffer
     @Environment(\.dismiss) private var dismiss
+    @State private var confirmBlock = false
+    @State private var reported = false
 
     var body: some View {
         VStack(spacing: 16) {
@@ -78,6 +127,37 @@ struct IncomingOfferView: View {
             Button("OK") { dismiss() }
                 .buttonStyle(PixelButtonStyle())
                 .frame(maxWidth: 200)
+
+            // C3: report / block cover the sender's creature names too.
+            // TODO(server): send the report (offer id, reason) and block by sender account.
+            HStack(spacing: 12) {
+                Button {
+                    model.report(offer: offer)
+                    reported = true
+                } label: {
+                    Label(reported ? LocalizedStringKey("Reported") : LocalizedStringKey("Report"),
+                          systemImage: "exclamationmark.bubble")
+                }
+                .disabled(reported)
+                Button(role: .destructive) {
+                    confirmBlock = true
+                } label: {
+                    Label("Block", systemImage: "hand.raised.fill")
+                }
+            }
+            .font(Theme.caption(13))
+            .buttonStyle(.bordered)
+            .controlSize(.large)
+            .confirmationDialog("Block this player?", isPresented: $confirmBlock, titleVisibility: .visible) {
+                Button("Block", role: .destructive) { model.block(offer: offer) }
+            } message: {
+                Text("You won't see their breeding or trade links any more.")
+            }
+            if reported {
+                Text("Thanks. We'll take a look.")
+                    .font(Theme.caption(12))
+                    .foregroundStyle(Theme.inkSoft)
+            }
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)

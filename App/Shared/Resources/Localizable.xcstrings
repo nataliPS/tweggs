@@ -1,12 +1,52 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%@ can breed once it's a teen, in 2 days.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ зможе схрещуватися, коли стане підлітком — за 2 дні."
+          }
+        }
+      }
+    },
     "%@ is feeling sleepy. A little care will cheer them up!": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "%@ трохи сонний. Трохи турботи — і настрій покращиться!"
+          }
+        }
+      }
+    },
+    "%@ just hatched! Breed with me on Tweggs.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ щойно вилупився! Схрестимо в Tweggs."
+          }
+        }
+      }
+    },
+    "%@ · %@": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%lld active slots instead of %lld": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld активних слотів замість %2$lld"
           }
         }
       }
@@ -115,6 +155,16 @@
         }
       }
     },
+    "%lld of %lld slots": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld з %2$lld слотів"
+          }
+        }
+      }
+    },
     "%lld percent": {
       "localizations": {
         "uk": {
@@ -187,6 +237,16 @@
         }
       }
     },
+    "A carrier parent is in this pairing": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "У цій парі є батько-носій"
+          }
+        }
+      }
+    },
     "A free surprise is waiting!": {
       "localizations": {
         "uk": {
@@ -217,12 +277,62 @@
         }
       }
     },
+    "A new baby arrived!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прибуло нове маля!"
+          }
+        }
+      }
+    },
     "Adult": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Дорослий"
+          }
+        }
+      }
+    },
+    "Album complete!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Альбом зібрано!"
+          }
+        }
+      }
+    },
+    "All slots are full. Move someone to the sanctuary first.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Усі слоти зайняті. Спершу перемісти когось до притулку."
+          }
+        }
+      }
+    },
+    "Another baby arrives tomorrow!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Завтра прибуде ще одне маля!"
+          }
+        }
+      }
+    },
+    "Aura": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Аура"
           }
         }
       }
@@ -247,12 +357,82 @@
         }
       }
     },
+    "Before any mutation is unlocked the chance is 0%. Each gene a baby gets is one of the two genes from each parent, picked at random.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Доки жодну мутацію не відкрито, шанс 0%. Кожен ген маля — один із двох генів кожного з батьків, вибраний випадково."
+          }
+        }
+      }
+    },
     "Belly": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Ситість"
+          }
+        }
+      }
+    },
+    "Best day ever! Let's play again.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Найкращий день! Пограймо ще."
+          }
+        }
+      }
+    },
+    "Biome decorations": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Декоративні біоми"
+          }
+        }
+      }
+    },
+    "Birth year": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Рік народження"
+          }
+        }
+      }
+    },
+    "Block": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Заблокувати"
+          }
+        }
+      }
+    },
+    "Block this player?": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Заблокувати цього гравця?"
+          }
+        }
+      }
+    },
+    "Body": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тіло"
           }
         }
       }
@@ -267,12 +447,32 @@
         }
       }
     },
+    "Breed with a friend": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрестити з другом"
+          }
+        }
+      }
+    },
     "Breed with my Mixling!": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Схрести свого мікслінга з моїм!"
+          }
+        }
+      }
+    },
+    "Breed with my pet on Tweggs!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрестимо улюбленців у Tweggs!"
           }
         }
       }
@@ -287,12 +487,82 @@
         }
       }
     },
+    "Breeding with friends, trading and sharing are turned off. You can still hatch, care for and collect Mixlings.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрещування з друзями, обмін і поширення вимкнені. Ти все одно можеш виводити, доглядати й колекціонувати Міксликів."
+          }
+        }
+      }
+    },
+    "Bring back": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Повернути"
+          }
+        }
+      }
+    },
+    "Buy for %lld sparks": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Купити за %lld іскор"
+          }
+        }
+      }
+    },
+    "Can breed": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Може схрещуватися"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скасувати"
+          }
+        }
+      }
+    },
     "Cancel offer": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Скасувати пропозицію"
+          }
+        }
+      }
+    },
+    "Carries a missing season gene": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Несе ген, якого бракує в сезоні"
+          }
+        }
+      }
+    },
+    "Chance per breed, once you've unlocked a mutation": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Шанс за одне схрещування, коли мутацію відкрито"
           }
         }
       }
@@ -317,6 +587,16 @@
         }
       }
     },
+    "Choose a year": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обери рік"
+          }
+        }
+      }
+    },
     "Close": {
       "localizations": {
         "uk": {
@@ -333,6 +613,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Колекція"
+          }
+        }
+      }
+    },
+    "Colour": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Колір"
           }
         }
       }
@@ -357,6 +647,16 @@
         }
       }
     },
+    "Couldn't make the video. Please try again.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не вдалося створити відео. Спробуй ще раз."
+          }
+        }
+      }
+    },
     "Creature card": {
       "localizations": {
         "uk": {
@@ -377,12 +677,42 @@
         }
       }
     },
+    "Debug: Club member": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Debug: учасник Club"
+          }
+        }
+      }
+    },
+    "Decorations for your Mixlings. Sparks come from the daily surprise and can't be bought.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прикраси для твоїх Міксликів. Іскри дає щоденний сюрприз, купити їх не можна."
+          }
+        }
+      }
+    },
     "Discoverer": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Відкривач"
+          }
+        }
+      }
+    },
+    "Earn sparks from the daily surprise.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Заробляй іскри зі щоденного сюрпризу."
           }
         }
       }
@@ -403,6 +733,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Енциклопедія"
+          }
+        }
+      }
+    },
+    "Every widget size and theme": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Усі розміри й теми віджетів"
+          }
+        }
+      }
+    },
+    "Eyes": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Очі"
           }
         }
       }
@@ -447,6 +797,36 @@
         }
       }
     },
+    "Free and unlimited. Mixlings here rest safely and never leave.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Безкоштовно й без обмежень. Мікслики тут відпочивають у безпеці й нікуди не зникають."
+          }
+        }
+      }
+    },
+    "Free for %lld days, then %@ %@ starting %@. Renews automatically until you cancel. Cancel any time in Settings > Apple ID > Subscriptions at least 24 hours before the trial ends and you won't be charged.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Безкоштовно %1$lld днів, потім %2$@ %3$@ з %4$@. Поновлюється автоматично, доки не скасуєш. Скасуй будь-коли в Параметри > Apple ID > Підписки щонайменше за 24 години до кінця пробного періоду — і з тебе нічого не спишуть."
+          }
+        }
+      }
+    },
+    "Friends can see this name.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Друзі бачитимуть це імʼя."
+          }
+        }
+      }
+    },
     "Fully grown — ready to breed!": {
       "localizations": {
         "uk": {
@@ -477,12 +857,156 @@
         }
       }
     },
+    "Gen %lld badge": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Значок пок. %lld"
+          }
+        }
+      }
+    },
+    "Gene hint": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Підказка генів"
+          }
+        }
+      }
+    },
+    "Gene hint · %lld sparks": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Gene hint · %lld spark"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Gene hint · %lld sparks"
+                }
+              }
+            }
+          }
+        },
+        "uk": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Підказка генів · %lld іскра"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Підказка генів · %lld іскри"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Підказка генів · %lld іскор"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Підказка генів · %lld іскри"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Generation": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Покоління"
+          }
+        }
+      }
+    },
+    "Generation %lld badge": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Значок покоління %lld"
+          }
+        }
+      }
+    },
+    "Give your Mixling a name.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дай Мікслику імʼя."
+          }
+        }
+      }
+    },
+    "Grow faster · %lld sparks": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Grow faster · %lld spark"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Grow faster · %lld sparks"
+                }
+              }
+            }
+          }
+        },
+        "uk": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Рости швидше · %lld іскра"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Рости швидше · %lld іскри"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Рости швидше · %lld іскор"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Рости швидше · %lld іскри"
+                }
+              }
+            }
           }
         }
       }
@@ -497,12 +1021,32 @@
         }
       }
     },
+    "Hatch an egg or breed with a friend to start your collection.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Виведи яйце або схрести з другом, щоб почати колекцію."
+          }
+        }
+      }
+    },
     "Hatch and breed Mixlings to fill your encyclopedia.": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Вилуплюй і схрещуй мікслінгів, щоб заповнити енциклопедію."
+          }
+        }
+      }
+    },
+    "Hatch video": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відео вилуплення"
           }
         }
       }
@@ -517,6 +1061,16 @@
         }
       }
     },
+    "Hatch yours on Tweggs": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Виведи свого в Tweggs"
+          }
+        }
+      }
+    },
     "Hatched": {
       "localizations": {
         "uk": {
@@ -527,12 +1081,42 @@
         }
       }
     },
+    "Head": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Голова"
+          }
+        }
+      }
+    },
     "Here is a grown-up Mixling to keep your baby company. Adults can breed with friends' Mixlings.": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Ось дорослий мікслінг, щоб малюку не було самотньо. Дорослі можуть схрещуватися з мікслінгами друзів."
+          }
+        }
+      }
+    },
+    "Here is a grown-up Mixling to keep your baby company. Teens and adults can breed with friends' Mixlings.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ось дорослий Мікслик, щоб твоєму малюку не було самотньо. Підлітки й дорослі можуть схрещуватися з Міксликами друзів."
+          }
+        }
+      }
+    },
+    "Hmm… a snack would be nice.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хм… перекусити б."
           }
         }
       }
@@ -557,12 +1141,42 @@
         }
       }
     },
+    "Keep at least one Mixling with you.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Залиш із собою хоча б одного Мікслика."
+          }
+        }
+      }
+    },
     "Legendary": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Легендарний"
+          }
+        }
+      }
+    },
+    "Let's go": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уперед"
+          }
+        }
+      }
+    },
+    "Let's hatch a baby together! %@ is waiting. The rarest pets only hatch with friends.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Виведімо маля разом! %@ чекає. Найрідкісніші улюбленці вилуплюються лише з друзями."
           }
         }
       }
@@ -577,12 +1191,32 @@
         }
       }
     },
+    "Let's pick a kinder name.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Виберімо добріше імʼя."
+          }
+        }
+      }
+    },
     "Let's play!": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Граймо!"
+          }
+        }
+      }
+    },
+    "Lines are written by on-device AI": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Репліки пише ШІ на твоєму пристрої"
           }
         }
       }
@@ -597,12 +1231,62 @@
         }
       }
     },
+    "Make a baby with a friend": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зроби маля з другом"
+          }
+        }
+      }
+    },
     "Make active": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Зробити активним"
+          }
+        }
+      }
+    },
+    "Make video": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Створити відео"
+          }
+        }
+      }
+    },
+    "Making your video…": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Створюємо відео…"
+          }
+        }
+      }
+    },
+    "Meet %@, my one-of-a-kind pixel pet. Hatch yours on Tweggs!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Знайомся: %@, мій єдиний у своєму роді піксельний улюбленець. Виведи свого в Tweggs!"
+          }
+        }
+      }
+    },
+    "Mix Club": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mix Club"
           }
         }
       }
@@ -620,12 +1304,82 @@
     "Mixlings": {
       "shouldTranslate": false
     },
+    "Monthly": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Місяць"
+          }
+        }
+      }
+    },
     "Mood": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Настрій"
+          }
+        }
+      }
+    },
+    "More": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Більше"
+          }
+        }
+      }
+    },
+    "More personality lines": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Більше реплік і характеру"
+          }
+        }
+      }
+    },
+    "More room and more style for your Mixlings. Odds are the same for every player.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Більше місця й краси для твоїх Міксликів. Шанси однакові для всіх гравців."
+          }
+        }
+      }
+    },
+    "More slots": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Більше слотів"
+          }
+        }
+      }
+    },
+    "Move a Mixling here from its page to free up a slot.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перемісти сюди Мікслика з його сторінки, щоб звільнити слот."
+          }
+        }
+      }
+    },
+    "Move to sanctuary": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "До притулку"
           }
         }
       }
@@ -640,12 +1394,52 @@
         }
       }
     },
+    "Mutations": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мутації"
+          }
+        }
+      }
+    },
+    "Name": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Імʼя"
+          }
+        }
+      }
+    },
+    "Name it": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дати імʼя"
+          }
+        }
+      }
+    },
     "Name your Mixling": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Дай ім'я своєму мікслінгу"
+          }
+        }
+      }
+    },
+    "Names can be up to 16 letters.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Імʼя може мати до 16 літер."
           }
         }
       }
@@ -660,12 +1454,62 @@
         }
       }
     },
+    "No Mixlings here yet": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тут ще немає Міксликів"
+          }
+        }
+      }
+    },
+    "No emails, phone numbers or links in names.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Без пошти, номерів телефону й посилань в імені."
+          }
+        }
+      }
+    },
+    "No parents yet": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ще немає батьків"
+          }
+        }
+      }
+    },
+    "No purchases to restore yet.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поки немає покупок для відновлення."
+          }
+        }
+      }
+    },
     "No season right now.": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Зараз немає сезону."
+          }
+        }
+      }
+    },
+    "None of your pairs can hatch this yet. A friend's Mixling might!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Жодна твоя пара поки не може це вивести. А от Мікслик друга — може!"
           }
         }
       }
@@ -680,12 +1524,32 @@
         }
       }
     },
+    "Not found yet. %@": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ще не знайдено. %@"
+          }
+        }
+      }
+    },
     "OK": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Гаразд"
+          }
+        }
+      }
+    },
+    "Odds": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Шанси"
           }
         }
       }
@@ -710,12 +1574,32 @@
         }
       }
     },
+    "Offline mode": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Офлайн-режим"
+          }
+        }
+      }
+    },
     "Okay": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Нормально"
+          }
+        }
+      }
+    },
+    "One free surprise per day. It's decided by the day, so opening it later doesn't change it.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Один безкоштовний сюрприз на день. Його визначає дата, тож відкриття пізніше нічого не змінює."
           }
         }
       }
@@ -750,12 +1634,32 @@
         }
       }
     },
+    "Owned ×%lld": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Є ×%lld"
+          }
+        }
+      }
+    },
     "Parents unknown": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Батьки невідомі"
+          }
+        }
+      }
+    },
+    "Pattern": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Візерунок"
           }
         }
       }
@@ -776,6 +1680,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Погладити мікслінга"
+          }
+        }
+      }
+    },
+    "Placeholder items. Coming soon: wear them on your Mixlings.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тимчасові предмети. Скоро: вдягай їх на Міксликів."
           }
         }
       }
@@ -820,12 +1734,92 @@
         }
       }
     },
+    "Privacy": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Конфіденційність"
+          }
+        }
+      }
+    },
     "Rare": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Рідкісний"
+          }
+        }
+      }
+    },
+    "Record hatch video": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Записати відео вилуплення"
+          }
+        }
+      }
+    },
+    "Rename": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перейменувати"
+          }
+        }
+      }
+    },
+    "Report": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поскаржитися"
+          }
+        }
+      }
+    },
+    "Reported": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скаргу надіслано"
+          }
+        }
+      }
+    },
+    "Restore Purchases": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відновити покупки"
+          }
+        }
+      }
+    },
+    "Sanctuary": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Притулок"
+          }
+        }
+      }
+    },
+    "Save": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зберегти"
           }
         }
       }
@@ -870,6 +1864,16 @@
         }
       }
     },
+    "Season palettes": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сезонні палітри"
+          }
+        }
+      }
+    },
     "Section": {
       "localizations": {
         "uk": {
@@ -886,6 +1890,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Картка: %@"
+          }
+        }
+      }
+    },
+    "Send %@'s link. The rarest Mixlings only hatch with friends!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Надішли посилання на %@. Найрідкісніші Мікслики вилуплюються лише з друзями!"
+          }
+        }
+      }
+    },
+    "Send to a friend": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Надіслати другові"
           }
         }
       }
@@ -920,12 +1944,82 @@
         }
       }
     },
+    "Share video": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поділитися відео"
+          }
+        }
+      }
+    },
+    "Shows which of your pairs can hatch a missing album look. It never changes the odds.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показує, які твої пари можуть вивести образ, якого бракує в альбомі. Шансів не змінює."
+          }
+        }
+      }
+    },
+    "Skips 1 day of growing. Once a day.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пропускає 1 день росту. Раз на день."
+          }
+        }
+      }
+    },
     "Sleepy": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Сонний"
+          }
+        }
+      }
+    },
+    "So sleepy… a little cuddle?": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Так хочеться спати… обіймешся?"
+          }
+        }
+      }
+    },
+    "Souvenir (one of %lld, equally likely)": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сувенір (один із %lld, однаково ймовірно)"
+          }
+        }
+      }
+    },
+    "Spark shop": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Крамниця іскор"
+          }
+        }
+      }
+    },
+    "Sparks (%lld–%lld, each amount equally likely)": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Іскри (%1$lld–%2$lld, кожна кількість однаково ймовірна)"
           }
         }
       }
@@ -950,12 +2044,52 @@
         }
       }
     },
+    "Swap pets on Tweggs?": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обміняємося улюбленцями в Tweggs?"
+          }
+        }
+      }
+    },
+    "Tail": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хвіст"
+          }
+        }
+      }
+    },
     "Teen": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Підліток"
+          }
+        }
+      }
+    },
+    "Teens and adults can breed. Keep caring for your Mixlings!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрещуватися можуть підлітки й дорослі. Дбай про своїх Міксликів!"
+          }
+        }
+      }
+    },
+    "Teens and adults can breed. Your first one is ready in %@.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрещуватися можуть підлітки й дорослі. Перший буде готовий через %@."
           }
         }
       }
@@ -970,12 +2104,82 @@
         }
       }
     },
+    "Terms": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Умови"
+          }
+        }
+      }
+    },
+    "Thanks. We'll take a look.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дякуємо. Ми перевіримо."
+          }
+        }
+      }
+    },
+    "The same odds for everyone, Club or not. You can never buy a re-roll.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Однакові шанси для всіх, з Club чи без. Купити перекидання не можна ніколи."
+          }
+        }
+      }
+    },
+    "The sanctuary is empty": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Притулок порожній"
+          }
+        }
+      }
+    },
+    "The sanctuary is free and unlimited for everyone.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Притулок безкоштовний і безлімітний для всіх."
+          }
+        }
+      }
+    },
     "This Mixling is no longer here.": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Цього мікслінга тут більше немає."
+          }
+        }
+      }
+    },
+    "This stays on your phone and helps us set up the game for you.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Це залишається на твоєму телефоні й допомагає налаштувати гру для тебе."
+          }
+        }
+      }
+    },
+    "Tip: parents with a glow carry a gene your season album is missing.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Підказка: батьки з сяйвом несуть ген, якого бракує твоєму сезонному альбому."
           }
         }
       }
@@ -1020,12 +2224,94 @@
         }
       }
     },
+    "Try %lld days free": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Try %lld day free"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Try %lld days free"
+                }
+              }
+            }
+          }
+        },
+        "uk": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Спробувати %lld день безкоштовно"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Спробувати %lld дні безкоштовно"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Спробувати %lld днів безкоштовно"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Спробувати %lld дня безкоштовно"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Uncommon": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Незвичайний"
+          }
+        }
+      }
+    },
+    "Unlock hint for %lld sparks": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відкрити підказку за %lld іскор"
+          }
+        }
+      }
+    },
+    "Use letters, numbers, spaces, - or '.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Використовуй літери, цифри, пробіли, - або '."
+          }
+        }
+      }
+    },
+    "Used today. Back tomorrow!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вже використано сьогодні. Повертайся завтра!"
           }
         }
       }
@@ -1040,12 +2326,62 @@
         }
       }
     },
+    "Want to swap pets? I'm offering %@.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обміняємося? Пропоную %@."
+          }
+        }
+      }
+    },
     "Welcome to Mixlings": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Вітаємо в Mixlings"
+          }
+        }
+      }
+    },
+    "What year were you born?": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "У якому році ти народився?"
+          }
+        }
+      }
+    },
+    "Yay!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ура!"
+          }
+        }
+      }
+    },
+    "Yearly": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Рік"
+          }
+        }
+      }
+    },
+    "You can hatch, care for and collect Mixlings. Breeding with friends, trading and sharing stay off for now.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ти можеш виводити, доглядати й колекціонувати Міксликів. Схрещування з друзями, обмін і поширення поки вимкнені."
           }
         }
       }
@@ -1122,6 +2458,36 @@
         }
       }
     },
+    "You won't see their breeding or trade links any more.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ти більше не бачитимеш їхніх посилань на схрещування чи обмін."
+          }
+        }
+      }
+    },
+    "You're all set!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Усе готово!"
+          }
+        }
+      }
+    },
+    "You've found every look this season.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ти знайшов усі образи цього сезону."
+          }
+        }
+      }
+    },
     "Your first egg is ready. Tap it to help it hatch!": {
       "localizations": {
         "uk": {
@@ -1138,6 +2504,50 @@
           "stringUnit": {
             "state": "translated",
             "value": "Твій гібрид і близнюк друга"
+          }
+        }
+      }
+    },
+    "Your pet + a friend's = 2 eggs, one each": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Твій улюбленець + друга = 2 яйця, по одному кожному"
+          }
+        }
+      }
+    },
+    "cosmetic.biome_meadow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meadow biome"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Біом «Галявина»"
+          }
+        }
+      }
+    },
+    "cosmetic.biome_night_sky": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night sky biome"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Біом «Нічне небо»"
           }
         }
       }
@@ -1206,6 +2616,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Маленький шарфик"
+          }
+        }
+      }
+    },
+    "per month": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "на місяць"
+          }
+        }
+      }
+    },
+    "per year": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "на рік"
           }
         }
       }
