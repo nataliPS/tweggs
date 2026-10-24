@@ -56,3 +56,10 @@ umbrella, water bottle, fan, sun hat, scarf, beanie, blanket; wet / sweat / shiv
 - App open → "While you were away" diary: short entries computed from elapsed time ("Lilo and Zephyr played chess — Zephyr won", "They painted a picture").
 - Paintings (Beta): procedural pixel artwork generated from the pair's palettes + seed, saved to a Gallery (collectible, shareable as an image).
 - Chess result, chat lines and diary text come from templates (+ optional on-device AI lines within the §2 guardrails).
+
+## 10. Visits — "Away at a friend's" (Beta, needs server)
+- Send one of your creatures to a friend (link/friends list) for 1–3 days. It appears in the friend's house next to their creature; pair-life scenes include it; the friend sees it on their Lock Screen/widget.
+- Guaranteed return: auto-return at the chosen time; owner can recall anytime; host cannot keep, rename, breed or trade a visitor. Permanent giving only via explicit mutual "Trade".
+- On return: diary "My visit to <friend>" (templated + guarded AI lines), a souvenir and possibly a jointly painted picture for the Gallery; friendship level between the two creatures rises; suggestion "They became friends — breed them?".
+- Server: `visits/{id}` {visitorCreatureId, ownerUid, hostUid, start, end, status}; functions `startVisit`, `recallVisit`, scheduled `endVisits`; the visitor's genome is shown read-only on the host device.
+- Safety: friends only, emoji-only interactions, block/report, no personal data in stories, under-13 offline mode excludes visits.
