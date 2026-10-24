@@ -236,7 +236,7 @@ final class RetroDecisionsTests: XCTestCase {
         XCTAssertEqual(Odds.surpriseCosmeticPercent, 20)
         XCTAssertEqual(Odds.sparksMin, 5)
         XCTAssertEqual(Odds.sparksMax, 25)
-        XCTAssertEqual(Odds.mutationPercent, 15)
+        XCTAssertEqual(Odds.mutationPercent, 10) // G3 revised: 10%
     }
 
     // MARK: H2 clip timeline

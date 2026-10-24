@@ -81,7 +81,8 @@ struct GeneHintView: View {
                         SparkBalance(sparks: model.save.sparks)
                     }
                     if let season = CollectingEngine.currentSeason(now: .now) {
-                        let missing = EconomyEngine.missingEntries(season, creatures: model.save.activeSlotCreatures)
+                        // Same rule as the album (all creatures, sanctuary included); pairs are still active-only.
+                        let missing = EconomyEngine.missingEntries(season, creatures: model.save.creatures)
                         if missing.isEmpty {
                             EmptyStateCard(systemImage: "checkmark.seal.fill", title: "Album complete!",
                                            message: Text("You've found every look this season."))

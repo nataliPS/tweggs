@@ -252,7 +252,7 @@ struct BreedView: View {
             parentA: Parent(id: parent.id, genome: parent.genome, owner: model.save.playerId),
             parentB: Parent(id: other.id, genome: other.genome, owner: "friend-preview"),
             nonce: localNonce,
-            unlockedMutations: [] // TODO: player's unlocked mutations (see Odds screen: 15% once unlocked)
+            unlockedMutations: [] // TODO: player's unlocked mutations (see Odds screen: 10% once unlocked)
         )
         guard let result = try? Genetics.breed(input),
               let rarity = try? Genetics.rarity(result.genome) else { return nil }
