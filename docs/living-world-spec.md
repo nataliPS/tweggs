@@ -34,3 +34,11 @@ The creature reacts to the real world. All features are optional, privacy-first 
 
 ## Art needed (Піксель)
 umbrella, water bottle, fan, sun hat, scarf, beanie, blanket; wet / sweat / shiver / sleep / wind-blown frames; holiday decorations; birthday hat.
+
+## 7. Morning wake-up with the creature's voice (MVP stretch → Beta)
+- iOS does not let apps read or hook into alarms set in the system Clock app. So the user sets the wake time INSIDE Tweggs ("Ранок з Tweggs").
+- Implementation: AlarmKit (iOS 26+). Two scheduled alarms: a gentle pre-alarm 2 minutes before (soft yawn + "Good morning… let's start waking up" in the creature's voice) and the main alarm at the set time (brighter melody + voice, snooze). AlarmKit rings through silent mode/Focus and shows a Live Activity / Dynamic Island with the creature waking up.
+- Voice: short bundled clips (< 30 s, .caf) per temperament × language (en, uk), recorded or generated at build time; custom sounds must ship in the app bundle (per developer reports). No personalised name in audio for now.
+- iOS 17–25 fallback: time-sensitive local notification with the creature sound (does not ring in silent mode — say so in the UI).
+- Reward: "Early bird" streak and a small spark gift when the alarm is stopped on time; never punish snoozing.
+- Permission: AlarmKit authorization requested only when the user enables the feature.
