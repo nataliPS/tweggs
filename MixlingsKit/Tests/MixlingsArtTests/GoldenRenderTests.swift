@@ -10,8 +10,23 @@ private struct RenderGolden: Decodable {
         let sha256: String
         let rgba_hex: String
     }
+    struct Scene: Decodable {
+        let kind: String           // "room" | "jumprope" | "glyph"
+        let pair: [Phenotype]?
+        let scene: Int?
+        let time_of_day: Int?
+        let weather: Int?
+        let furniture: [Int]?
+        let pheno: Phenotype?
+        let frame: Int?
+        let width: Int
+        let height: Int
+        let sha256: String
+        let rgba_hex: String
+    }
     let size: Int
     let cases: [Case]
+    let scenes: [Scene]
 }
 
 private func decodeHex(_ s: String) -> [UInt8]? {
@@ -48,7 +63,7 @@ final class GoldenRenderTests: XCTestCase {
     func testGoldenRendersPixelIdentical() throws {
         let golden = try loadGolden()
         XCTAssertEqual(golden.size, MixlingsRenderer.size)
-        XCTAssertEqual(golden.cases.count, 146)
+        XCTAssertEqual(golden.cases.count, 215) // 146 approved v2 + 69 living-world
         var matched = 0
         for (i, c) in golden.cases.enumerated() {
             guard let want = decodeHex(c.rgba_hex) else {
@@ -70,6 +85,77 @@ final class GoldenRenderTests: XCTestCase {
             }
         }
         XCTAssertEqual(matched, golden.cases.count, "\(matched)/\(golden.cases.count) golden renders matched")
+    }
+
+    func testGoldenScenesPixelIdentical() throws {
+        let golden = try loadGolden()
+        XCTAssertEqual(golden.scenes.count, 63)
+        var matched = 0
+        for (i, sc) in golden.scenes.enumerated() {
+            guard let want = decodeHex(sc.rgba_hex) else { XCTFail("scene \(i): bad rgba_hex"); continue }
+            let got: PixelBuffer
+            switch sc.kind {
+            case "room":
+                let pair = sc.pair!
+                got = MixlingsRenderer.renderRoom((pair[0], pair[1]), scene: sc.scene!,
+                                                  timeOfDay: sc.time_of_day!, weather: sc.weather!,
+                                                  furniture: sc.furniture!)
+            case "jumprope":
+                got = MixlingsRenderer.renderJumpRope(sc.pheno!, frame: sc.frame!)
+            default:
+                got = MixlingsRenderer.renderGlyph(scene: sc.scene!)
+            }
+            XCTAssertEqual(got.width, sc.width, "scene \(i) width")
+            XCTAssertEqual(got.height, sc.height, "scene \(i) height")
+            guard got.rgba.count == want.count else { XCTFail("scene \(i): byte count"); continue }
+            if let k = zip(got.rgba, want).enumerated().first(where: { $0.element.0 != $0.element.1 })?.offset {
+                let px = k / 4
+                XCTFail("scene \(i) \(sc.kind) \(sc.scene ?? sc.frame ?? -1): first differing pixel (x=\(px % sc.width), y=\(px / sc.width)) "
+                        + "want RGBA \(Array(want[(px * 4)..<(px * 4 + 4)])) got \(Array(got.rgba[(px * 4)..<(px * 4 + 4)]))")
+            } else {
+                matched += 1
+            }
+        }
+        XCTAssertEqual(matched, golden.scenes.count, "\(matched)/\(golden.scenes.count) golden scenes matched")
+    }
+
+    func testGoldenCoversLivingWorld() throws {
+        let golden = try loadGolden()
+        XCTAssertEqual(Set(golden.cases.map { $0.pheno.weather }), Set(0...5))
+        XCTAssertEqual(Set(golden.cases.map { $0.pheno.item }), Set(0...9))
+        XCTAssertEqual(Set(golden.cases.map { $0.pheno.alive }), Set(0...3))
+        XCTAssertEqual(Set(golden.scenes.filter { $0.kind == "room" }.compactMap { $0.scene }), Set(0..<LivingWorld.sceneCount))
+        XCTAssertEqual(Set(golden.scenes.filter { $0.kind == "jumprope" }.compactMap { $0.frame }), Set(0..<LivingWorld.jumpRopeFrames))
+        XCTAssertEqual(golden.scenes.filter { $0.kind == "glyph" }.count, LivingWorld.glyphCount)
+    }
+
+    func testLivingWorldDefaultsKeepV2Render() {
+        // New fields default to 0 and leave the approved v2 output untouched.
+        let p = Phenotype(body: 2, eyes: 4, head: 6, pattern: 2, tail: 4, palette: 7, aura: 1, seed: 9)
+        XCTAssertEqual(p.weather, 0); XCTAssertEqual(p.item, 0); XCTAssertEqual(p.alive, 0)
+        var q = p
+        q.weather = LivingWorld.rain
+        XCTAssertNotEqual(MixlingsRenderer.render(p).rgba, MixlingsRenderer.render(q).rgba)
+        // Silhouettes ignore living-world layers.
+        XCTAssertEqual(MixlingsRenderer.renderSilhouette(p), MixlingsRenderer.renderSilhouette(q))
+    }
+
+    func testSceneSizesAndOpacity() {
+        let a = Phenotype(body: 0, eyes: 1, head: 1, pattern: 1, tail: 1, palette: 0, aura: 0)
+        let b = Phenotype(body: 3, eyes: 7, head: 4, pattern: 3, tail: 2, palette: 12, aura: 2)
+        for s in 0..<LivingWorld.sceneCount {
+            let room = MixlingsRenderer.renderRoom((a, b), scene: s, timeOfDay: LivingWorld.nightTime)
+            XCTAssertEqual(room.width, 64); XCTAssertEqual(room.height, 48)
+            XCTAssertTrue(stride(from: 3, to: room.rgba.count, by: 4).allSatisfy { room.rgba[$0] == 255 }, "room is opaque")
+            let g = MixlingsRenderer.renderGlyph(scene: s)
+            XCTAssertEqual(g.width, 16)
+            XCTAssertTrue(stride(from: 0, to: g.rgba.count, by: 4).allSatisfy {
+                g.rgba[$0 + 3] == 0 || Array(g.rgba[$0..<$0 + 4]) == [255, 255, 255, 255]
+            }, "glyph is one colour")
+        }
+        for f in 0..<LivingWorld.jumpRopeFrames {
+            XCTAssertEqual(MixlingsRenderer.renderJumpRope(a, frame: f).rgba.count, 64 * 48 * 4)
+        }
     }
 
     func testGoldenCoversStagesMoodsAndSilhouettes() throws {

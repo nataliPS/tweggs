@@ -1,6 +1,6 @@
 // Swift port of art/render.py `render_raw(p, silhouette)` and everything it calls.
-// Mirrors art/ts-port/render.ts line by line; that port is verified 146/146 against
-// art/golden/renders.json. Keep the three in sync.
+// Mirrors art/ts-port/render.ts line by line; that port is verified against every case
+// of art/golden/renders.json. Keep the three in sync. Living world / scenes: Living.swift.
 import Foundation
 
 /// Grid size (Python `S`).
@@ -24,20 +24,31 @@ public struct Phenotype: Hashable, Sendable, Codable {
     public var mood: Int
     /// Growth stage: 0 egg, 1 baby, 2 teen, 3 adult.
     public var stage: Int
+    /// Living world (not a gene): 0 none, 1 rain, 2 heat, 3 snow, 4 wind, 5 night.
+    public var weather: Int
+    /// Held / worn care item: 0 none, 1 umbrella, 2 water bottle, 3 fan, 4 sun hat,
+    /// 5 scarf, 6 beanie, 7 blanket, 8 jump rope, 9 juice box.
+    public var item: Int
+    /// Widget-alive frame: 0 none, 1 charging (juice box), 2 low power (blanket nap),
+    /// 3 morning stretch ("!" bubble).
+    public var alive: Int
 
     public init(body: Int, eyes: Int, head: Int, pattern: Int, tail: Int,
                 palette: Int, aura: Int, shift: Int = 0, seed: Int = 0,
-                mood: Int = 0, stage: Int = 3) {
+                mood: Int = 0, stage: Int = 3,
+                weather: Int = 0, item: Int = 0, alive: Int = 0) {
         self.body = body; self.eyes = eyes; self.head = head; self.pattern = pattern
         self.tail = tail; self.palette = palette; self.aura = aura; self.shift = shift; self.seed = seed
         self.mood = mood; self.stage = stage
+        self.weather = weather; self.item = item; self.alive = alive
     }
 
     private enum CodingKeys: String, CodingKey {
         case body, eyes, head, pattern, tail, palette, aura, shift, seed, mood, stage
+        case weather, item, alive
     }
 
-    /// `shift`, `seed`, `mood` and `stage` are optional in JSON (defaults as in Python).
+    /// Everything after `aura` is optional in JSON (defaults as in Python).
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         body = try c.decode(Int.self, forKey: .body)
@@ -51,10 +62,14 @@ public struct Phenotype: Hashable, Sendable, Codable {
         seed = try c.decodeIfPresent(Int.self, forKey: .seed) ?? 0
         mood = try c.decodeIfPresent(Int.self, forKey: .mood) ?? 0
         stage = try c.decodeIfPresent(Int.self, forKey: .stage) ?? 3
+        weather = try c.decodeIfPresent(Int.self, forKey: .weather) ?? 0
+        item = try c.decodeIfPresent(Int.self, forKey: .item) ?? 0
+        alive = try c.decodeIfPresent(Int.self, forKey: .alive) ?? 0
     }
 }
 
-/// 32x32 RGBA, row-major, 4 bytes/pixel, straight (non-premultiplied) alpha.
+/// RGBA, row-major, 4 bytes/pixel, straight (non-premultiplied) alpha
+/// (32x32 creatures, 64x48 scenes, 16x16 glyphs).
 public struct PixelBuffer: Hashable, Sendable {
     public let width: Int
     public let height: Int
@@ -264,8 +279,13 @@ let EYES: [Int: Sprite] = [
     5: sprite([".K.", "WKK", "KKK", ".K."]),                          // oval 3x4
     6: sprite([".K.", "KAK", ".K."]),                                 // star
     7: sprite([".KKKK.", "KWWKKK", "KWKKKK", "KKKKKK", ".KKKK."]),     // cyclops (single)
+    // state eyes (living world, never genes)
+    8: sprite(["..K", "KK.", "..K"]),                                 // squint (heat)
+    9: sprite(["K..K", ".KK."]),                                      // closed, asleep
+    10: sprite(["K....K", ".KKKK."]),                                 // closed cyclops
 ]
-let EYE_MIRROR: [Int: Bool] = [0: false, 1: false, 2: true, 3: true, 4: false, 5: false, 6: false, 7: false]
+let EYE_MIRROR: [Int: Bool] = [0: false, 1: false, 2: true, 3: true, 4: false, 5: false, 6: false, 7: false,
+                               8: true, 9: true, 10: false]
 
 /// Mood layer: (x0, mouth sprite).
 let MOODS: [Int: (x0: Int, spr: Sprite)] = [
@@ -333,12 +353,25 @@ func stamp(_ c: inout Canvas, _ x0: Int, _ y0: Int, _ rows: [String]) {
     for s in sprite(rows) { c.put(x0 + s.x, y0 + s.y, roleFor(s.ch), s.ch != "a") }
 }
 
-func drawHead(_ c: inout Canvas, _ v: Int, _ a: Anchors, _ stage: Int) {
-    if let part = HEADS[stage]?[v] { stamp(&c, part.x0, a.top + part.dy0, part.rows) }
+/// Wind: rows above refY lean right by (refY - y + 1) // 2.
+func stampBlown(_ c: inout Canvas, _ x0: Int, _ y0: Int, _ rows: [String], _ refY: Int) {
+    for s in sprite(rows) {
+        let yy = y0 + s.y
+        let dx = yy < refY ? floorDiv(refY - yy + 1, 2) : 0
+        c.put(x0 + s.x + dx, yy, roleFor(s.ch), s.ch != "a")
+    }
 }
 
-func drawTail(_ c: inout Canvas, _ v: Int, _ a: Anchors, _ stage: Int) {
-    if let part = TAILS[stage]?[v] { stamp(&c, a.tailX + part.x0, a.tailY + part.dy0, part.rows) }
+func drawHead(_ c: inout Canvas, _ v: Int, _ a: Anchors, _ stage: Int, _ wind: Bool = false) {
+    guard let part = HEADS[stage]?[v] else { return }
+    if wind { stampBlown(&c, part.x0, a.top + part.dy0, part.rows, a.top) }
+    else { stamp(&c, part.x0, a.top + part.dy0, part.rows) }
+}
+
+func drawTail(_ c: inout Canvas, _ v: Int, _ a: Anchors, _ stage: Int, _ wind: Bool = false) {
+    guard let part = TAILS[stage]?[v] else { return }
+    if wind { stampBlown(&c, a.tailX + part.x0, a.tailY + part.dy0, part.rows, a.tailY) }
+    else { stamp(&c, a.tailX + part.x0, a.tailY + part.dy0, part.rows) }
 }
 
 /// Spots on a fixed grid around (16, midY); at most 4, in table order.
@@ -445,7 +478,7 @@ func eyeLayout(_ v: Int, _ a: Anchors) -> EyeLayout {
 
 func drawEyes(_ c: inout Canvas, _ v: Int, _ a: Anchors) {
     let e = eyeLayout(v, a)
-    if v == 7 { // cyclops: one centred eye (x 13..18)
+    if v == 7 || v == 10 { // cyclops (open / closed): one centred eye (x 13..18)
         for s in e.spr { c.put(13 + s.x, e.y0 + s.y, roleFor(s.ch), true, true) }
         return
     }
@@ -464,7 +497,7 @@ func drawFace(_ c: inout Canvas, _ m: Mask, _ eyes: Int, _ mood: Int, _ a: Ancho
     let mouth = MOODS[mood] ?? MOODS[0]!
     for s in mouth.spr { c.put(mouth.x0 + s.x, my + s.y, roleFor(s.ch)) }
     let by = a.eyeY + 2
-    let bx = eyes != 7 ? 16 + e.dx + floorDiv(e.w + 1, 2) + 1 : 21
+    let bx = (eyes != 7 && eyes != 10) ? 16 + e.dx + floorDiv(e.w + 1, 2) + 1 : 21
     for x in [bx, 31 - bx] where m.contains(x, by) { c.put(x, by, .blush) }
 }
 
@@ -521,7 +554,7 @@ func drawAura(_ v: Int, _ seed: Int) -> [(x: Int, y: Int, role: Role)] {
 }
 
 /// Python `build`: the role canvas.
-func build(_ p: Phenotype, _ silhouette: Bool) -> Canvas {
+func build(_ p: Phenotype, _ silhouette: Bool, face: (eyes: Int, mood: Int)? = nil) -> Canvas {
     let stage = p.stage
     let mask = bodyMask(p.body, stage)
     var c = Canvas()
@@ -533,15 +566,23 @@ func build(_ p: Phenotype, _ silhouette: Bool) -> Canvas {
         return c
     }
     let a = anchors(mask)
-    drawTail(&c, p.tail, a, stage)
+    var eyes = p.eyes, mood = p.mood, wind = false
+    if let f = face {
+        eyes = f.eyes; mood = f.mood
+    } else if !silhouette { // living-world state layers (colour mode only)
+        let sf = stateFace(p)
+        eyes = sf.eyes; mood = sf.mood
+        wind = stateWeather(p).weather == WIND
+    }
+    drawTail(&c, p.tail, a, stage, wind)
     putMask(&c, mask, .base)
-    drawHead(&c, p.head, a, stage)
+    drawHead(&c, p.head, a, stage, wind)
     for pt in mask.sortedPoints() where !c.has(pt.x, pt.y) { c.set(pt.x, pt.y, .base) } // setdefault
     applyPattern(&c, mask, p.pattern, a)
     shadeBody(&c, mask)
     outline(&c)
-    drawEyes(&c, p.eyes, a)
-    if !silhouette { drawFace(&c, mask, p.eyes, p.mood, a) }
+    drawEyes(&c, eyes, a)
+    if !silhouette { drawFace(&c, mask, eyes, mood, a) }
     return c
 }
 
@@ -558,23 +599,11 @@ public enum MixlingsRenderer {
     /// Render at scale 1 (honours `p.stage` and `p.mood`).
     /// Pixel-identical to Python `render_raw(p).tobytes()`.
     public static func render(_ p: Phenotype) -> PixelBuffer {
-        let c = build(p, false)
-        let pal = makePalette(p.palette, p.shift)
         var buf = [UInt8](repeating: 0, count: S * S * 4)
-        if p.stage == ADULT {
-            for e in drawAura(p.aura, p.seed) {
-                if e.x >= 0 && e.x < S && e.y >= 0 && e.y < S && !c.has(e.x, e.y) {
-                    let col = pal[e.role], i = (e.y * S + e.x) * 4
-                    buf[i] = UInt8(col.r); buf[i + 1] = UInt8(col.g); buf[i + 2] = UInt8(col.b)
-                    buf[i + 3] = 255
-                }
-            }
-        }
-        for i in 0..<(S * S) {
-            guard let px = c.px[i] else { continue }
-            let col = pal[px.role]
-            buf[i * 4] = UInt8(col.r); buf[i * 4 + 1] = UInt8(col.g); buf[i * 4 + 2] = UInt8(col.b)
-            buf[i * 4 + 3] = 255
+        for e in creatureLayers(p) {
+            let i = (e.y * S + e.x) * 4
+            buf[i] = UInt8(e.c.r); buf[i + 1] = UInt8(e.c.g); buf[i + 2] = UInt8(e.c.b)
+            buf[i + 3] = 255
         }
         return PixelBuffer(width: S, height: S, rgba: buf)
     }

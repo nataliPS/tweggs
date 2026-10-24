@@ -250,8 +250,12 @@ EYES = {
     5: sprite([".K.", "WKK", "KKK", ".K."]),              # oval 3x4, white top-left
     6: sprite([".K.", "KAK", ".K."]),                     # star
     7: sprite([".KKKK.", "KWWKKK", "KWKKKK", "KKKKKK", ".KKKK."]),  # cyclops (single, centred)
+    # state eyes (living world, not genes): never chosen by the genome
+    8: sprite(["..K", "KK.", "..K"]),                     # squint > < (heat)
+    9: sprite(["K..K", ".KK."]),                          # closed, asleep (night)
 }
-EYE_MIRROR = {0: False, 1: False, 2: True, 3: True, 4: False, 5: False, 6: False, 7: False}
+EYE_MIRROR = {0: False, 1: False, 2: True, 3: True, 4: False, 5: False, 6: False, 7: False,
+              8: True, 9: True}
 
 # Mood layer (not a gene): mouth sprites centred on x 15.5, drawn under the eyes.
 MOODS = {
@@ -382,19 +386,33 @@ def stamp(canvas, x0, y0, rows):
         put(canvas, x0 + x, y0 + y, ROLE[ch], ch != "a")
 
 
-def draw_head(canvas, v, a, stage):
+def stamp_blown(canvas, x0, y0, rows, ref_y):
+    """Wind: rows above ref_y lean right by (ref_y - y + 1) // 2."""
+    for (x, y, ch) in sprite(rows):
+        yy = y0 + y
+        dx = (ref_y - yy + 1) // 2 if yy < ref_y else 0
+        put(canvas, x0 + x + dx, yy, ROLE[ch], ch != "a")
+
+
+def draw_head(canvas, v, a, stage, wind=False):
     part = HEADS.get(stage, {}).get(v)
     if part:
         x0, dy0, rows = part
-        stamp(canvas, x0, a["top"] + dy0, rows)
+        if wind:
+            stamp_blown(canvas, x0, a["top"] + dy0, rows, a["top"])
+        else:
+            stamp(canvas, x0, a["top"] + dy0, rows)
 
 
-def draw_tail(canvas, v, a, stage):
+def draw_tail(canvas, v, a, stage, wind=False):
     part = TAILS.get(stage, {}).get(v)
     if part:
         dx0, dy0, rows = part
         tx, ty = a["tail"]
-        stamp(canvas, tx + dx0, ty + dy0, rows)
+        if wind:
+            stamp_blown(canvas, tx + dx0, ty + dy0, rows, ty)
+        else:
+            stamp(canvas, tx + dx0, ty + dy0, rows)
 
 
 # Spots sit on a fixed grid around (16, mid_y); each must fit fully on the body
@@ -501,7 +519,7 @@ def eye_layout(v, a):
 
 def draw_eyes(canvas, v, a):
     spr, x0, y0, w, h, dx = eye_layout(v, a)
-    if v == 7:  # cyclops: one centred eye (x 13..18)
+    if v in (7, 10):  # cyclops (open / closed): one centred eye (x 13..18)
         for (x, y, ch) in spr:
             put(canvas, 13 + x, y0 + y, ROLE[ch], knock=True)
         return
@@ -519,7 +537,7 @@ def draw_face(canvas, mask, eyes, mood, a):
     for (x, y, ch) in mouth:
         put(canvas, mx + x, my + y, ROLE[ch])
     by = a["eye_y"] + 2
-    bx = 16 + dx + (w + 1) // 2 + 1 if eyes != 7 else 21
+    bx = 16 + dx + (w + 1) // 2 + 1 if eyes not in (7, 10) else 21
     for x in (bx, 31 - bx):
         if (x, by) in mask:
             put(canvas, x, by, "blush")
@@ -575,10 +593,14 @@ class Pheno:
     seed: int = 0
     mood: int = 0    # 0 neutral (small smile), 1 "o", 2 hungry wobble
     stage: int = 3   # 0 egg, 1 baby, 2 teen, 3 adult
+    weather: int = 0  # living world: 0 none, 1 rain, 2 heat, 3 snow, 4 wind, 5 night
+    item: int = 0     # care item: 0 none, 1 umbrella, 2 bottle, 3 fan, 4 sun hat, 5 scarf,
+    #                   6 beanie, 7 blanket, 8 jump rope, 9 juice box
+    alive: int = 0    # widget-alive frame: 0 none, 1 charging, 2 low power, 3 morning
 
 
-def build(p: Pheno, silhouette: bool = False) -> dict:
-    """The role canvas: {(x, y): Px}."""
+def build(p: Pheno, silhouette: bool = False, face=None) -> dict:
+    """The role canvas: {(x, y): Px}. `face` = (eyes, mood) override (scenes)."""
     stage = p.stage
     mask = body_mask(p.body, stage)
     canvas: dict = {}
@@ -590,42 +612,1058 @@ def build(p: Pheno, silhouette: bool = False) -> dict:
         outline(canvas)
         return canvas
     a = anchors(mask)
-    draw_tail(canvas, p.tail, a, stage)
+    eyes, mood, wind = p.eyes, p.mood, False
+    if face is not None:
+        eyes, mood = face
+    elif not silhouette:  # living-world state layers (colour mode only)
+        eyes, mood = state_face(p)
+        wind = state_weather(p)[0] == WIND
+    draw_tail(canvas, p.tail, a, stage, wind)
     for pt in pts(mask):
         canvas[pt] = Px("base", True)
-    draw_head(canvas, p.head, a, stage)
+    draw_head(canvas, p.head, a, stage, wind)
     for pt in pts(mask):  # body over head base so ears tuck behind
         canvas.setdefault(pt, Px("base", True))
     apply_pattern(canvas, mask, p.pattern, a)
     shade_body(canvas, mask)
     outline(canvas)
-    draw_eyes(canvas, p.eyes, a)
+    draw_eyes(canvas, eyes, a)
     if not silhouette:
-        draw_face(canvas, mask, p.eyes, p.mood, a)
+        draw_face(canvas, mask, eyes, mood, a)
     return canvas
 
 
+def creature_layers(p: Pheno, face=None, plain: bool = False, aura: bool = True) -> list:
+    """Colour creature as an ordered paint list [(x, y, rgb)] in 32x32 coordinates
+    (later entries win). `plain`: no living-world layers (scenes pass their own `face`)."""
+    canvas = build(p, False, face)
+    behind, front = [], []
+    if not plain:
+        canvas, behind, front = living(p, canvas)
+    pal = palette(p.palette, p.shift)
+    out = []
+    if p.stage == ADULT and aura:
+        for (x, y, role) in draw_aura(p.aura, p.seed):
+            if 0 <= x < S and 0 <= y < S and (x, y) not in canvas:
+                out.append((x, y, pal[role]))
+    for (x, y, rgb) in behind:
+        if 0 <= x < S and 0 <= y < S and (x, y) not in canvas:
+            out.append((x, y, rgb))
+    for (x, y) in pts(set(canvas)):
+        out.append((x, y, pal[canvas[(x, y)].role]))
+    for (x, y, rgb) in front:
+        if 0 <= x < S and 0 <= y < S:
+            out.append((x, y, rgb))
+    return out
+
+
 def render_raw(p: Pheno, silhouette: bool = False) -> Image.Image:
-    canvas = build(p, silhouette)
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     px = img.load()
     if silhouette:  # one colour, knocked-out eyes, no aura
-        for (x, y), v in canvas.items():
+        for (x, y), v in build(p, True).items():
             if not v.knock:
                 px[x, y] = (255, 255, 255, 255)
         return img
-    pal = palette(p.palette, p.shift)
-    if p.stage == ADULT:
-        for (x, y, role) in draw_aura(p.aura, p.seed):
-            if 0 <= x < S and 0 <= y < S and (x, y) not in canvas:
-                px[x, y] = (*pal[role], 255)
-    for (x, y), v in canvas.items():
-        px[x, y] = (*pal[v.role], 255)
+    for (x, y, rgb) in creature_layers(p):
+        px[x, y] = (*rgb, 255)
     return img
 
 
 def render(p: Pheno, scale: int = 8, silhouette: bool = False) -> Image.Image:
     return render_raw(p, silhouette).resize((S * scale, S * scale), Image.NEAREST)
+
+
+# ---------------------------------------------------------------- living world
+# docs/living-world-spec.md §1 weather, §8 jump rope, §9 pair life, §13 alive.
+# Everything below is explicit tables + integer maths (no floats, no RNG except
+# Mulberry), so the TS / Swift ports stay pixel-identical.
+NONE, RAIN, HEAT, SNOW, WIND, NIGHT = 0, 1, 2, 3, 4, 5
+I_UMBRELLA, I_BOTTLE, I_FAN, I_HAT, I_SCARF, I_BEANIE, I_BLANKET, I_ROPE, I_JUICE = range(1, 10)
+A_CHARGING, A_LOWPOWER, A_MORNING = 1, 2, 3
+EYE_SQUINT, EYE_CLOSED, EYE_CLOSED_CYCLOPS = 8, 9, 10
+EYES[EYE_CLOSED_CYCLOPS] = sprite(["K....K", ".KKKK."])
+EYE_MIRROR[EYE_CLOSED_CYCLOPS] = False
+
+# One colour table for all props (chars are shared by every living-world sprite).
+LW = {
+    "o": (52, 40, 70),    # ink outline
+    "w": (255, 255, 255), "k": (92, 80, 112),
+    "r": (255, 107, 122), "R": (214, 72, 98),
+    "y": (255, 214, 90), "Y": (232, 170, 52),
+    "b": (112, 172, 255), "B": (70, 118, 222),
+    "c": (196, 232, 255), "t": (150, 200, 255), "q": (170, 196, 230),
+    "g": (126, 212, 140), "G": (72, 160, 102),
+    "n": (196, 138, 86), "N": (146, 96, 58),
+    "p": (176, 146, 255), "P": (124, 98, 214),
+    "s": (244, 214, 156), "S": (208, 172, 108),
+    "e": (226, 224, 236), "E": (150, 148, 170),
+    "m": (255, 176, 204), "M": (230, 120, 160),
+    "l": (255, 244, 200),
+    "T": (214, 120, 80), "U": (170, 88, 60),
+}
+
+
+def lw_sprite(x0, y0, rows, out, cmap=None):
+    """Append (x, y, rgb) for every non-'.' char of an ASCII sprite."""
+    cm = cmap or LW
+    for (x, y, ch) in sprite(rows):
+        out.append((x0 + x, y0 + y, cm[ch]))
+
+
+def row_ext(mask, y):
+    xs = [x for x, yy in pts(mask) if yy == y]
+    return (min(xs), max(xs)) if xs else (16, 15)
+
+
+# --- weather particles (world coordinates, drawn behind the creature)
+RAIN_DROPS = [(2, 3), (7, 9), (12, 1), (27, 4), (22, 0), (29, 12), (3, 17), (25, 18),
+              (18, 6), (5, 24), (28, 23), (10, 13)]
+SNOW_FLAKES = [(3, 4), (10, 1), (27, 3), (22, 9), (29, 15), (2, 13), (6, 21), (27, 24),
+               (17, 2)]
+WIND_LINES = [(0, 8, 6), (1, 15, 4), (0, 21, 5), (2, 26, 3)]  # x, y, length
+SHEEN = [(-6, -4), (5, -6), (7, 3), (-8, 3)]                   # rel. (16, mid_y)
+
+ZZZ_ROWS = ["pppp...", "..p....", ".p.....", "pppp...", "....ppp", ".....p.", "....ppp"]
+BANG = [".ooooo.", "owwrwwo", "owwrwwo", "owwrwwo", "owwwwwo", "owwrwwo", ".ooooo.",
+        "..oo...", ".o....."]
+BOLT = [".oooo", "oyyo.", "oyyoo", ".oyyo", "..oyo", "..oo."]
+SWEAT = [".o..", "oco.", "otco", ".oo."]
+SUN = ["...y...", ".y.y.y.", "..yyy..", "yyyYyyy", "..yyy..", ".y.y.y.", "...y..."]
+MOON = [".yy.", "yy..", "yy..", ".yy."]
+LEAF = [".g", "gG", "G."]
+FLAKE = [".w.", "wqw", ".w."]
+
+# --- care items (body coordinates; x0 / y0 are resolved from anchors)
+UMBRELLA = ["........oo........",
+            "......orryyo......",
+            "....orrryyyyyo....",
+            "..orrrryyyyyyrro..",
+            ".orrrrryyyyyyrrro.",
+            "oRRRRRRYYYYYYRRRRo",
+            ".oooo..oooo..oooo."]
+BOTTLE = [".oo.", "oBBo", ".oo.", "otto", "otco", "otto", "oooo"]
+FAN = [".ooooooo.",
+       "orrwrrwro",
+       "orwrrwrro",
+       ".orrwrro.",
+       "..orrro..",
+       "...oro...",
+       "....o....",
+       "....N....",
+       "....N...."]
+SUN_HAT = ["....oooooooo....",
+           "...osssssssso...",
+           "...orrrrrrrro...",
+           "oooosssssssoooo.",
+           "osssssssssssssso",
+           ".oooooooooooooo."]
+BEANIE = [".....oo.....",
+          "....owwo....",
+          "...oorroo...",
+          "..orrrrrro..",
+          ".orrrrrrrro.",
+          ".owRwRwRwRo.",
+          ".oooooooooo."]
+JUICE = ["w.......",
+         ".w......",
+         "..oooooo",
+         "..oggggo",
+         "..ogwwgo",
+         "..ogwwgo",
+         "..oGGGGo",
+         "..oooooo"]
+HANDLE = ["oo", "yo", "yo", "oo"]
+
+
+def state_weather(p):
+    """Effective (weather, item) after the widget-alive override (§13)."""
+    w, it = p.weather, p.item
+    if p.alive == A_CHARGING:
+        it = I_JUICE
+    elif p.alive == A_LOWPOWER:
+        w, it = NIGHT, I_BLANKET
+    return w, it
+
+
+def state_face(p):
+    """(eyes, mood) after weather / alive expressions."""
+    w, _ = state_weather(p)
+    cyc = p.eyes == 7
+    if w == NIGHT:
+        return (EYE_CLOSED_CYCLOPS if cyc else EYE_CLOSED), 0
+    if p.alive == A_MORNING:
+        return (7 if cyc else 3), 1
+    if p.alive == A_CHARGING:
+        return (7 if cyc else 3), 0
+    if w == HEAT:
+        return (7 if cyc else EYE_SQUINT), 1
+    if w == RAIN:
+        return (7 if cyc else 3), 0
+    if w == SNOW:
+        return p.eyes, 2
+    return p.eyes, p.mood
+
+
+def rope_arc(x0, x1, hy, apex, out, rgb):
+    """Integer parabola from (x0, hy) to (x1, hy) through apex at the middle,
+    gaps filled vertically so the rope reads as one line."""
+    half = (x1 - x0) // 2
+    cx = x0 + half
+    prev = None
+    for x in range(x0, x1 + 1):
+        d = x - cx
+        y = hy + ((apex - hy) * (half * half - d * d)) // (half * half)
+        out.append((x, y, rgb))
+        if prev is not None and abs(y - prev) > 1:
+            step = 1 if y > prev else -1
+            for yy in range(prev + step, y, step):
+                out.append((x, yy, rgb))
+        prev = y
+
+
+def item_layer(p, it, mask, a, front, behind):
+    top, bottom, mid = a["top"], a["bottom"], a["mid_y"]
+    lx, rx = row_ext(mask, mid)
+    if it == I_UMBRELLA:  # tilted to the right, handle in the right paw
+        y0 = max(0, top - 11)
+        lw_sprite(10, y0, UMBRELLA, front)
+        hx = min(rx, 24)
+        for y in range(y0 + 6, mid + 2):
+            front.append((hx, y, LW["N"]))
+        front += [(hx - 1, mid + 2, LW["N"]), (hx - 2, mid + 1, LW["N"])]
+    elif it == I_BOTTLE:
+        lw_sprite(rx - 1, mid - 2, BOTTLE, front)
+    elif it == I_FAN:
+        lw_sprite(max(0, lx - 7), mid - 7, FAN, front)
+    elif it == I_HAT:
+        lw_sprite(8, top - 4, SUN_HAT, front)
+    elif it == I_BEANIE:
+        lw_sprite(10, top - 4, BEANIE, front)
+    elif it == I_SCARF:
+        sy = a["eye_y"] + 5
+        for y in (sy, sy + 1):
+            l, r = row_ext(mask, y)
+            for x in range(l - 1, r + 2):
+                ch = "w" if (x + y) % 4 == 0 else ("R" if y == sy + 1 else "r")
+                front.append((x, y, LW[ch]))
+            front += [(l - 2, y, LW["o"]), (r + 2, y, LW["o"])]
+        l, r = row_ext(mask, sy + 1)
+        for x in range(l - 1, r + 2):
+            front.append((x, sy + 2, LW["o"]))
+        tx = r - 4
+        tail = ["orro", "orwo", "orro", "orRo"][:max(1, min(4, bottom - sy - 2))] + ["oooo"]
+        for i, row in enumerate(tail):  # tail clipped to the body (short on babies)
+            lw_sprite(tx, sy + 2 + i, [row], front)
+    elif it == I_BLANKET:
+        y0 = mid + 2
+        for y in range(y0, bottom + 3):
+            l, r = (lx - 2, rx + 2)
+            for x in range(l, r + 1):
+                if y == y0 or x in (l, r) or y == bottom + 2:
+                    if not (y == y0 and x in (l, r)):
+                        front.append((x, y, LW["o"]))
+                    continue
+                ch = "p" if ((x - l) // 3 + (y - y0) // 3) % 2 == 0 else "P"
+                if y == y0 + 1:
+                    ch = "w"
+                front.append((x, y, LW[ch]))
+    elif it == I_ROPE:
+        hl, hr = lx - 3, rx + 2
+        lw_sprite(hl, mid - 1, HANDLE, front)
+        lw_sprite(hr, mid - 1, HANDLE, front)
+        rope_arc(hl, hr + 1, mid - 1, 0, behind, LW["M"])
+    elif it == I_JUICE:  # straw tip at the right corner of the mouth
+        lw_sprite(18, mouth_y(p, a), JUICE, front)
+
+
+def mouth_y(p, a):
+    eyes, _ = state_face(p)
+    spr, x0, y0, w, h, dx = eye_layout(eyes, a)
+    return y0 + h + (1 if h >= 3 else 2)
+
+
+def shift_canvas(canvas, dx, dy):
+    out = {}
+    for (x, y) in sorted(canvas):
+        nx, ny = x + dx, y + dy
+        if 0 <= nx < S and 0 <= ny < S:
+            out[(nx, ny)] = canvas[(x, y)]
+    return out
+
+
+def stretch_canvas(canvas, ref_y):
+    """Morning stretch: rows <= ref_y move up one, row ref_y is kept twice."""
+    out = {}
+    for (x, y) in sorted(canvas):
+        if y >= ref_y:
+            out[(x, y)] = canvas[(x, y)]
+    for (x, y) in sorted(canvas):
+        if y <= ref_y and y - 1 >= 0:
+            out[(x, y - 1)] = canvas[(x, y)]
+    return out
+
+
+def living(p: Pheno, canvas: dict):
+    """Weather / care item / alive layers: (canvas, behind, front)."""
+    w, it = state_weather(p)
+    if w == NONE and it == 0 and p.alive == 0:
+        return canvas, [], []
+    behind, front = [], []
+    # world particles
+    if w == RAIN:
+        for (x, y) in RAIN_DROPS:
+            if it == I_UMBRELLA and 4 <= x <= 28 and y <= 20:
+                continue
+            behind += [(x, y, LW["c"]), (x, y + 1, LW["t"]), (x, y + 2, LW["b"])]
+    elif w == SNOW:
+        for (x, y) in SNOW_FLAKES:
+            lw_sprite(x - 1, y - 1, FLAKE, behind)
+    elif w == WIND:
+        for (x, y, n) in WIND_LINES:
+            for i in range(n):
+                behind.append((x + i, y, LW["q"]))
+        lw_sprite(27, 5, LEAF, behind)
+    elif w == HEAT:
+        lw_sprite(0, 0, SUN, behind)
+    elif w == NIGHT and it != I_BLANKET:
+        lw_sprite(1, 1, MOON, behind)
+    if p.stage == EGG:  # eggs only get the weather around them
+        if w == NIGHT:
+            lw_sprite(22, 3, ZZZ_ROWS, front)
+        return canvas, behind, front
+    mask = body_mask(p.body, p.stage)
+    a = anchors(mask)
+    body_front, body_behind = [], []
+    item_layer(p, it, mask, a, body_front, body_behind)
+    lx, rx = row_ext(mask, a["mid_y"])
+    if w == RAIN:
+        for (dx, dy) in SHEEN:
+            x, y = 16 + dx, a["mid_y"] + dy
+            if (x, y) in mask and (x, y + 1) in mask:
+                body_front += [(x, y, LW["w"]), (x, y + 1, LW["t"])]
+    elif w == HEAT:
+        lw_sprite(16 + a["eye_dx"] + 3, a["eye_y"] - 6, SWEAT, body_front)
+    elif w == SNOW and it != I_BEANIE and it != I_HAT:
+        for x in range(12, 20):
+            ys = [y for xx, y in pts(mask) if xx == x]
+            if ys:
+                body_front.append((x, min(ys), LW["w"]))
+                if 14 <= x <= 17:
+                    body_front.append((x, min(ys) + 1, LW["w"]))
+    if w == NIGHT:
+        lw_sprite(22, max(0, a["top"] - 8), ZZZ_ROWS, front)
+    if p.alive == A_CHARGING:
+        lw_sprite(25, max(0, a["top"] - 6), BOLT, front)
+    if p.alive == A_MORNING:
+        lw_sprite(24, max(0, a["top"] - 9), BANG, front)
+    # pose
+    dx = dy = 0
+    if w == RAIN:
+        dy = -1
+        b = a["bottom"] + 1
+        for x in range(lx - 1, rx + 2):
+            behind.append((x, b + 1, LW["t"]))
+        for x in range(lx + 1, rx):
+            behind.append((x, b + 2, LW["c"]))
+        behind += [(lx - 3, b - 1, LW["t"]), (lx - 4, b - 2, LW["c"]),
+                   (rx + 3, b - 1, LW["t"]), (rx + 4, b - 2, LW["c"])]
+    elif w == SNOW:
+        dx = 1
+        for y in (a["mid_y"] - 1, a["mid_y"] + 1):
+            behind += [(lx - 2, y, LW["q"]), (rx + 4, y, LW["q"])]
+        behind += [(lx - 3, a["mid_y"], LW["q"]), (rx + 5, a["mid_y"], LW["q"])]
+    if p.alive == A_MORNING and w != NIGHT:
+        dx = dy = 0  # the stretch replaces the weather pose
+        canvas = stretch_canvas(canvas, a["mid_y"])
+        body_front = [(x, y - 1 if y <= a["mid_y"] else y, c) for (x, y, c) in body_front]
+        front += [(lx - 2, a["top"] - 1, LW["q"]), (lx - 3, a["top"] - 2, LW["q"]),
+                  (rx + 2, a["top"] - 1, LW["q"]), (rx + 3, a["top"] - 2, LW["q"])]
+    elif dx or dy:
+        canvas = shift_canvas(canvas, dx, dy)
+    front = [(x + dx, y + dy, c) for (x, y, c) in body_front] + front
+    behind = behind + [(x + dx, y + dy, c) for (x, y, c) in body_behind]
+    return canvas, behind, front
+
+
+# ---------------------------------------------------------------- scenes (64x48)
+RW, RH = 64, 48
+DAY, NIGHT_TIME = 0, 1
+SC_CHESS, SC_PAINT, SC_CHAT, SC_NAP, SC_STARS, SC_BREAKFAST, SC_HOMEWORK = range(7)
+SCENE_NAMES = ["chess", "painting", "chatting", "napping", "stargazing", "breakfast", "homework"]
+
+
+class Img:
+    """Opaque-or-empty RGB grid; every write is bounds-checked (portable)."""
+
+    def __init__(self, w, h):
+        self.w, self.h = w, h
+        self.px = [None] * (w * h)
+
+    def set(self, x, y, rgb, tint=None):
+        if 0 <= x < self.w and 0 <= y < self.h:
+            if tint is not None:
+                rgb = tuple((rgb[i] * tint[i]) // 256 for i in range(3))
+            self.px[y * self.w + x] = rgb
+
+    def get(self, x, y):
+        return self.px[y * self.w + x]
+
+    def spr(self, x0, y0, rows, tint=None, cmap=None):
+        cm = cmap or LW
+        for (x, y, ch) in sprite(rows):
+            self.set(x0 + x, y0 + y, cm[ch], tint)
+
+    def creature(self, layers, ox, oy, mirror=False, tint=None):
+        for (x, y, rgb) in layers:
+            self.set(ox + (31 - x if mirror else x), oy + y, rgb, tint)
+
+    def image(self) -> Image.Image:
+        img = Image.new("RGBA", (self.w, self.h), (0, 0, 0, 0))
+        p = img.load()
+        for y in range(self.h):
+            for x in range(self.w):
+                c = self.px[y * self.w + x]
+                if c is not None:
+                    p[x, y] = (*c, 255)
+        return img
+
+
+NIGHT_TINT = (176, 168, 224)   # furniture & props at night (x/256 per channel)
+CREATURE_NIGHT = (224, 220, 244)
+ROOM = {  # day, night
+    "wall": ((250, 236, 214), (78, 70, 118)),
+    "stripe": ((242, 224, 198), (70, 63, 108)),
+    "base": ((201, 162, 122), (52, 44, 82)),
+    "floor": ((222, 170, 112), (104, 82, 120)),
+    "plank": ((190, 136, 82), (84, 64, 100)),
+    "floor_hi": ((234, 188, 132), (116, 94, 132)),
+}
+SKY = {  # (sky top, sky bottom) per window state
+    "day": ((126, 200, 255), (176, 226, 255)),
+    "night": ((24, 26, 72), (46, 44, 104)),
+    "rain": ((126, 142, 172), (156, 170, 196)),
+    "rain_night": ((36, 40, 70), (52, 56, 88)),
+    "snow": ((176, 192, 216), (206, 216, 232)),
+}
+WALL_Y1, FLOOR_Y0 = 32, 34
+WIN_X0, WIN_Y0, WIN_X1, WIN_Y1 = 24, 3, 39, 16
+WIN_STARS = [(27, 6), (31, 9), (36, 5), (29, 13), (37, 11), (33, 7), (26, 10)]
+WIN_RAIN = [(27, 5), (31, 8), (35, 6), (29, 11), (37, 12), (33, 13), (26, 13), (36, 9)]
+WIN_SNOW = [(27, 6), (32, 5), (36, 8), (29, 10), (34, 12), (37, 14), (26, 14), (31, 13)]
+CLOUD = [".ww..", "wwwww"]
+
+# Furniture: 6 slots, each a table of variants (0 = empty, 1 = default).
+PICTURE = ["oooooooooo",
+           "onnnnnnnno",
+           "onbbbbbyno",
+           "onbbbbbbno",
+           "onbbgbbbno",
+           "onggGggbno",
+           "onGgggGgno",
+           "onnnnnnnno",
+           "oooooooooo"]
+SHELF = ["...gg.........",
+         "..gGgg...o.oo.",
+         "...gG...ono.oo",
+         ".oooo..onoboro",
+         ".oTTo..onoboro",
+         ".oTUo..onoboro",
+         "oooooooooooooo",
+         "oNNNNNNNNNNNNo",
+         "oooooooooooooo",
+         ".oo.......oo..",
+         ".o.........o.."]
+PLANT = ["..g..g..",
+         ".gGggGg.",
+         "gGgGgGgg",
+         ".gGggGgG",
+         "gGgGgggG",
+         ".gGgGgG.",
+         "..gGgG..",
+         "...GG...",
+         ".oooooo.",
+         ".oTTTTo.",
+         ".oTTTUo.",
+         "..oTUo..",
+         "..oooo.."]
+LAMP = ["..ooooo..",
+        ".oyyyyyo.",
+        ".oyyyyyo.",
+        "oyyyyyyyo",
+        "ooooooooo",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "....o....",
+        "...ooo...",
+        "..ooooo.."]
+LAMP_LIT = {**LW, "y": LW["l"]}
+BULBS = ["r", "y", "b", "g", "m"]
+
+CHESS_TABLE = ["..o..........o..",
+               ".owo........oko.",
+               ".owo........oko.",
+               "oooooooooooooooo",
+               "owkwkwkwkwkwkwko",
+               "okwkwkwkwkwkwkwo",
+               "oooooooooooooooo",
+               "onnnnnnnnnnnnnno",
+               "oNNNNNNNNNNNNNNo",
+               ".oooooooooooooo.",
+               "..oNo......oNo..",
+               "..oNo......oNo..",
+               "..oNo......oNo..",
+               "..ooo......ooo.."]
+EASEL = ["......oo......",
+         ".oooooooooooo.",
+         ".owwwwwwwwwwo.",
+         ".owwwwwwwwwwo.",
+         ".owwwwwwwwwwo.",
+         ".owwwwwwwwwwo.",
+         ".owwwwwwwwwwo.",
+         ".owwwwwwwwwwo.",
+         ".oooooooooooo.",
+         "oNNNNNNNNNNNNo",
+         "..oNo...oNo...",
+         "..oNo...oNo...",
+         ".oNo.....oNo..",
+         ".oNo.....oNo..",
+         "oNo.......oNo.",
+         "ooo.......ooo."]
+EASEL_DABS = [(3, 3, 0), (4, 3, 0), (3, 4, 0), (7, 3, 1), (8, 3, 1), (8, 4, 1),
+              (5, 5, 2), (6, 5, 2), (5, 6, 2), (9, 6, 3), (10, 6, 3), (4, 7, 3)]
+PAINT_POT = [".oooo.", "obbrro", "oyyggo", ".oooo."]
+BUBBLE = [".ooooooooo.",
+          "owwwwwwwwwo",
+          "owwwwwwwwwo",
+          "owwwwwwwwwo",
+          "owwwwwwwwwo",
+          "owwwwwwwwwo",
+          "owwwwwwwwwo",
+          ".ooooooooo.",
+          "..oo.......",
+          "..o........"]
+EMOTES = [
+    [".r.r.", "rrrrr", "rrrrr", ".rrr.", "..r.."],     # heart
+    ["..PP.", "..P.P", "..P..", "PPP..", "PPP.."],     # note
+    ["..y..", ".yyy.", "yyyyy", ".y.y.", "y...y"],     # star
+    ["k...k", ".....", "k...k", ".kkk.", "....."],     # laugh
+    [".kkk.", "k...k", "...k.", "..k..", "..k.."],     # question
+    ["g...g", ".g.g.", "..g..", ".g.g.", "g...g"],     # sparkle (cross)
+]
+NAP_BLANKET_Y = 33
+TELESCOPE = ["......oo",
+             ".....oko",
+             "....okko",
+             "...okko.",
+             "..okko..",
+             ".okko...",
+             "okko....",
+             "oko.....",
+             ".ooN....",
+             "..oNo...",
+             "..oNo...",
+             ".oN.No..",
+             ".oN.No..",
+             "oN...No.",
+             "oo...oo."]
+BREAKFAST_TABLE = ["................",
+                   "..oo......oo....",
+                   ".owwo....owwo...",
+                   "oooooooooooooooo",
+                   "orwrwrwrwrwrwrwo",
+                   "owrwrwrwrwrwrwro",
+                   "oooooooooooooooo",
+                   ".oRo........oRo.",
+                   ".oRo........oRo.",
+                   ".oNo........oNo.",
+                   ".oNo........oNo.",
+                   ".oNo........oNo.",
+                   ".ooo........ooo."]
+PLATE_FOOD = ["..oooo..", ".oSssSo.", "oeeeeeeo", ".oooooo."]
+EGG_PLATE = ["........", ".owwwo..", "oeewyweo", ".oooooo."]
+CUP = ["w.w.", ".w..", "oooo", "obbo", "obbo", ".oo."]
+DESK = ["......ooooo.....",
+        "....oyyyyyo.....",
+        "...oyyyyyyyo....",
+        "...ooooooooo....",
+        "oooooo..o.......",
+        "owwkwwo.o..oo...",
+        "owwkwwo.o.oko...",
+        "oooooooooooooooo",
+        "onnnnnnnnnnnnnno",
+        "oNNNNNNNNNNNNNNo",
+        ".oNo........oNo.",
+        ".oNo........oNo.",
+        ".oNo........oNo.",
+        ".ooo........ooo."]
+DESK_LIT = {**LW, "y": LW["l"]}
+
+
+def sky_kind(tod, weather):
+    night = tod == NIGHT_TIME or weather == NIGHT
+    if weather == RAIN:
+        return "rain_night" if night else "rain"
+    if weather == SNOW:
+        return "snow"
+    return "night" if night else "day"
+
+
+def draw_window(im, kind, weather):
+    top, bot = SKY[kind]
+    for y in range(WIN_Y0 + 1, WIN_Y1):
+        c = top if y < (WIN_Y0 + WIN_Y1) // 2 else bot
+        for x in range(WIN_X0 + 1, WIN_X1):
+            im.set(x, y, c)
+    if kind == "day":
+        im.spr(27, 5, CLOUD)
+        if weather == HEAT:
+            im.spr(32, 4, ["..y..", ".yyy.", "yyyyy", ".yyy.", "..y.."])
+        if weather == WIND:
+            im.spr(33, 11, LEAF)
+            im.spr(29, 8, [".g", "G."])
+    elif kind in ("night",):
+        for (x, y) in WIN_STARS:
+            im.set(x, y, (255, 244, 200))
+        im.spr(34, 9, MOON)
+    elif kind.startswith("rain"):
+        for (x, y) in WIN_RAIN:
+            im.set(x, y, (200, 214, 236))
+            im.set(x - 1, y + 1, (200, 214, 236))
+    else:  # snow
+        for (x, y) in WIN_SNOW:
+            im.set(x, y, (255, 255, 255))
+    frame = (255, 255, 255) if kind in ("day", "rain", "snow") else (196, 188, 228)
+    mx, my = (WIN_X0 + WIN_X1) // 2, (WIN_Y0 + WIN_Y1) // 2
+    for x in range(WIN_X0, WIN_X1 + 1):
+        im.set(x, WIN_Y0, LW["o"])
+        im.set(x, WIN_Y1, LW["o"])
+        im.set(x, my, frame)
+    for y in range(WIN_Y0, WIN_Y1 + 1):
+        im.set(WIN_X0, y, LW["o"])
+        im.set(WIN_X1, y, LW["o"])
+        if WIN_Y0 < y < WIN_Y1:
+            im.set(mx, y, frame)
+    for x in range(WIN_X0 - 1, WIN_X1 + 2):  # sill
+        im.set(x, WIN_Y1 + 1, LW["N"])
+        im.set(x, WIN_Y1 + 2, LW["o"])
+
+
+def draw_room_bg(im, night, lamp_on):
+    k = 1 if night else 0
+    for y in range(0, WALL_Y1 + 1):
+        for x in range(RW):
+            c = ROOM["stripe"][k] if x % 6 in (0, 1) else ROOM["wall"][k]
+            im.set(x, y, c)
+    for x in range(RW):
+        im.set(x, WALL_Y1 + 1, ROOM["base"][k])
+    for y in range(FLOOR_Y0, RH):
+        for x in range(RW):
+            c = ROOM["floor"][k]
+            if (y - FLOOR_Y0) % 5 == 4 or (x + 7 * ((y - FLOOR_Y0) // 5)) % 21 == 0:
+                c = ROOM["plank"][k]
+            elif y == FLOOR_Y0:
+                c = ROOM["floor_hi"][k]
+            im.set(x, y, c)
+
+
+def draw_furniture(im, slots, night):
+    t = NIGHT_TINT if night else None
+    if slots[5]:  # ceiling garland
+        prev = None
+        for x in range(2, 62):
+            d = x - 32
+            y = 1 + (3 * (900 - d * d)) // 900
+            im.set(x, y, LW["N"], t)
+            if prev is not None and y != prev:
+                im.set(x, prev, LW["N"], t)
+            prev = y
+            if x % 6 == 5:
+                c = LW[BULBS[(x // 6) % 5]]
+                im.set(x, y + 1, c, None if night else t)
+                im.set(x, y + 2, c if not night else LW["l"], None if night else t)
+    if slots[0]:
+        im.spr(4, 7, PICTURE, t)
+    if slots[1]:
+        im.spr(46, 6, SHELF, t)
+    if slots[4]:  # rug (behind creatures)
+        for y in range(39, 47):
+            for x in range(10, 54):
+                dx, dy = (x - 32) * 4, (y - 43) * 22
+                r = dx * dx + dy * dy
+                if r <= 88 * 88:
+                    c = "M" if r > 74 * 74 else ("m" if (abs(x - 32) // 4) % 2 == 0 else "w")
+                    im.set(x, y, LW[c], t)
+    if slots[2]:
+        im.spr(0, 27, PLANT, t)
+    if slots[3]:
+        if night:
+            im.spr(55, 12, LAMP, None, LAMP_LIT)
+        else:
+            im.spr(55, 12, LAMP, t)
+
+
+ROOM_CREATURE_Y = 12
+LEFT_X, RIGHT_X = 0, 32
+
+
+def scene_faces(scene, pa, pb):
+    def f(p, eyes, mood):
+        if p.eyes == 7 and eyes not in (7, EYE_CLOSED_CYCLOPS):
+            eyes = 7
+        if p.eyes == 7 and eyes == EYE_CLOSED:
+            eyes = EYE_CLOSED_CYCLOPS
+        return (eyes, mood)
+    if scene == SC_CHESS:
+        return f(pa, pa.eyes, 1), f(pb, pb.eyes, 0)
+    if scene == SC_PAINT:
+        return f(pa, 3, 0), f(pb, pb.eyes, 1)
+    if scene == SC_CHAT:
+        return f(pa, pa.eyes, 1), f(pb, 3, 0)
+    if scene == SC_NAP:
+        return f(pa, EYE_CLOSED, 0), f(pb, EYE_CLOSED, 0)
+    if scene == SC_STARS:
+        return f(pa, 4, 1), f(pb, 4, 1)
+    if scene == SC_BREAKFAST:
+        return f(pa, 3, 0), f(pb, 3, 0)
+    return f(pa, pa.eyes, 0), f(pb, 2, 1)  # homework: one focused, one sleepy
+
+
+def pair_seed(pa, pb, scene):
+    return (pa.seed * 31 + pb.seed * 7 + scene * 101) & 0xFFFFFFFF
+
+
+def draw_scene_props(im, scene, pa, pb, night):
+    t = NIGHT_TINT if night else None
+    if scene == SC_CHESS:
+        im.spr(24, 30, CHESS_TABLE, t)
+    elif scene == SC_PAINT:
+        im.spr(25, 21, EASEL, t)
+        cols = [palette(pa.palette, pa.shift)["base"], palette(pb.palette, pb.shift)["base"],
+                palette(pa.palette, pa.shift)["accent"], palette(pb.palette, pb.shift)["accent"]]
+        for (x, y, i) in EASEL_DABS:
+            im.set(25 + x, 21 + y, cols[i], t)
+        im.spr(36, 41, PAINT_POT, t)
+    elif scene == SC_CHAT:
+        rnd = Mulberry(pair_seed(pa, pb, scene))
+        a, b = rnd.int(len(EMOTES)), rnd.int(len(EMOTES) - 1)
+        if b >= a:
+            b += 1
+        im.spr(15, 2, BUBBLE, None)
+        im.spr(18, 3, EMOTES[a], None)
+        im.spr(38, 2, [r[::-1] for r in BUBBLE], None)
+        im.spr(41, 3, EMOTES[b], None)
+    elif scene == SC_NAP:
+        for y in range(NAP_BLANKET_Y, 45):
+            for x in range(4, 60):
+                if y == NAP_BLANKET_Y or y == 44 or x in (4, 59):
+                    if not ((y == NAP_BLANKET_Y or y == 44) and x in (4, 59)):
+                        im.set(x, y, LW["o"], t)
+                    continue
+                c = "w" if y == NAP_BLANKET_Y + 1 else (
+                    "p" if ((x - 4) // 4 + (y - NAP_BLANKET_Y) // 4) % 2 == 0 else "P")
+                im.set(x, y, LW[c], t)
+        im.spr(28, 20, ZZZ_ROWS)
+    elif scene == SC_STARS:
+        im.spr(28, 22, TELESCOPE, t)
+    elif scene == SC_BREAKFAST:
+        im.spr(24, 30, BREAKFAST_TABLE, t)
+        im.spr(25, 29, PLATE_FOOD, t)
+        im.spr(32, 29, EGG_PLATE, t)
+    elif scene == SC_HOMEWORK:
+        im.spr(24, 28, DESK, None, DESK_LIT if night else None)  # desk lamp: never tinted
+
+
+def render_room(pair, scene: int, time_of_day: int = DAY, weather: int = NONE,
+                furniture=(1, 1, 1, 1, 1, 1)) -> Image.Image:
+    """64x48 cutaway room with the pair living a scene (§9). Opaque."""
+    pa, pb = pair
+    if scene == SC_STARS:
+        time_of_day = NIGHT_TIME
+    night = time_of_day == NIGHT_TIME or weather == NIGHT
+    im = Img(RW, RH)
+    draw_room_bg(im, night, bool(furniture[3]))
+    draw_window(im, sky_kind(time_of_day, weather), weather)
+    draw_furniture(im, furniture, night)
+    fa, fb = scene_faces(scene, pa, pb)
+    ct = CREATURE_NIGHT if night else None
+    oy = ROOM_CREATURE_Y + (2 if scene == SC_NAP else 0)
+    im.creature(creature_layers(pa, face=fa, plain=True, aura=False), LEFT_X, oy, True, ct)
+    im.creature(creature_layers(pb, face=fb, plain=True, aura=False), RIGHT_X, oy, False, ct)
+    draw_scene_props(im, scene, pa, pb, night)
+    return im.image()
+
+
+# ---------------------------------------------------------------- jump rope (§8)
+# Frames 0..3: rope loop (overhead, front, under the feet, behind) with the creature
+# jump synced (ground, rise, top, rise); 4: trip; 5: cheer.
+JR_LOOP = [(0, 0), (1, 1), (2, 2), (3, 1)]   # (rope phase, jump pose)
+JR_HEIGHT = [0, 2, 5]
+JR_TRIP, JR_CHEER = 4, 5
+JR_FRAMES = 6
+YARD = {"sky0": (150, 214, 255), "sky1": (184, 230, 255), "sky2": (214, 242, 255),
+        "fence": (255, 246, 228), "fence_s": (222, 204, 176), "grass": (132, 212, 120),
+        "grass_d": (96, 178, 98), "grass_l": (170, 230, 150), "shadow": (92, 160, 92)}
+YARD_GROUND = 40
+YARD_CLOUDS = [(6, 5), (44, 9)]
+YARD_TUFTS = [(4, 43), (13, 46), (22, 42), (40, 45), (51, 42), (59, 46), (33, 47)]
+YARD_FLOWERS = [(8, 38, "r"), (56, 39, "y"), (47, 44, "m")]
+BIG_CLOUD = ["..www...", ".wwwww..", "wwwwwwww"]
+DIZZY = [".y.", "y.y", ".y."]
+STARBURST = ["..y..", "..y..", "yyYyy", "..y..", "..y.."]
+
+
+def draw_yard(im):
+    for y in range(RH):
+        for x in range(RW):
+            if y < 14:
+                c = YARD["sky0"]
+            elif y < 24:
+                c = YARD["sky1"]
+            elif y < 30:
+                c = YARD["sky2"]
+            elif y < YARD_GROUND - 6:
+                c = YARD["fence"] if (x % 6) in (1, 2, 3, 4) else YARD["sky2"]
+                if y in (31, 32) and (x % 6) not in (1, 2, 3, 4):
+                    c = YARD["fence_s"]
+            elif y < YARD_GROUND - 2:
+                c = YARD["grass_d"] if (x + y) % 3 == 0 else YARD["grass"]
+            else:
+                c = YARD["grass"] if y > YARD_GROUND - 2 else YARD["grass_l"]
+            im.set(x, y, c)
+    for x in range(RW):  # fence post tops
+        if x % 6 in (2, 3):
+            im.set(x, 29, YARD["fence"])
+        if x % 6 == 4:
+            for y in range(30, YARD_GROUND - 6):
+                im.set(x, y, YARD["fence_s"])
+    for (x, y) in YARD_CLOUDS:
+        im.spr(x, y, BIG_CLOUD)
+    im.spr(54, 2, SUN)
+    for (x, y) in YARD_TUFTS:
+        im.set(x, y, YARD["grass_d"])
+        im.set(x + 1, y - 1, YARD["grass_d"])
+        im.set(x + 2, y, YARD["grass_d"])
+    for (x, y, c) in YARD_FLOWERS:
+        im.spr(x - 1, y - 1, [".c.", "cyc", ".c."], cmap={**LW, "c": LW[c], "y": LW["y"] if c != "y" else LW["w"]})
+        im.set(x, y + 1, LW["G"])
+
+
+def render_jump_rope(p: Pheno, frame: int) -> Image.Image:
+    """64x48 yard frame of the jump-rope mini-game."""
+    im = Img(RW, RH)
+    draw_yard(im)
+    mask = body_mask(p.body, p.stage)
+    a = anchors(mask)
+    lx, rx = row_ext(mask, a["mid_y"])
+    ox = 16
+    base_oy = YARD_GROUND + 2 - (a["bottom"] + 1)
+    if frame == JR_TRIP:
+        phase, h, face = 2, 0, ((7 if p.eyes == 7 else EYE_SQUINT), 1)
+    elif frame == JR_CHEER:
+        phase, h, face = 0, 3, ((7 if p.eyes == 7 else 3), 1)
+    else:
+        phase, pose = JR_LOOP[frame % 4]
+        h = JR_HEIGHT[pose]
+        face = (p.eyes, 1 if pose == 2 else 0)
+    oy = base_oy - h
+    # ground shadow shrinks while airborne
+    sw = (rx - lx) // 2 - h
+    cx = ox + 16
+    for x in range(cx - sw, cx + sw):
+        im.set(x, YARD_GROUND + 2, YARD["shadow"])
+    hl, hr = ox + lx - 3, ox + rx + 2
+    hy = oy + a["mid_y"] - 1
+    rope = LW["R"]
+    behind, front = [], []
+    if frame == JR_TRIP:  # rope tangled around the feet
+        fy = YARD_GROUND + 1
+        rope_arc(hl, hr + 1, hy + 2, fy + 2, front, rope)
+        for (x, y) in [(cx - 6, fy - 1), (cx - 5, fy - 2), (cx + 4, fy - 1), (cx + 5, fy - 2)]:
+            front.append((x, y, rope))
+    elif phase == 0:
+        rope_arc(hl, hr + 1, hy, max(1, oy + a["top"] - 8), front, rope)
+    elif phase == 1:
+        rope_arc(hl, hr + 1, hy, oy + a["mid_y"] + 5, front, rope)
+    elif phase == 2:
+        rope_arc(hl, hr + 1, hy, YARD_GROUND + 3, front, rope)
+    else:
+        rope_arc(hl, hr + 1, hy, max(1, oy + a["top"] - 5), behind, rope)
+    behind = behind + [(x, y + 1, c) for (x, y, c) in behind]
+    front = front + [(x, y + 1, c) for (x, y, c) in front]
+    for (x, y, c) in behind:
+        im.set(x, y, c)
+    if frame == JR_TRIP:  # tilted: shift upper rows left by one
+        layers = creature_layers(p, face=face, plain=True, aura=False)
+        layers = [(x - 1 if y < a["mid_y"] else x, y, c) for (x, y, c) in layers]
+        im.creature(layers, ox, oy)
+        for (dx, dy) in [(-2, -4), (3, -6), (8, -4)]:
+            im.spr(ox + 16 + dx - 1, oy + a["top"] + dy - 1, DIZZY)
+    else:
+        im.creature(creature_layers(p, face=face, plain=True, aura=False), ox, oy)
+    for (x, y, c) in front:
+        im.set(x, y, c)
+    if frame != JR_TRIP:
+        im.spr(hl, hy, HANDLE)
+        im.spr(hr, hy, HANDLE)
+    if frame == JR_CHEER:
+        for (x, y) in [(6, 12), (52, 16), (10, 26), (49, 30)]:
+            im.spr(x, y, STARBURST)
+    return im.image()
+
+
+# ---------------------------------------------------------------- lock-screen glyphs
+# 16x16 one-colour scene glyphs (white on transparent), index = scene; 7 = jump rope.
+GLYPHS = [
+    ["................",  # chess knight
+     "......XX........",
+     ".....XXXX.......",
+     "....XXXXXX......",
+     "...XXX.XXXX.....",
+     "..XXXXXXXXXX....",
+     "..XXXXXXXXXX....",
+     "...XX..XXXXX....",
+     ".......XXXXX....",
+     "......XXXXXX....",
+     ".....XXXXXXX....",
+     ".....XXXXXX.....",
+     "....XXXXXXXX....",
+     "...XXXXXXXXXX...",
+     "...XXXXXXXXXX...",
+     "................"],
+    ["................",  # painting: easel + canvas
+     ".......XX.......",
+     "..XXXXXXXXXXXX..",
+     "..X..........X..",
+     "..X.XX.......X..",
+     "..X.XX...XX..X..",
+     "..X.....XXX..X..",
+     "..X..XXX.....X..",
+     "..X..........X..",
+     "..XXXXXXXXXXXX..",
+     "....XX....XX....",
+     "....XX....XX....",
+     "...XX......XX...",
+     "...XX......XX...",
+     "..XX........XX..",
+     "................"],
+    ["................",  # chatting: two bubbles
+     ".XXXXXXXX.......",
+     "XXXXXXXXXX......",
+     "XX.X.X.XXX......",
+     "XXXXXXXXXX......",
+     ".XXXXXXXX.......",
+     "..XX....XXXXXXX.",
+     "..X....XXXXXXXXX",
+     ".......XXX.X.XXX",
+     ".......XXXXXXXXX",
+     "........XXXXXXX.",
+     "............XX..",
+     ".............X..",
+     "................",
+     "................",
+     "................"],
+    ["................",  # napping: Zz + crescent pillow
+     ".........XXXXX..",
+     "............X...",
+     "...........X....",
+     "..........XXXXX.",
+     "......XXX.......",
+     ".......X........",
+     "......XXX.......",
+     "................",
+     "................",
+     "..XXXXXXXXXXXX..",
+     ".XXXXXXXXXXXXXX.",
+     ".XX..........XX.",
+     ".XXXXXXXXXXXXXX.",
+     "..XXXXXXXXXXXX..",
+     "................"],
+    ["................",  # stargazing: moon + stars
+     "..........X.....",
+     "....XXX...X.....",
+     "...XXX..XXXXX...",
+     "..XXX.....X.....",
+     "..XXX.....X.....",
+     "..XXX...........",
+     "..XXXX.......X..",
+     "...XXXXX.....X..",
+     "....XXXX...XXXXX",
+     ".............X..",
+     "......X......X..",
+     ".....XXX........",
+     "......X.........",
+     "................",
+     "................"],
+    ["................",  # breakfast: steaming cup
+     "....X..X..X.....",
+     ".....X..X..X....",
+     "....X..X..X.....",
+     "................",
+     "..XXXXXXXXXX....",
+     "..XXXXXXXXXXXXX.",
+     "..XXXXXXXXXX..X.",
+     "..XXXXXXXXXX..X.",
+     "..XXXXXXXXXXXXX.",
+     "..XXXXXXXXXX....",
+     "...XXXXXXXX.....",
+     "XXXXXXXXXXXXXXX.",
+     ".XXXXXXXXXXXXX..",
+     "................",
+     "................"],
+    ["................",  # homework: open book + pencil
+     "............XX..",
+     "...........XXX..",
+     "..........XXX...",
+     ".........XXX....",
+     "........XXX.....",
+     ".......XX.......",
+     "................",
+     ".XXXXX....XXXXX.",
+     "XX...XX..XX...XX",
+     "XX.XX.XXXX.XX.XX",
+     "XX....XXXX....XX",
+     "XX.XX.XXXX.XX.XX",
+     "XXXXXXXXXXXXXXXX",
+     ".......XX.......",
+     "................"],
+    ["................",  # jump rope
+     ".....XXXXXX.....",
+     "...XX......XX...",
+     "..X..........X..",
+     ".X....XXXX....X.",
+     ".X...XXXXXX...X.",
+     "XX...X.XX.X...XX",
+     "XX...XXXXXX...XX",
+     "XX...XXXXXX...XX",
+     "X....XXXXXX....X",
+     ".....XX..XX.....",
+     "................",
+     "...XXXXXXXXXX...",
+     "................",
+     "................",
+     "................"],
+]
+GLYPH_SIZE = 16
+
+
+def render_glyph(scene: int) -> Image.Image:
+    img = Image.new("RGBA", (GLYPH_SIZE, GLYPH_SIZE), (0, 0, 0, 0))
+    px = img.load()
+    for (x, y, ch) in sprite(GLYPHS[scene]):
+        px[x, y] = (255, 255, 255, 255)
+    return img
 
 
 # ---------------------------------------------------------------- app icon
@@ -831,6 +1869,113 @@ def breed_sheet(path: str, rows: int = 3, seed: int = 21, scale: int = 6):
     bg.save(path)
 
 
+WEATHER_NAMES = ["clear", "rain", "heat", "snow", "wind", "night"]
+ITEM_NAMES = ["", "umbrella", "bottle", "fan", "sun hat", "scarf", "beanie", "blanket", "rope",
+              "juice"]
+
+
+def _review_six(seed=7):
+    rnd = random.Random(seed)
+    ps = [random_pheno(rnd, i) for i in range(24)]
+    return [ps[i] for i in (0, 4, 7, 10, 14, 20)]
+
+
+def weather_sheet(path: str, scale: int = 5):
+    """6 creatures x 6 weather states, then every care item in its weather."""
+    six = _review_six()
+    items, labels = [], []
+    for p in six:
+        for w in range(6):
+            items.append(Pheno(**{**p.__dict__, "weather": w}))
+            labels.append(WEATHER_NAMES[w])
+    pairs = [(RAIN, I_UMBRELLA), (HEAT, I_BOTTLE), (HEAT, I_FAN), (HEAT, I_HAT),
+             (SNOW, I_SCARF), (SNOW, I_BEANIE), (NIGHT, I_BLANKET), (NONE, I_ROPE)]
+    for i, (w, it) in enumerate(pairs):
+        for j in range(3):
+            p = six[(i + j * 2) % 6]
+            items.append(Pheno(**{**p.__dict__, "weather": w, "item": it}))
+            labels.append(ITEM_NAMES[it])
+    items.append(Pheno(**{**six[0].__dict__, "stage": BABY, "weather": SNOW, "item": I_SCARF}))
+    labels.append("baby scarf")
+    items.append(Pheno(**{**six[2].__dict__, "stage": TEEN, "weather": RAIN, "item": I_UMBRELLA}))
+    labels.append("teen umbrella")
+    items.append(Pheno(**{**six[3].__dict__, "stage": EGG, "weather": SNOW}))
+    labels.append("egg snow")
+    items.append(Pheno(**{**six[4].__dict__, "stage": BABY, "weather": NIGHT}))
+    labels.append("baby night")
+    grid_sheet(path, items, 6, scale, labels)
+
+
+def alive_sheet(path: str, scale: int = 5):
+    six = _review_six()
+    items, labels = [], []
+    for p in six:
+        for al, name in ((0, "idle"), (A_CHARGING, "charging"), (A_LOWPOWER, "low power"),
+                         (A_MORNING, "morning")):
+            items.append(Pheno(**{**p.__dict__, "alive": al}))
+            labels.append(name)
+    grid_sheet(path, items, 8, scale, labels)
+
+
+def _paste_grid(path, imgs, cols, scale, labels=None, gap=12):
+    w0, h0 = imgs[0].size
+    cw, ch = w0 * scale, h0 * scale
+    lab = 24 if labels else 0
+    rows = (len(imgs) + cols - 1) // cols
+    sheet = Image.new("RGB", (gap + cols * (cw + gap), gap + rows * (ch + gap + lab)), BG)
+    d = ImageDraw.Draw(sheet)
+    for i, im in enumerate(imgs):
+        x, y = gap + (i % cols) * (cw + gap), gap + (i // cols) * (ch + gap + lab)
+        big = im.resize((cw, ch), Image.NEAREST)
+        sheet.paste(big, (x, y), big)
+        if labels:
+            d.text((x + cw / 2, y + ch + 12), labels[i], fill=INK, font=font(16), anchor="mm")
+    sheet.save(path)
+
+
+def rooms_sheet(path: str, scale: int = 4):
+    six = _review_six()
+    pairs = [(six[0], six[1]), (six[2], six[3]), (six[4], six[5])]
+    imgs, labels = [], []
+    for s in range(7):
+        for tod, tn in ((DAY, "day"), (NIGHT_TIME, "night")):
+            imgs.append(render_room(pairs[s % 3], s, tod))
+            labels.append(f"{SCENE_NAMES[s]} · {tn}")
+    for w in (RAIN, SNOW, HEAT, WIND):  # window weather
+        imgs.append(render_room(pairs[w % 3], SC_CHAT if w != RAIN else SC_NAP, DAY, w))
+        labels.append(f"window · {WEATHER_NAMES[w]}")
+    _paste_grid(path, imgs, 4, scale, labels)
+
+
+def jumprope_sheet(path: str, scale: int = 4):
+    six = _review_six()
+    names = ["rope over", "rope front", "rope under", "rope back", "trip", "cheer"]
+    imgs, labels = [], []
+    for p in (six[0], six[2], six[5]):
+        for f in range(JR_FRAMES):
+            imgs.append(render_jump_rope(p, f))
+            labels.append(names[f])
+    _paste_grid(path, imgs, 6, scale, labels)
+
+
+def glyphs_sheet(path: str, scale: int = 8):
+    imgs = [render_glyph(i) for i in range(len(GLYPHS))]
+    names = SCENE_NAMES + ["jump rope"]
+    w = 16 * scale
+    gap = 20
+    sheet = Image.new("RGB", (gap + len(imgs) * (w + gap), w + 2 * gap + 60 + w // 4 + gap),
+                      (20, 18, 28))
+    d = ImageDraw.Draw(sheet)
+    for i, im in enumerate(imgs):
+        x = gap + i * (w + gap)
+        big = im.resize((w, w), Image.NEAREST)
+        sheet.paste(big, (x, gap), big)
+        d.text((x + w / 2, gap + w + 14), names[i], fill=(200, 196, 220), font=font(15), anchor="mm")
+        small = im.resize((w // 4 * 1, w // 4), Image.NEAREST)  # ~actual lock-screen size
+        sheet.paste(small, (x + w // 2 - w // 8, gap + w + 36), small)
+    sheet.save(path)
+
+
 if __name__ == "__main__":
     outdir = sys.argv[1] if len(sys.argv) > 1 else "out"
     sheet(f"{outdir}/sheet.png")
@@ -840,4 +1985,9 @@ if __name__ == "__main__":
     breed_sheet(f"{outdir}/twins.png", rows=4)
     breed_sheet(f"{outdir}/breeding.png")
     render_icon().save(f"{outdir}/app-icon.png")
+    weather_sheet(f"{outdir}/weather.png")
+    alive_sheet(f"{outdir}/alive.png")
+    rooms_sheet(f"{outdir}/rooms.png")
+    jumprope_sheet(f"{outdir}/jumprope.png")
+    glyphs_sheet(f"{outdir}/glyphs.png")
     print("saved", outdir)

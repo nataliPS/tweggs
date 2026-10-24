@@ -3,6 +3,8 @@
 // trusting the Swift port (MixlingsKit/Sources/MixlingsArt), which mirrors this file.
 // Run: node art/ts-port/check.ts
 
+import * as T from "./living-tables.ts";
+
 export const S = 32;
 export const EGG = 0, BABY = 1, TEEN = 2, ADULT = 3;
 
@@ -11,6 +13,9 @@ export interface Pheno {
   palette: number; aura: number; shift: number; seed: number;
   mood?: number;  // 0 neutral (small smile), 1 "o", 2 hungry wobble; default 0
   stage?: number; // 0 egg, 1 baby, 2 teen, 3 adult; default 3
+  weather?: number; // living world: 0 none, 1 rain, 2 heat, 3 snow, 4 wind, 5 night
+  item?: number;    // care item 0..9 (see render.py)
+  alive?: number;   // widget-alive frame: 0 none, 1 charging, 2 low power, 3 morning
 }
 type RGB = [number, number, number];
 type Role = "base" | "shade" | "accent" | "light" | "outline" | "eye" | "white" | "blush" | "mouth";
@@ -254,8 +259,11 @@ const EYES: Record<number, Sprite> = {
   5: sprite([".K.", "WKK", "KKK", ".K."]),
   6: sprite([".K.", "KAK", ".K."]),
   7: sprite([".KKKK.", "KWWKKK", "KWKKKK", "KKKKKK", ".KKKK."]),
+  8: sprite(["..K", "KK.", "..K"]),      // squint (heat) - state eyes, never genes
+  9: sprite(["K..K", ".KK."]),           // closed, asleep
+  10: sprite(["K....K", ".KKKK."]),      // closed cyclops
 };
-const EYE_MIRROR: Record<number, boolean> = { 0: false, 1: false, 2: true, 3: true, 4: false, 5: false, 6: false, 7: false };
+const EYE_MIRROR: Record<number, boolean> = { 0: false, 1: false, 2: true, 3: true, 4: false, 5: false, 6: false, 7: false, 8: true, 9: true, 10: false };
 const MOODS: Record<number, [number, Sprite]> = {
   0: [14, sprite(["M..M", ".MM."])],
   1: [14, sprite([".MM.", "M..M", ".MM."])],
@@ -312,13 +320,25 @@ const TAILS: Record<number, Record<number, Part>> = {
 function stamp(c: Canvas, x0: number, y0: number, rows: string[]) {
   for (const [x, y, ch] of sprite(rows)) c.put(x0 + x, y0 + y, ROLE[ch], ch !== "a");
 }
-function drawHead(c: Canvas, v: number, a: Anchors, stage: number) {
-  const part = HEADS[stage]?.[v];
-  if (part) stamp(c, part[0], a.top + part[1], part[2]);
+/** Wind: rows above refY lean right by (refY - y + 1) // 2. */
+function stampBlown(c: Canvas, x0: number, y0: number, rows: string[], refY: number) {
+  for (const [x, y, ch] of sprite(rows)) {
+    const yy = y0 + y;
+    const dx = yy < refY ? floorDiv(refY - yy + 1, 2) : 0;
+    c.put(x0 + x + dx, yy, ROLE[ch], ch !== "a");
+  }
 }
-function drawTail(c: Canvas, v: number, a: Anchors, stage: number) {
+function drawHead(c: Canvas, v: number, a: Anchors, stage: number, wind = false) {
+  const part = HEADS[stage]?.[v];
+  if (!part) return;
+  if (wind) stampBlown(c, part[0], a.top + part[1], part[2], a.top);
+  else stamp(c, part[0], a.top + part[1], part[2]);
+}
+function drawTail(c: Canvas, v: number, a: Anchors, stage: number, wind = false) {
   const part = TAILS[stage]?.[v];
-  if (part) stamp(c, a.tailX + part[0], a.tailY + part[1], part[2]);
+  if (!part) return;
+  if (wind) stampBlown(c, a.tailX + part[0], a.tailY + part[1], part[2], a.tailY);
+  else stamp(c, a.tailX + part[0], a.tailY + part[1], part[2]);
 }
 
 const SPOT_GRID = [[-7, -2], [5, -3], [-3, 2], [4, 3], [-8, 4], [0, 6], [6, -7], [-5, 7]];
@@ -406,7 +426,7 @@ function eyeLayout(v: number, a: Anchors): EyeLayout {
 
 function drawEyes(c: Canvas, v: number, a: Anchors) {
   const { spr, x0, y0, w } = eyeLayout(v, a);
-  if (v === 7) {
+  if (v === 7 || v === 10) {
     for (const [x, y, ch] of spr) c.put(13 + x, y0 + y, ROLE[ch], true, true);
     return;
   }
@@ -423,7 +443,7 @@ function drawFace(c: Canvas, m: Mask, eyes: number, mood: number, a: Anchors) {
   const [mx, mouth] = MOODS[mood] ?? MOODS[0];
   for (const [x, y, ch] of mouth) c.put(mx + x, my + y, ROLE[ch]);
   const by = a.eyeY + 2;
-  const bx = eyes !== 7 ? 16 + dx + floorDiv(w + 1, 2) + 1 : 21;
+  const bx = eyes !== 7 && eyes !== 10 ? 16 + dx + floorDiv(w + 1, 2) + 1 : 21;
   for (const x of [bx, 31 - bx]) if (inMask(m, x, by)) c.put(x, by, "blush");
 }
 
@@ -466,7 +486,7 @@ function drawAura(v: number, seed: number): [number, number, Role][] {
   return extra;
 }
 
-function build(p: Pheno, silhouette: boolean): Canvas {
+function build(p: Pheno, silhouette: boolean, face?: [number, number]): Canvas {
   const stage = p.stage ?? ADULT;
   const mask = bodyMask(p.body, stage);
   const c = new Canvas();
@@ -478,23 +498,26 @@ function build(p: Pheno, silhouette: boolean): Canvas {
     return c;
   }
   const a = anchors(mask);
-  drawTail(c, p.tail, a, stage);
+  let eyes = p.eyes, mood = p.mood ?? 0, wind = false;
+  if (face) [eyes, mood] = face;
+  else if (!silhouette) { [eyes, mood] = stateFace(p); wind = stateWeather(p)[0] === WIND; }
+  drawTail(c, p.tail, a, stage, wind);
   for (const [x, y] of sortedPoints(mask)) c.set(x, y, "base");
-  drawHead(c, p.head, a, stage);
+  drawHead(c, p.head, a, stage, wind);
   for (const [x, y] of sortedPoints(mask)) if (!c.has(x, y)) c.set(x, y, "base");
   applyPattern(c, mask, p.pattern, a);
   shadeBody(c, mask);
   outline(c);
-  drawEyes(c, p.eyes, a);
-  if (!silhouette) drawFace(c, mask, p.eyes, p.mood ?? 0, a);
+  drawEyes(c, eyes, a);
+  if (!silhouette) drawFace(c, mask, eyes, mood, a);
   return c;
 }
 
 /** 32x32 RGBA, row-major, straight alpha (identical to Python render_raw(p, silhouette).tobytes()). */
 export function render(p: Pheno, silhouette = false): Uint8Array {
-  const c = build(p, silhouette);
   const buf = new Uint8Array(S * S * 4);
   if (silhouette) {
+    const c = build(p, true);
     for (let i = 0; i < S * S; i++) {
       const px = c.px[i];
       if (!px || px.knock) continue;
@@ -502,20 +525,509 @@ export function render(p: Pheno, silhouette = false): Uint8Array {
     }
     return buf;
   }
-  const pal = palette(p.palette, p.shift);
-  if ((p.stage ?? ADULT) === ADULT) {
-    for (const [x, y, role] of drawAura(p.aura, p.seed)) {
-      if (x >= 0 && x < S && y >= 0 && y < S && !c.has(x, y)) {
-        const col = pal[role], i = (y * S + x) * 4;
-        buf[i] = col[0]; buf[i + 1] = col[1]; buf[i + 2] = col[2]; buf[i + 3] = 255;
+  for (const [x, y, col] of creatureLayers(p)) {
+    const i = (y * S + x) * 4;
+    buf[i] = col[0]; buf[i + 1] = col[1]; buf[i + 2] = col[2]; buf[i + 3] = 255;
+  }
+  return buf;
+}
+
+// ============================================================ living world (render.py)
+// docs/living-world-spec.md §1 weather, §8 jump rope, §9 pair life, §13 alive.
+export const NONE = 0, RAIN = 1, HEAT = 2, SNOW = 3, WIND = 4, NIGHT = 5;
+const I_UMBRELLA = 1, I_BOTTLE = 2, I_FAN = 3, I_HAT = 4, I_SCARF = 5, I_BEANIE = 6,
+  I_BLANKET = 7, I_ROPE = 8, I_JUICE = 9;
+const A_CHARGING = 1, A_LOWPOWER = 2, A_MORNING = 3;
+const EYE_SQUINT = 8, EYE_CLOSED = 9, EYE_CLOSED_CYCLOPS = 10;
+const LW = T.LW;
+type Paint = [number, number, RGB];
+const imod = (a: number, b: number) => ((a % b) + b) % b;
+
+function lwSprite(x0: number, y0: number, rows: string[], out: Paint[], cmap: Record<string, RGB> = LW) {
+  for (const [x, y, ch] of sprite(rows)) out.push([x0 + x, y0 + y, cmap[ch]]);
+}
+function rowExt(m: Mask, y: number): [number, number] {
+  const xs = sortedPoints(m).filter(p => p[1] === y).map(p => p[0]);
+  return xs.length ? [Math.min(...xs), Math.max(...xs)] : [16, 15];
+}
+
+function stateWeather(p: Pheno): [number, number] {
+  let w = p.weather ?? 0, it = p.item ?? 0;
+  const al = p.alive ?? 0;
+  if (al === A_CHARGING) it = I_JUICE;
+  else if (al === A_LOWPOWER) { w = NIGHT; it = I_BLANKET; }
+  return [w, it];
+}
+function stateFace(p: Pheno): [number, number] {
+  const [w] = stateWeather(p);
+  const cyc = p.eyes === 7, al = p.alive ?? 0;
+  if (w === NIGHT) return [cyc ? EYE_CLOSED_CYCLOPS : EYE_CLOSED, 0];
+  if (al === A_MORNING) return [cyc ? 7 : 3, 1];
+  if (al === A_CHARGING) return [cyc ? 7 : 3, 0];
+  if (w === HEAT) return [cyc ? 7 : EYE_SQUINT, 1];
+  if (w === RAIN) return [cyc ? 7 : 3, 0];
+  if (w === SNOW) return [p.eyes, 2];
+  return [p.eyes, p.mood ?? 0];
+}
+
+/** Integer parabola from (x0, hy) to (x1, hy) through the apex; vertical gaps filled. */
+function ropeArc(x0: number, x1: number, hy: number, apex: number, out: Paint[], rgb: RGB) {
+  const half = floorDiv(x1 - x0, 2), cx = x0 + half;
+  let prev: number | null = null;
+  for (let x = x0; x <= x1; x++) {
+    const d = x - cx;
+    const y = hy + floorDiv((apex - hy) * (half * half - d * d), half * half);
+    out.push([x, y, rgb]);
+    if (prev !== null && Math.abs(y - prev) > 1) {
+      const step = y > prev ? 1 : -1;
+      for (let yy: number = prev + step; yy !== y; yy += step) out.push([x, yy, rgb]);
+    }
+    prev = y;
+  }
+}
+
+function mouthY(p: Pheno, a: Anchors): number {
+  const [eyes] = stateFace(p);
+  const { y0, h } = eyeLayout(eyes, a);
+  return y0 + h + (h >= 3 ? 1 : 2);
+}
+
+function itemLayer(p: Pheno, it: number, m: Mask, a: Anchors, front: Paint[], behind: Paint[]) {
+  const top = a.top, bottom = a.bottom, mid = a.midY;
+  const [lx, rx] = rowExt(m, mid);
+  if (it === I_UMBRELLA) {
+    const y0 = Math.max(0, top - 11);
+    lwSprite(10, y0, T.UMBRELLA, front);
+    const hx = Math.min(rx, 24);
+    for (let y = y0 + 6; y < mid + 2; y++) front.push([hx, y, LW["N"]]);
+    front.push([hx - 1, mid + 2, LW["N"]], [hx - 2, mid + 1, LW["N"]]);
+  } else if (it === I_BOTTLE) {
+    lwSprite(rx - 1, mid - 2, T.BOTTLE, front);
+  } else if (it === I_FAN) {
+    lwSprite(Math.max(0, lx - 7), mid - 7, T.FAN, front);
+  } else if (it === I_HAT) {
+    lwSprite(8, top - 4, T.SUN_HAT, front);
+  } else if (it === I_BEANIE) {
+    lwSprite(10, top - 4, T.BEANIE, front);
+  } else if (it === I_SCARF) {
+    const sy = a.eyeY + 5;
+    for (const y of [sy, sy + 1]) {
+      const [l, r] = rowExt(m, y);
+      for (let x = l - 1; x < r + 2; x++) {
+        const ch = imod(x + y, 4) === 0 ? "w" : (y === sy + 1 ? "R" : "r");
+        front.push([x, y, LW[ch]]);
+      }
+      front.push([l - 2, y, LW["o"]], [r + 2, y, LW["o"]]);
+    }
+    const [l, r] = rowExt(m, sy + 1);
+    for (let x = l - 1; x < r + 2; x++) front.push([x, sy + 2, LW["o"]]);
+    const tx = r - 4;
+    const tail = ["orro", "orwo", "orro", "orRo"].slice(0, Math.max(1, Math.min(4, bottom - sy - 2))).concat(["oooo"]);
+    tail.forEach((row, i) => lwSprite(tx, sy + 2 + i, [row], front)); // clipped to the body
+  } else if (it === I_BLANKET) {
+    const y0 = mid + 2;
+    for (let y = y0; y < bottom + 3; y++) {
+      const l = lx - 2, r = rx + 2;
+      for (let x = l; x <= r; x++) {
+        if (y === y0 || x === l || x === r || y === bottom + 2) {
+          if (!(y === y0 && (x === l || x === r))) front.push([x, y, LW["o"]]);
+          continue;
+        }
+        let ch = (floorDiv(x - l, 3) + floorDiv(y - y0, 3)) % 2 === 0 ? "p" : "P";
+        if (y === y0 + 1) ch = "w";
+        front.push([x, y, LW[ch]]);
+      }
+    }
+  } else if (it === I_ROPE) {
+    const hl = lx - 3, hr = rx + 2;
+    lwSprite(hl, mid - 1, T.HANDLE, front);
+    lwSprite(hr, mid - 1, T.HANDLE, front);
+    ropeArc(hl, hr + 1, mid - 1, 0, behind, LW["M"]);
+  } else if (it === I_JUICE) {
+    lwSprite(18, mouthY(p, a), T.JUICE, front);
+  }
+}
+
+function shiftCanvas(c: Canvas, dx: number, dy: number): Canvas {
+  const out = new Canvas();
+  for (let x = 0; x < S; x++) for (let y = 0; y < S; y++) {
+    const px = c.get(x, y);
+    if (!px) continue;
+    const nx = x + dx, ny = y + dy;
+    if (nx >= 0 && nx < S && ny >= 0 && ny < S) out.px[ny * S + nx] = px;
+  }
+  return out;
+}
+/** Morning stretch: rows <= refY move up one, row refY is kept twice. */
+function stretchCanvas(c: Canvas, refY: number): Canvas {
+  const out = new Canvas();
+  for (let i = 0; i < S * S; i++) if (c.px[i] && Math.floor(i / S) >= refY) out.px[i] = c.px[i];
+  for (let x = 0; x < S; x++) for (let y = 0; y < S; y++) {
+    const px = c.get(x, y);
+    if (px && y <= refY && y - 1 >= 0) out.px[(y - 1) * S + x] = px;
+  }
+  return out;
+}
+
+/** Weather / care item / alive layers. */
+function living(p: Pheno, canvas: Canvas): [Canvas, Paint[], Paint[]] {
+  const [w, it] = stateWeather(p);
+  const al = p.alive ?? 0;
+  if (w === NONE && it === 0 && al === 0) return [canvas, [], []];
+  let behind: Paint[] = [], front: Paint[] = [];
+  if (w === RAIN) {
+    for (const [x, y] of T.RAIN_DROPS) {
+      if (it === I_UMBRELLA && x >= 4 && x <= 28 && y <= 20) continue;
+      behind.push([x, y, LW["c"]], [x, y + 1, LW["t"]], [x, y + 2, LW["b"]]);
+    }
+  } else if (w === SNOW) {
+    for (const [x, y] of T.SNOW_FLAKES) lwSprite(x - 1, y - 1, T.FLAKE, behind);
+  } else if (w === WIND) {
+    for (const [x, y, n] of T.WIND_LINES) for (let i = 0; i < n; i++) behind.push([x + i, y, LW["q"]]);
+    lwSprite(27, 5, T.LEAF, behind);
+  } else if (w === HEAT) {
+    lwSprite(0, 0, T.SUN, behind);
+  } else if (w === NIGHT && it !== I_BLANKET) {
+    lwSprite(1, 1, T.MOON, behind);
+  }
+  const stage = p.stage ?? ADULT;
+  if (stage === EGG) {
+    if (w === NIGHT) lwSprite(22, 3, T.ZZZ_ROWS, front);
+    return [canvas, behind, front];
+  }
+  const m = bodyMask(p.body, stage);
+  const a = anchors(m);
+  let bodyFront: Paint[] = [];
+  const bodyBehind: Paint[] = [];
+  itemLayer(p, it, m, a, bodyFront, bodyBehind);
+  const [lx, rx] = rowExt(m, a.midY);
+  if (w === RAIN) {
+    for (const [dx, dy] of T.SHEEN) {
+      const x = 16 + dx, y = a.midY + dy;
+      if (inMask(m, x, y) && inMask(m, x, y + 1)) bodyFront.push([x, y, LW["w"]], [x, y + 1, LW["t"]]);
+    }
+  } else if (w === HEAT) {
+    lwSprite(16 + a.eyeDx + 3, a.eyeY - 6, T.SWEAT, bodyFront);
+  } else if (w === SNOW && it !== I_BEANIE && it !== I_HAT) {
+    const pts = sortedPoints(m);
+    for (let x = 12; x < 20; x++) {
+      const ys = pts.filter(q => q[0] === x).map(q => q[1]);
+      if (ys.length) {
+        const t = Math.min(...ys);
+        bodyFront.push([x, t, LW["w"]]);
+        if (x >= 14 && x <= 17) bodyFront.push([x, t + 1, LW["w"]]);
       }
     }
   }
-  for (let i = 0; i < S * S; i++) {
-    const px = c.px[i];
-    if (!px) continue;
-    const col = pal[px.role];
-    buf[i * 4] = col[0]; buf[i * 4 + 1] = col[1]; buf[i * 4 + 2] = col[2]; buf[i * 4 + 3] = 255;
+  if (w === NIGHT) lwSprite(22, Math.max(0, a.top - 8), T.ZZZ_ROWS, front);
+  if (al === A_CHARGING) lwSprite(25, Math.max(0, a.top - 6), T.BOLT, front);
+  if (al === A_MORNING) lwSprite(24, Math.max(0, a.top - 9), T.BANG, front);
+  let dx = 0, dy = 0;
+  if (w === RAIN) {
+    dy = -1;
+    const b = a.bottom + 1;
+    for (let x = lx - 1; x < rx + 2; x++) behind.push([x, b + 1, LW["t"]]);
+    for (let x = lx + 1; x < rx; x++) behind.push([x, b + 2, LW["c"]]);
+    behind.push([lx - 3, b - 1, LW["t"]], [lx - 4, b - 2, LW["c"]], [rx + 3, b - 1, LW["t"]], [rx + 4, b - 2, LW["c"]]);
+  } else if (w === SNOW) {
+    dx = 1;
+    for (const y of [a.midY - 1, a.midY + 1]) behind.push([lx - 2, y, LW["q"]], [rx + 4, y, LW["q"]]);
+    behind.push([lx - 3, a.midY, LW["q"]], [rx + 5, a.midY, LW["q"]]);
   }
+  if (al === A_MORNING && w !== NIGHT) {
+    dx = 0; dy = 0;
+    canvas = stretchCanvas(canvas, a.midY);
+    bodyFront = bodyFront.map(([x, y, c]) => [x, y <= a.midY ? y - 1 : y, c] as Paint);
+    front.push([lx - 2, a.top - 1, LW["q"]], [lx - 3, a.top - 2, LW["q"]], [rx + 2, a.top - 1, LW["q"]], [rx + 3, a.top - 2, LW["q"]]);
+  } else if (dx || dy) {
+    canvas = shiftCanvas(canvas, dx, dy);
+  }
+  front = bodyFront.map(([x, y, c]) => [x + dx, y + dy, c] as Paint).concat(front);
+  behind = behind.concat(bodyBehind.map(([x, y, c]) => [x + dx, y + dy, c] as Paint));
+  return [canvas, behind, front];
+}
+
+/** Colour creature as an ordered paint list (later entries win), 32x32 coordinates. */
+export function creatureLayers(p: Pheno, face?: [number, number], plain = false, aura = true): Paint[] {
+  let canvas = build(p, false, face);
+  let behind: Paint[] = [], front: Paint[] = [];
+  if (!plain) [canvas, behind, front] = living(p, canvas);
+  const pal = palette(p.palette, p.shift);
+  const out: Paint[] = [];
+  const inS = (x: number, y: number) => x >= 0 && x < S && y >= 0 && y < S;
+  if ((p.stage ?? ADULT) === ADULT && aura)
+    for (const [x, y, role] of drawAura(p.aura, p.seed)) if (inS(x, y) && !canvas.has(x, y)) out.push([x, y, pal[role]]);
+  for (const [x, y, rgb] of behind) if (inS(x, y) && !canvas.has(x, y)) out.push([x, y, rgb]);
+  for (let x = 0; x < S; x++) for (let y = 0; y < S; y++) { const px = canvas.get(x, y); if (px) out.push([x, y, pal[px.role]]); }
+  for (const [x, y, rgb] of front) if (inS(x, y)) out.push([x, y, rgb]);
+  return out;
+}
+
+// ------------------------------------------------------------ scenes (64x48)
+export const RW = 64, RH = 48;
+export const DAY = 0, NIGHT_TIME = 1;
+const SC_CHESS = 0, SC_PAINT = 1, SC_CHAT = 2, SC_NAP = 3, SC_STARS = 4, SC_BREAKFAST = 5, SC_HOMEWORK = 6;
+
+export class Img {
+  w: number; h: number; px: (RGB | null)[];
+  constructor(w: number, h: number) { this.w = w; this.h = h; this.px = new Array(w * h).fill(null); }
+  set(x: number, y: number, rgb: RGB, tint: RGB | null = null) {
+    if (x >= 0 && x < this.w && y >= 0 && y < this.h) {
+      if (tint) rgb = [floorDiv(rgb[0] * tint[0], 256), floorDiv(rgb[1] * tint[1], 256), floorDiv(rgb[2] * tint[2], 256)];
+      this.px[y * this.w + x] = rgb;
+    }
+  }
+  spr(x0: number, y0: number, rows: string[], tint: RGB | null = null, cmap: Record<string, RGB> = LW) {
+    for (const [x, y, ch] of sprite(rows)) this.set(x0 + x, y0 + y, cmap[ch], tint);
+  }
+  creature(layers: Paint[], ox: number, oy: number, mirror = false, tint: RGB | null = null) {
+    for (const [x, y, rgb] of layers) this.set(ox + (mirror ? 31 - x : x), oy + y, rgb, tint);
+  }
+  rgba(): Uint8Array {
+    const buf = new Uint8Array(this.w * this.h * 4);
+    this.px.forEach((c, i) => { if (c) { buf[i * 4] = c[0]; buf[i * 4 + 1] = c[1]; buf[i * 4 + 2] = c[2]; buf[i * 4 + 3] = 255; } });
+    return buf;
+  }
+}
+
+const WALL_Y1 = 32, FLOOR_Y0 = 34;
+const WIN_X0 = 24, WIN_Y0 = 3, WIN_X1 = 39, WIN_Y1 = 16;
+const LAMP_LIT: Record<string, RGB> = { ...LW, y: LW["l"] };
+
+function skyKind(tod: number, weather: number): string {
+  const night = tod === NIGHT_TIME || weather === NIGHT;
+  if (weather === RAIN) return night ? "rain_night" : "rain";
+  if (weather === SNOW) return "snow";
+  return night ? "night" : "day";
+}
+
+function drawWindow(im: Img, kind: string, weather: number) {
+  const [top, bot] = T.SKY[kind];
+  for (let y = WIN_Y0 + 1; y < WIN_Y1; y++) {
+    const c = y < floorDiv(WIN_Y0 + WIN_Y1, 2) ? top : bot;
+    for (let x = WIN_X0 + 1; x < WIN_X1; x++) im.set(x, y, c);
+  }
+  if (kind === "day") {
+    im.spr(27, 5, T.CLOUD);
+    if (weather === HEAT) im.spr(32, 4, ["..y..", ".yyy.", "yyyyy", ".yyy.", "..y.."]);
+    if (weather === WIND) { im.spr(33, 11, T.LEAF); im.spr(29, 8, [".g", "G."]); }
+  } else if (kind === "night") {
+    for (const [x, y] of T.WIN_STARS) im.set(x, y, [255, 244, 200]);
+    im.spr(34, 9, T.MOON);
+  } else if (kind.startsWith("rain")) {
+    for (const [x, y] of T.WIN_RAIN) { im.set(x, y, [200, 214, 236]); im.set(x - 1, y + 1, [200, 214, 236]); }
+  } else {
+    for (const [x, y] of T.WIN_SNOW) im.set(x, y, [255, 255, 255]);
+  }
+  const frame: RGB = (kind === "day" || kind === "rain" || kind === "snow") ? [255, 255, 255] : [196, 188, 228];
+  const mx = floorDiv(WIN_X0 + WIN_X1, 2), my = floorDiv(WIN_Y0 + WIN_Y1, 2);
+  for (let x = WIN_X0; x <= WIN_X1; x++) { im.set(x, WIN_Y0, LW["o"]); im.set(x, WIN_Y1, LW["o"]); im.set(x, my, frame); }
+  for (let y = WIN_Y0; y <= WIN_Y1; y++) {
+    im.set(WIN_X0, y, LW["o"]); im.set(WIN_X1, y, LW["o"]);
+    if (y > WIN_Y0 && y < WIN_Y1) im.set(mx, y, frame);
+  }
+  for (let x = WIN_X0 - 1; x < WIN_X1 + 2; x++) { im.set(x, WIN_Y1 + 1, LW["N"]); im.set(x, WIN_Y1 + 2, LW["o"]); }
+}
+
+function drawRoomBg(im: Img, night: boolean) {
+  const k = night ? 1 : 0;
+  for (let y = 0; y <= WALL_Y1; y++) for (let x = 0; x < RW; x++)
+    im.set(x, y, (x % 6 === 0 || x % 6 === 1) ? T.ROOM["stripe"][k] : T.ROOM["wall"][k]);
+  for (let x = 0; x < RW; x++) im.set(x, WALL_Y1 + 1, T.ROOM["base"][k]);
+  for (let y = FLOOR_Y0; y < RH; y++) for (let x = 0; x < RW; x++) {
+    let c = T.ROOM["floor"][k];
+    if ((y - FLOOR_Y0) % 5 === 4 || (x + 7 * floorDiv(y - FLOOR_Y0, 5)) % 21 === 0) c = T.ROOM["plank"][k];
+    else if (y === FLOOR_Y0) c = T.ROOM["floor_hi"][k];
+    im.set(x, y, c);
+  }
+}
+
+function drawFurniture(im: Img, slots: number[], night: boolean) {
+  const t = night ? T.NIGHT_TINT : null;
+  if (slots[5]) {
+    let prev: number | null = null;
+    for (let x = 2; x < 62; x++) {
+      const d = x - 32;
+      const y = 1 + floorDiv(3 * (900 - d * d), 900);
+      im.set(x, y, LW["N"], t);
+      if (prev !== null && y !== prev) im.set(x, prev, LW["N"], t);
+      prev = y;
+      if (x % 6 === 5) {
+        const c = LW[T.BULBS[floorDiv(x, 6) % 5]];
+        im.set(x, y + 1, c, night ? null : t);
+        im.set(x, y + 2, night ? LW["l"] : c, night ? null : t);
+      }
+    }
+  }
+  if (slots[0]) im.spr(4, 7, T.PICTURE, t);
+  if (slots[1]) im.spr(46, 6, T.SHELF, t);
+  if (slots[4]) {
+    for (let y = 39; y < 47; y++) for (let x = 10; x < 54; x++) {
+      const dx = (x - 32) * 4, dy = (y - 43) * 22, r = dx * dx + dy * dy;
+      if (r <= 88 * 88) {
+        const c = r > 74 * 74 ? "M" : (floorDiv(Math.abs(x - 32), 4) % 2 === 0 ? "m" : "w");
+        im.set(x, y, LW[c], t);
+      }
+    }
+  }
+  if (slots[2]) im.spr(0, 27, T.PLANT, t);
+  if (slots[3]) { if (night) im.spr(55, 12, T.LAMP, null, LAMP_LIT); else im.spr(55, 12, T.LAMP, t); }
+}
+
+function sceneFaces(scene: number, pa: Pheno, pb: Pheno): [[number, number], [number, number]] {
+  const f = (p: Pheno, eyes: number, mood: number): [number, number] => {
+    if (p.eyes === 7 && eyes !== 7 && eyes !== EYE_CLOSED_CYCLOPS) eyes = 7;
+    if (p.eyes === 7 && eyes === EYE_CLOSED) eyes = EYE_CLOSED_CYCLOPS;
+    return [eyes, mood];
+  };
+  if (scene === SC_CHESS) return [f(pa, pa.eyes, 1), f(pb, pb.eyes, 0)];
+  if (scene === SC_PAINT) return [f(pa, 3, 0), f(pb, pb.eyes, 1)];
+  if (scene === SC_CHAT) return [f(pa, pa.eyes, 1), f(pb, 3, 0)];
+  if (scene === SC_NAP) return [f(pa, EYE_CLOSED, 0), f(pb, EYE_CLOSED, 0)];
+  if (scene === SC_STARS) return [f(pa, 4, 1), f(pb, 4, 1)];
+  if (scene === SC_BREAKFAST) return [f(pa, 3, 0), f(pb, 3, 0)];
+  return [f(pa, pa.eyes, 0), f(pb, 2, 1)];
+}
+
+const pairSeed = (pa: Pheno, pb: Pheno, scene: number) =>
+  (mul32(pa.seed, 31) + mul32(pb.seed, 7) + scene * 101) >>> 0;
+
+function drawSceneProps(im: Img, scene: number, pa: Pheno, pb: Pheno, night: boolean) {
+  const t = night ? T.NIGHT_TINT : null;
+  if (scene === SC_CHESS) im.spr(24, 30, T.CHESS_TABLE, t);
+  else if (scene === SC_PAINT) {
+    im.spr(25, 21, T.EASEL, t);
+    const qa = palette(pa.palette, pa.shift), qb = palette(pb.palette, pb.shift);
+    const cols = [qa.base, qb.base, qa.accent, qb.accent];
+    for (const [x, y, i] of T.EASEL_DABS) im.set(25 + x, 21 + y, cols[i], t);
+    im.spr(36, 41, T.PAINT_POT, t);
+  } else if (scene === SC_CHAT) {
+    const rnd = new Mulberry(pairSeed(pa, pb, scene));
+    const a = rnd.int(T.EMOTES.length);
+    let b = rnd.int(T.EMOTES.length - 1);
+    if (b >= a) b++;
+    im.spr(15, 2, T.BUBBLE);
+    im.spr(18, 3, T.EMOTES[a]);
+    im.spr(38, 2, T.BUBBLE.map(r => [...r].reverse().join("")));
+    im.spr(41, 3, T.EMOTES[b]);
+  } else if (scene === SC_NAP) {
+    const Y = 33;
+    for (let y = Y; y < 45; y++) for (let x = 4; x < 60; x++) {
+      if (y === Y || y === 44 || x === 4 || x === 59) {
+        if (!((y === Y || y === 44) && (x === 4 || x === 59))) im.set(x, y, LW["o"], t);
+        continue;
+      }
+      const c = y === Y + 1 ? "w" : ((floorDiv(x - 4, 4) + floorDiv(y - Y, 4)) % 2 === 0 ? "p" : "P");
+      im.set(x, y, LW[c], t);
+    }
+    im.spr(28, 20, T.ZZZ_ROWS);
+  } else if (scene === SC_STARS) im.spr(28, 22, T.TELESCOPE, t);
+  else if (scene === SC_BREAKFAST) {
+    im.spr(24, 30, T.BREAKFAST_TABLE, t);
+    im.spr(25, 29, T.PLATE_FOOD, t);
+    im.spr(32, 29, T.EGG_PLATE, t);
+  } else if (scene === SC_HOMEWORK) im.spr(24, 28, T.DESK, null, night ? LAMP_LIT : LW);
+}
+
+/** 64x48 RGBA room (python render_room(...).tobytes()). */
+export function renderRoom(pair: [Pheno, Pheno], scene: number, timeOfDay = DAY, weather = NONE,
+  furniture: number[] = [1, 1, 1, 1, 1, 1]): Uint8Array {
+  const [pa, pb] = pair;
+  if (scene === SC_STARS) timeOfDay = NIGHT_TIME;
+  const night = timeOfDay === NIGHT_TIME || weather === NIGHT;
+  const im = new Img(RW, RH);
+  drawRoomBg(im, night);
+  drawWindow(im, skyKind(timeOfDay, weather), weather);
+  drawFurniture(im, furniture, night);
+  const [fa, fb] = sceneFaces(scene, pa, pb);
+  const ct = night ? T.CREATURE_NIGHT : null;
+  const oy = 12 + (scene === SC_NAP ? 2 : 0);
+  im.creature(creatureLayers(pa, fa, true, false), 0, oy, true, ct);
+  im.creature(creatureLayers(pb, fb, true, false), 32, oy, false, ct);
+  drawSceneProps(im, scene, pa, pb, night);
+  return im.rgba();
+}
+
+// ------------------------------------------------------------ jump rope
+const JR_TRIP = 4, JR_CHEER = 5, YARD_GROUND = 40;
+
+function drawYard(im: Img) {
+  const Y = T.YARD;
+  const fenceCol = (x: number) => [1, 2, 3, 4].includes(x % 6);
+  for (let y = 0; y < RH; y++) for (let x = 0; x < RW; x++) {
+    let c: RGB;
+    if (y < 14) c = Y["sky0"];
+    else if (y < 24) c = Y["sky1"];
+    else if (y < 30) c = Y["sky2"];
+    else if (y < YARD_GROUND - 6) {
+      c = fenceCol(x) ? Y["fence"] : Y["sky2"];
+      if ((y === 31 || y === 32) && !fenceCol(x)) c = Y["fence_s"];
+    } else if (y < YARD_GROUND - 2) c = (x + y) % 3 === 0 ? Y["grass_d"] : Y["grass"];
+    else c = y > YARD_GROUND - 2 ? Y["grass"] : Y["grass_l"];
+    im.set(x, y, c);
+  }
+  for (let x = 0; x < RW; x++) {
+    if (x % 6 === 2 || x % 6 === 3) im.set(x, 29, Y["fence"]);
+    if (x % 6 === 4) for (let y = 30; y < YARD_GROUND - 6; y++) im.set(x, y, Y["fence_s"]);
+  }
+  for (const [x, y] of T.YARD_CLOUDS) im.spr(x, y, T.BIG_CLOUD);
+  im.spr(54, 2, T.SUN);
+  for (const [x, y] of T.YARD_TUFTS) {
+    im.set(x, y, Y["grass_d"]); im.set(x + 1, y - 1, Y["grass_d"]); im.set(x + 2, y, Y["grass_d"]);
+  }
+  for (const [x, y, c] of T.YARD_FLOWERS) {
+    im.spr(x - 1, y - 1, [".c.", "cyc", ".c."], null, { ...LW, c: LW[c], y: c !== "y" ? LW["y"] : LW["w"] });
+    im.set(x, y + 1, LW["G"]);
+  }
+}
+
+/** 64x48 RGBA jump-rope frame 0..5 (python render_jump_rope(p, frame).tobytes()). */
+export function renderJumpRope(p: Pheno, frame: number): Uint8Array {
+  const im = new Img(RW, RH);
+  drawYard(im);
+  const m = bodyMask(p.body, p.stage ?? ADULT);
+  const a = anchors(m);
+  const [lx, rx] = rowExt(m, a.midY);
+  const ox = 16, baseOy = YARD_GROUND + 2 - (a.bottom + 1);
+  let phase: number, h: number, face: [number, number];
+  if (frame === JR_TRIP) { phase = 2; h = 0; face = [p.eyes === 7 ? 7 : EYE_SQUINT, 1]; }
+  else if (frame === JR_CHEER) { phase = 0; h = 3; face = [p.eyes === 7 ? 7 : 3, 1]; }
+  else {
+    const [ph, pose] = T.JR_LOOP[imod(frame, 4)];
+    phase = ph; h = T.JR_HEIGHT[pose]; face = [p.eyes, pose === 2 ? 1 : 0];
+  }
+  const oy = baseOy - h;
+  const sw = floorDiv(rx - lx, 2) - h, cx = ox + 16;
+  for (let x = cx - sw; x < cx + sw; x++) im.set(x, YARD_GROUND + 2, T.YARD["shadow"]);
+  const hl = ox + lx - 3, hr = ox + rx + 2, hy = oy + a.midY - 1;
+  const rope = LW["R"];
+  let behind: Paint[] = [], front: Paint[] = [];
+  if (frame === JR_TRIP) {
+    const fy = YARD_GROUND + 1;
+    ropeArc(hl, hr + 1, hy + 2, fy + 2, front, rope);
+    for (const [x, y] of [[cx - 6, fy - 1], [cx - 5, fy - 2], [cx + 4, fy - 1], [cx + 5, fy - 2]]) front.push([x, y, rope]);
+  } else if (phase === 0) ropeArc(hl, hr + 1, hy, Math.max(1, oy + a.top - 8), front, rope);
+  else if (phase === 1) ropeArc(hl, hr + 1, hy, oy + a.midY + 5, front, rope);
+  else if (phase === 2) ropeArc(hl, hr + 1, hy, YARD_GROUND + 3, front, rope);
+  else ropeArc(hl, hr + 1, hy, Math.max(1, oy + a.top - 5), behind, rope);
+  behind = behind.concat(behind.map(([x, y, c]) => [x, y + 1, c] as Paint));
+  front = front.concat(front.map(([x, y, c]) => [x, y + 1, c] as Paint));
+  for (const [x, y, c] of behind) im.set(x, y, c);
+  let layers = creatureLayers(p, face, true, false);
+  if (frame === JR_TRIP) {
+    layers = layers.map(([x, y, c]) => [y < a.midY ? x - 1 : x, y, c] as Paint);
+    im.creature(layers, ox, oy);
+    for (const [dx, dy] of [[-2, -4], [3, -6], [8, -4]]) im.spr(ox + 16 + dx - 1, oy + a.top + dy - 1, T.DIZZY);
+  } else im.creature(layers, ox, oy);
+  for (const [x, y, c] of front) im.set(x, y, c);
+  if (frame !== JR_TRIP) { im.spr(hl, hy, T.HANDLE); im.spr(hr, hy, T.HANDLE); }
+  if (frame === JR_CHEER) for (const [x, y] of [[6, 12], [52, 16], [10, 26], [49, 30]]) im.spr(x, y, T.STARBURST);
+  return im.rgba();
+}
+
+/** 16x16 white-on-transparent Lock Screen glyph (scenes 0..6, 7 = jump rope). */
+export function renderGlyph(scene: number): Uint8Array {
+  const buf = new Uint8Array(16 * 16 * 4);
+  for (const [x, y] of sprite(T.GLYPHS[scene])) buf.fill(255, (y * 16 + x) * 4, (y * 16 + x) * 4 + 4);
   return buf;
 }
