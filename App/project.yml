@@ -124,11 +124,10 @@ targets:
     sources:
       - path: Tests
     dependencies:
+      # Package products are NOT linked here: they are statically linked into the host app
+      # (TEST_HOST); linking them again triggers Xcode's "linked as a static library by
+      # 'MixlingsTests' and 'Mixlings'... duplication of library code" error.
       - target: Mixlings
-      - package: MixlingsKit
-        product: MixlingsGenome
-      - package: MixlingsKit
-        product: MixlingsArt
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.orizolabs.mixlings.tests

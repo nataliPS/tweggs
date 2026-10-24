@@ -21,6 +21,8 @@ struct CreatureStore: Sendable {
         if let group = fm.containerURL(forSecurityApplicationGroupIdentifier: Self.appGroupId) {
             base = group
         } else {
+            // App and widget would silently use different files here — surface it in DEBUG.
+            assertionFailure("App Group \(Self.appGroupId) unavailable; check entitlements")
             base = (try? fm.url(for: .applicationSupportDirectory, in: .userDomainMask,
                                 appropriateFor: nil, create: true))
                 ?? fm.temporaryDirectory

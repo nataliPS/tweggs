@@ -131,7 +131,9 @@ struct BreedView: View {
     /// Partner for the local preview: another of the player's own adults/creatures.
     /// TODO(server): partner comes from the friend's offer.
     private func partner(for parent: Creature) -> Creature? {
-        model.creatures.first(where: { $0.id != parent.id })
+        model.creatures.first(where: {
+            $0.id != parent.id && CareEngine.stage($0, at: .now) == .adult
+        })
     }
 
     private func makePreview(parent: Creature) -> BreedPreview? {

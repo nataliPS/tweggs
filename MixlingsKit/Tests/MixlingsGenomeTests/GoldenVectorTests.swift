@@ -171,10 +171,10 @@ final class GoldenVectorTests: XCTestCase {
     }
 
     func testExpressionRules() {
-        // body: bean(5) vs round(6) -> round (1), regardless of order
-        XCTAssertEqual(Genetics.expressGene(0, 0, 1), 1)
-        XCTAssertEqual(Genetics.expressGene(0, 1, 0), 1)
-        // palette: mint(5) vs peach(5) tie -> lower index
+        // body: round(6, idx 0) vs bean(5, idx 1) -> round (0), regardless of order
+        XCTAssertEqual(Genetics.expressGene(0, 0, 1), 0)
+        XCTAssertEqual(Genetics.expressGene(0, 1, 0), 0)
+        // palette: mint(5) vs bubblegum(5) tie -> lower index
         XCTAssertEqual(Genetics.expressGene(5, 1, 0), 0)
         XCTAssertEqual(Genetics.expressGene(5, 0, 1), 0)
     }

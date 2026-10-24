@@ -25,7 +25,9 @@ final class GameModel {
 
     /// Re-read from disk (widget intents may have changed it while we were in background).
     func reload() {
-        save = store.load()
+        // Re-read from disk, but never replace state with a fresh, unsaved SaveData
+        // (an unreadable file must not mint a new playerId).
+        save = store.loadOrCreate()
     }
 
     func select(_ creature: Creature) {
