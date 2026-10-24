@@ -173,6 +173,102 @@ final class RetroDecisionsTests: XCTestCase {
         XCTAssertEqual(save.breedsWithoutNewEntry, 0)
     }
 
+    func testCompleteBreedAdmitsChildAndDrivesPityHint() {
+        var save = SaveData(playerId: "p")
+        save.replace(creature("a"))
+        save.replace(creature("b"))
+        for i in 0..<15 {
+            XCTAssertFalse(EconomyEngine.pityHintActive(save))
+            EconomyEngine.completeBreed(&save, child: creature("dud\(i)"), now: noon, timeZone: utc)
+        }
+        XCTAssertEqual(save.breedsWithoutNewEntry, 15)
+        XCTAssertTrue(EconomyEngine.pityHintActive(save), "pity hint triggers after 15 dud breeds")
+        XCTAssertNotNil(save.creature(id: "dud0"), "the child is admitted")
+
+        // A re-delivered result for the same child is not counted twice.
+        EconomyEngine.completeBreed(&save, child: creature("dud0"), now: noon, timeZone: utc)
+        XCTAssertEqual(save.breedsWithoutNewEntry, 15)
+
+        var lucky = Array(repeating: [0, 0], count: 8)
+        lucky[1] = [3, 3] // eyes "happy": a missing season entry
+        EconomyEngine.completeBreed(&save, child: creature("lucky", genome: lucky), now: noon, timeZone: utc)
+        XCTAssertEqual(save.breedsWithoutNewEntry, 0)
+        XCTAssertFalse(EconomyEngine.pityHintActive(save))
+    }
+
+    func testPityResetsWhenANewEntryArrivesAnyWay() {
+        var save = SaveData(playerId: "p", breedsWithoutNewEntry: 20)
+        save.replace(creature("a"))
+        let before = EconomyEngine.missingCount(save, now: noon, timeZone: utc)
+        save.replace(creature("plain2")) // nothing new
+        EconomyEngine.resetPityIfNewEntry(&save, missingBefore: before, now: noon, timeZone: utc)
+        XCTAssertEqual(save.breedsWithoutNewEntry, 20)
+
+        var lucky = Array(repeating: [0, 0], count: 8)
+        lucky[1] = [3, 3]
+        let before2 = EconomyEngine.missingCount(save, now: noon, timeZone: utc)
+        save.replace(creature("traded", genome: lucky, origin: .starter)) // e.g. trade / gift
+        EconomyEngine.resetPityIfNewEntry(&save, missingBefore: before2, now: noon, timeZone: utc)
+        XCTAssertEqual(save.breedsWithoutNewEntry, 0)
+    }
+
+    func testCarriersJudgeMissingEntriesAgainstWholeCollection() {
+        let season = Collecting.season1
+        var carrier = Array(repeating: [0, 0], count: 8)
+        carrier[1] = [0, 3] // carries eyes "happy"
+        var owner = Array(repeating: [0, 0], count: 8)
+        owner[1] = [3, 3]   // expresses eyes "happy"
+        let active = [creature("carrier", genome: carrier)]
+        XCTAssertTrue(EconomyEngine.carrierIds(season: season, creatures: active).contains("carrier"))
+        // The entry is already owned by a sanctuary creature: not missing, so no glow.
+        let all = active + [creature("resting", genome: owner, inSanctuary: true)]
+        XCTAssertFalse(EconomyEngine.carrierIds(season: season, creatures: all).contains("carrier"))
+    }
+
+    // MARK: G4 day-2 gift
+
+    func testGiftBabyIsAnchoredToOnboardingNotHatchRush() throws {
+        let pid = "p-gift"
+        var save = SaveData(playerId: pid, onboardingComplete: true, sparks: 100,
+                            giftBabyDueAt: noon + day)
+        let eggId = CreatureFactory.starterId(playerId: pid, slot: 0)
+        save.replace(Creature(id: eggId, name: "Mixy", genome: Array(repeating: [0, 0], count: 8),
+                              origin: .hatched, bornAt: noon, hatchedAt: noon, lastUpdated: noon))
+        XCTAssertFalse(save.isGiftBabyDue(now: noon + 3600))
+        XCTAssertNil(EconomyEngine.hatchRush(&save, creatureId: eggId, now: noon + 3600, timeZone: utc).failureValue)
+        XCTAssertEqual(save.creature(id: eggId)?.hatchedAt, noon - day, "rush moved the baby's schedule")
+        XCTAssertFalse(save.isGiftBabyDue(now: noon + 3600), "but not the gift")
+        XCTAssertTrue(save.isGiftBabyDue(now: noon + day))
+        XCTAssertFalse(SaveData(playerId: pid, giftBabyDueAt: noon).isGiftBabyDue(now: noon + day),
+                       "never before onboarding is complete")
+    }
+
+    func testGiftBabyDueAtIsInferredForOlderSaves() throws {
+        let pid = "p-old"
+        var save = SaveData(playerId: pid, onboardingComplete: true)
+        let onboardedAt = noon
+        let adult = try XCTUnwrap(CreatureFactory.starter(save: &save, slot: 1, name: "Pip", origin: .starter,
+                                                          bornAt: onboardedAt, alreadyAdult: true, now: onboardedAt))
+        save.replace(adult)
+        // The onboarding baby was hatch-rushed (hatchedAt a day early): must not matter.
+        let eggId = CreatureFactory.starterId(playerId: pid, slot: 0)
+        save.replace(Creature(id: eggId, name: "Mixy", genome: Array(repeating: [0, 0], count: 8),
+                              origin: .hatched, bornAt: onboardedAt - 2 * day, hatchedAt: onboardedAt - day))
+        let e = JSONEncoder()
+        e.dateEncodingStrategy = .deferredToDate
+        let d = JSONDecoder()
+        d.dateDecodingStrategy = .deferredToDate
+        var json = try XCTUnwrap(JSONSerialization.jsonObject(with: e.encode(save)) as? [String: Any])
+        json["giftBabyDueAt"] = nil // as written before the field existed
+        let decoded = try d.decode(SaveData.self, from: JSONSerialization.data(withJSONObject: json))
+        let due = try XCTUnwrap(decoded.giftBabyDueAt)
+        XCTAssertEqual(due.timeIntervalSince1970, (onboardedAt + day).timeIntervalSince1970, accuracy: 0.001)
+        // Round trip keeps the stored value.
+        XCTAssertEqual(try d.decode(SaveData.self, from: e.encode(decoded)).giftBabyDueAt, decoded.giftBabyDueAt)
+        // Fresh / mid-onboarding saves have nothing to infer.
+        XCTAssertNil(try d.decode(SaveData.self, from: Data(#"{"version":3,"playerId":"x"}"#.utf8)).giftBabyDueAt)
+    }
+
     // MARK: G8
 
     func testGenerationBadges() {
@@ -245,7 +341,8 @@ final class RetroDecisionsTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(HatchClipTimeline.duration, 6)
         XCTAssertLessThanOrEqual(HatchClipTimeline.duration, 8)
         XCTAssertEqual(HatchClipTimeline.size.width / HatchClipTimeline.size.height, 9.0 / 16.0, accuracy: 0.001)
-        XCTAssertEqual(HatchClipTimeline.size.width * HatchClipTimeline.scale, 1080)
+        XCTAssertEqual(HatchClipTimeline.pixelWidth, 720)
+        XCTAssertEqual(HatchClipTimeline.pixelHeight, 1280)
         XCTAssertEqual(HatchClipTimeline.phase(at: 0), .wobble)
         XCTAssertEqual(HatchClipTimeline.phase(at: 1.5), .cracks)
         XCTAssertEqual(HatchClipTimeline.phase(at: 2.4), .flash)
@@ -351,6 +448,74 @@ final class RetroDecisionsTests: XCTestCase {
         let loaded = store.load()
         XCTAssertEqual(loaded.creature(id: "a")?.hunger ?? 0, snap.creature?.hunger ?? -1, accuracy: 0.0001)
         XCTAssertEqual(loaded.creature(id: "a")?.lastUpdated, noon + 3600)
+    }
+
+    func testWidgetCareEventsMergeIdempotentlyAndAreCleared() throws {
+        let url = tempURL("collection")
+        let store = CreatureStore(fileURL: url)
+        defer { try? FileManager.default.removeItem(at: url); try? FileManager.default.removeItem(at: store.activeURL) }
+        var a = creature("a")
+        a.hunger = 20
+        a.mood = 20
+        store.update(now: noon) { $0.replace(a); $0.activeCreatureId = "a" }
+
+        // Two taps from the widget: both are kept as events (append-only, no overwrite).
+        store.applyToActive(.feed, at: noon + 60)
+        let snap = try XCTUnwrap(store.applyToActive(.pet, at: noon + 120))
+        XCTAssertEqual(snap.pendingCare.map(\.action), [.feed, .pet])
+        XCTAssertEqual(Set(snap.pendingCare.map(\.id)).count, 2)
+
+        // Expected: both actions replayed once, in order.
+        let expected = CreatureStore.applying(.pet, to: CreatureStore.applying(.feed, to: a, at: noon + 60), at: noon + 120)
+
+        // Merging the same snapshot twice applies each event once.
+        var save = store.load()
+        CreatureStore.merge(snap, into: &save)
+        XCTAssertEqual(save.creature(id: "a")?.hunger ?? 0, expected.hunger, accuracy: 0.0001)
+        XCTAssertEqual(save.creature(id: "a")?.mood ?? 0, expected.mood, accuracy: 0.0001)
+        XCTAssertEqual(save.appliedCareEventIds, snap.pendingCare.map(\.id))
+
+        // The app persists the merge; merged events are cleared from active.json.
+        let saved = store.update(now: noon + 180) { _ in }
+        XCTAssertEqual(saved.creature(id: "a")?.mood ?? 0, expected.mood, accuracy: 0.0001)
+        XCTAssertEqual(store.loadActive()?.pendingCare, [])
+        // Re-merging the old snapshot (e.g. a stale read) changes nothing.
+        var again = saved
+        CreatureStore.merge(snap, into: &again)
+        XCTAssertEqual(again, saved)
+        XCTAssertEqual(store.load(), saved)
+    }
+
+    func testWidgetEventAfterAppReadIsKeptNotLost() throws {
+        let url = tempURL("collection")
+        let store = CreatureStore(fileURL: url)
+        defer { try? FileManager.default.removeItem(at: url); try? FileManager.default.removeItem(at: store.activeURL) }
+        store.update(now: noon) { $0.replace(self.creature("a")); $0.activeCreatureId = "a" }
+        // The app has a save that has NOT seen this tap (tap lands after the app's read).
+        let appSave = store.load()
+        let tap = try XCTUnwrap(store.applyToActive(.pet, at: noon + 60)?.pendingCare.last)
+        store.refreshActive(from: appSave, now: noon + 90)
+        let snap = try XCTUnwrap(store.loadActive())
+        XCTAssertEqual(snap.pendingCare, [tap], "unmerged widget care survives an app refresh")
+        XCTAssertGreaterThan(snap.creature?.mood ?? 0, appSave.creature(id: "a")?.mood ?? 100,
+                             "display includes pending care")
+        // Next app update merges it exactly once.
+        let merged = store.update(now: noon + 120) { _ in }
+        XCTAssertEqual(merged.appliedCareEventIds, [tap.id])
+        XCTAssertEqual(store.loadActive()?.pendingCare, [])
+    }
+
+    func testLegacyV1SnapshotStatsStillMerge() throws {
+        let url = tempURL("collection")
+        let store = CreatureStore(fileURL: url)
+        defer { try? FileManager.default.removeItem(at: url); try? FileManager.default.removeItem(at: store.activeURL) }
+        var a = creature("a")
+        a.hunger = 20
+        store.update(now: noon) { $0.replace(a); $0.activeCreatureId = "a" }
+        let fed = CreatureStore.applying(.feed, to: a, at: noon + 60)
+        store.saveActive(ActiveSnapshot(version: 1, creature: fed))
+        let loaded = store.load()
+        XCTAssertEqual(loaded.creature(id: "a")?.hunger ?? 0, fed.hunger, accuracy: 0.0001)
     }
 
     func testEggSnapshotHasTimer() throws {

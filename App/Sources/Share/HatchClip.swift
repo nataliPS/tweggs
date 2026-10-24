@@ -9,9 +9,11 @@ import MixlingsGenome
 // with AVAssetWriter. Watermark "Tweggs" (placeholder brand) and an end card are baked in.
 // Content stays inside TikTok/Reels safe zones (no text in the top ~8% / bottom ~20%, right rail).
 //
+// Performance: frames are 720x1280 (scale 2). ImageRenderer needs the main actor, so each frame
+// is rendered in its own short main-actor hop; pixel-buffer conversion and appending run off the
+// main actor, and every frame is appended right away (at most one frame in memory).
+//
 // RISKY APIs (verify on device):
-// - ImageRenderer per frame on the main actor: ~170 renders at 1080x1920. Measured budget unknown;
-//   if too slow, drop `fps` to 20 or render at scale 2 (720x1280).
 // - AVAssetWriterInputPixelBufferAdaptor pool is nil until `startWriting()`; we fall back to
 //   CVPixelBufferCreate.
 // - `isReadyForMoreMediaData` polling with Task.sleep (simple, not the most efficient).
@@ -21,9 +23,11 @@ enum HatchClipTimeline {
     static let duration: Double = 7.0
     static let fps: Int32 = 24
     static var frameCount: Int { Int(duration * Double(fps)) }
-    /// Layout size in points; rendered at `scale` -> 1080 x 1920 px.
+    /// Layout size in points; rendered at `scale` -> 720 x 1280 px (9:16, 720p).
     static let size = CGSize(width: 360, height: 640)
-    static let scale: CGFloat = 3
+    static let scale: CGFloat = 2
+    static var pixelWidth: Int { Int(size.width * scale) }
+    static var pixelHeight: Int { Int(size.height * scale) }
 
     enum Phase: Equatable { case wobble, cracks, flash, drop, reveal, endCard }
 
@@ -83,8 +87,8 @@ struct HatchClipFrame: View {
                 let wobble: Double = phase == .wobble
                     ? sin(t * 14) * 6 * HatchClipTimeline.local(t, 0, 1.2)
                     : sin(t * 30) * 3
-                EggView(traits: traits)
-                    .frame(width: 200, height: 200)
+                egg(traits)
+                    .frame(width: Self.eggFrame, height: Self.eggFrame)
                     .rotationEffect(.degrees(wobble))
                     .overlay {
                         CrackShape(progress: HatchClipTimeline.local(t, 1.2, 2.2))
@@ -121,6 +125,25 @@ struct HatchClipFrame: View {
                 .opacity(phase == .flash ? Self.flashOpacity(t) : 0)
         }
     }
+
+    /// A3: with art v2 the egg is MixlingsArt stage 0 (the creature's palette, pattern on the
+    /// shell), exactly like the in-app egg; `EggView` is only the non-v2 fallback.
+    @ViewBuilder
+    private func egg(_ traits: ExpressedTraits) -> some View {
+        #if MIXLINGS_ART_V2
+        CreatureSprite(creature: creature, stage: .egg)
+        #else
+        EggView(traits: traits)
+        #endif
+    }
+
+    /// The art-v2 egg fills ~14x18 of the 32px canvas, so its frame is larger to keep the shell
+    /// about the size of the old 200pt `EggView` (and under the 120pt crack).
+    #if MIXLINGS_ART_V2
+    static let eggFrame: CGFloat = 340
+    #else
+    static let eggFrame: CGFloat = 200
+    #endif
 
     static func flashOpacity(_ t: Double) -> Double {
         1 - abs(HatchClipTimeline.local(t, 2.2, 2.6) * 2 - 1)
@@ -173,12 +196,13 @@ struct CrackShape: Shape {
 
 enum HatchClipError: Error { case writerSetup, frame, finish }
 
-@MainActor
 enum HatchClipExporter {
-    /// Renders the clip to `tmp/hatch-<id>.mp4` and returns its URL. `progress` gets 0...1.
-    static func export(creature: Creature, progress: (Double) -> Void = { _ in }) async throws -> URL {
-        let pixelW = Int(HatchClipTimeline.size.width * HatchClipTimeline.scale)
-        let pixelH = Int(HatchClipTimeline.size.height * HatchClipTimeline.scale)
+    /// Renders the clip to `tmp/hatch-<id>.mp4` and returns its URL. `progress` gets 0...1 on the
+    /// main actor. Not main-actor isolated: only `renderFrame` hops to the main actor.
+    static func export(creature: Creature,
+                       progress: @escaping @MainActor (Double) -> Void = { _ in }) async throws -> URL {
+        let pixelW = HatchClipTimeline.pixelWidth
+        let pixelH = HatchClipTimeline.pixelHeight
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("hatch-\(creature.id).mp4")
         try? FileManager.default.removeItem(at: url)
@@ -188,7 +212,7 @@ enum HatchClipExporter {
             AVVideoCodecKey: AVVideoCodecType.h264,
             AVVideoWidthKey: pixelW,
             AVVideoHeightKey: pixelH,
-            AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: 6_000_000],
+            AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: 4_000_000],
         ]
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: settings)
         input.expectsMediaDataInRealTime = false
@@ -205,29 +229,46 @@ enum HatchClipExporter {
         writer.startSession(atSourceTime: .zero)
 
         let total = HatchClipTimeline.frameCount
-        for i in 0..<total {
-            try Task.checkCancellation()
-            let t = Double(i) / Double(HatchClipTimeline.fps)
-            let renderer = ImageRenderer(content: HatchClipFrame(creature: creature, t: t))
-            renderer.proposedSize = ProposedViewSize(HatchClipTimeline.size)
-            renderer.scale = HatchClipTimeline.scale
-            guard let cg = renderer.cgImage,
-                  let buffer = pixelBuffer(from: cg, pool: adaptor.pixelBufferPool, width: pixelW, height: pixelH)
-            else { throw HatchClipError.frame }
-            while !input.isReadyForMoreMediaData {
-                try await Task.sleep(nanoseconds: 5_000_000)
+        do {
+            for i in 0..<total {
+                try Task.checkCancellation()
+                let t = Double(i) / Double(HatchClipTimeline.fps)
+                // One frame per short main-actor hop, then converted here (off the main actor) and
+                // appended straight away: memory stays at ~1 frame.
+                guard let cg = await MainActor.run(body: { renderFrame(creature: creature, t: t) })
+                else { throw HatchClipError.frame }
+                let buffer: CVPixelBuffer? = autoreleasepool {
+                    pixelBuffer(from: cg, pool: adaptor.pixelBufferPool, width: pixelW, height: pixelH)
+                }
+                guard let buffer else { throw HatchClipError.frame }
+                while !input.isReadyForMoreMediaData {
+                    try await Task.sleep(nanoseconds: 5_000_000)
+                }
+                let time = CMTime(value: CMTimeValue(i), timescale: HatchClipTimeline.fps)
+                guard adaptor.append(buffer, withPresentationTime: time) else {
+                    throw writer.error ?? HatchClipError.frame
+                }
+                await progress(Double(i + 1) / Double(total))
+                await Task.yield() // let the UI (progress bar, preview) breathe between frames
             }
-            let time = CMTime(value: CMTimeValue(i), timescale: HatchClipTimeline.fps)
-            guard adaptor.append(buffer, withPresentationTime: time) else {
-                throw writer.error ?? HatchClipError.frame
-            }
-            progress(Double(i + 1) / Double(total))
-            if i % 8 == 0 { await Task.yield() } // keep the progress UI alive
+        } catch {
+            writer.cancelWriting()
+            try? FileManager.default.removeItem(at: url)
+            throw error
         }
         input.markAsFinished()
         await writer.finishWriting()
         guard writer.status == .completed else { throw writer.error ?? HatchClipError.finish }
         return url
+    }
+
+    /// ImageRenderer requires the main actor.
+    @MainActor
+    static func renderFrame(creature: Creature, t: Double) -> CGImage? {
+        let renderer = ImageRenderer(content: HatchClipFrame(creature: creature, t: t))
+        renderer.proposedSize = ProposedViewSize(HatchClipTimeline.size)
+        renderer.scale = HatchClipTimeline.scale
+        return renderer.cgImage
     }
 
     private static func pixelBuffer(from image: CGImage, pool: CVPixelBufferPool?,

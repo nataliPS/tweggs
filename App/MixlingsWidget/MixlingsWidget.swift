@@ -128,11 +128,13 @@ struct MixlingWidgetView: View {
 private struct WidgetSprite: View {
     let creature: Creature
     let stage: Stage
+    /// A1 mood layer (smile / "o" / hungry wobble) for this entry's moment.
+    let condition: Condition
     @Environment(\.widgetRenderingMode) private var renderingMode
 
     var body: some View {
         CreatureSprite(creature: creature, stage: stage,
-                       silhouette: renderingMode != .fullColor)
+                       silhouette: renderingMode != .fullColor, condition: condition)
     }
 }
 
@@ -142,7 +144,7 @@ private struct SmallView: View {
     var body: some View {
         if let c = entry.creature {
             VStack(spacing: 4) {
-                WidgetSprite(creature: c, stage: entry.stage)
+                WidgetSprite(creature: c, stage: entry.stage, condition: entry.condition)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 HStack(spacing: 4) {
                     Text(c.name)
@@ -177,7 +179,7 @@ private struct MediumView: View {
     var body: some View {
         if let c = entry.creature {
             HStack(spacing: 12) {
-                WidgetSprite(creature: c, stage: entry.stage)
+                WidgetSprite(creature: c, stage: entry.stage, condition: entry.condition)
                     .frame(maxWidth: 120, maxHeight: .infinity)
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
@@ -217,7 +219,7 @@ private struct CircularView: View {
             Gauge(value: Double(c.moodValue), in: 0...100) {
                 Text("Mood")
             } currentValueLabel: {
-                CreatureSprite(creature: c, stage: entry.stage, silhouette: true)
+                CreatureSprite(creature: c, stage: entry.stage, silhouette: true, condition: entry.condition)
                     .padding(6)
             }
             .gaugeStyle(.accessoryCircularCapacity)

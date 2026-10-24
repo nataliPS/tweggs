@@ -208,8 +208,35 @@ enum EconomyEngine {
         return ids
     }
 
+    /// A confirmed breed's child joins the save (G5 admit) and is counted for the pity hint (G7).
+    /// The ONLY place a bred child is added, so the counter can't be skipped. Previews must not
+    /// call this (they are not breeds). Idempotent per child id: a child already in the save
+    /// (e.g. a re-delivered server result) is not counted twice.
+    static func completeBreed(_ save: inout SaveData, child: Creature, now: Date,
+                              timeZone: TimeZone = .current) {
+        guard save.creature(id: child.id) == nil else { return }
+        admit(child, to: &save)
+        let stored = save.creature(id: child.id) ?? child
+        recordBreed(&save, child: stored, season: CollectingEngine.currentSeason(now: now, timeZone: timeZone))
+    }
+
+    /// Number of entries of the current season still missing from the whole collection.
+    static func missingCount(_ save: SaveData, now: Date, timeZone: TimeZone = .current) -> Int? {
+        guard let season = CollectingEngine.currentSeason(now: now, timeZone: timeZone) else { return nil }
+        return missingEntries(season, creatures: save.creatures).count
+    }
+
+    /// G7: "breeds without a new season entry" restarts whenever a new entry is found, however
+    /// it arrived (breed, trade, gift). Compare the missing count before and after a change.
+    static func resetPityIfNewEntry(_ save: inout SaveData, missingBefore: Int?, now: Date,
+                                    timeZone: TimeZone = .current) {
+        guard let before = missingBefore,
+              let after = missingCount(save, now: now, timeZone: timeZone), after < before else { return }
+        save.breedsWithoutNewEntry = 0
+    }
+
     /// Call after every CONFIRMED breed (not previews): resets the counter if the child filled a
-    /// missing entry. TODO(server): call from the server-confirmed breed result handler.
+    /// missing entry, else counts one more breed without a new entry. Prefer `completeBreed`.
     static func recordBreed(_ save: inout SaveData, child: Creature, season: Collecting.Season?) {
         guard let season else { save.breedsWithoutNewEntry += 1; return }
         let others = save.creatures.filter { $0.id != child.id }

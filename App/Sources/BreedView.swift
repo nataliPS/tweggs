@@ -99,7 +99,9 @@ struct BreedView: View {
 
     private var carrierIds: Set<String> {
         guard let season else { return [] }
-        return EconomyEngine.carrierIds(season: season, creatures: model.save.activeSlotCreatures)
+        // "Missing" is judged against the whole collection (sanctuary included), like the gene
+        // hint; only active-slot creatures are shown as breeders, so only they get the glow.
+        return EconomyEngine.carrierIds(season: season, creatures: model.save.creatures)
     }
 
     private var pityBanner: some View {

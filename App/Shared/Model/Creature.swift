@@ -209,6 +209,13 @@ struct SaveData: Codable, Equatable, Sendable {
     /// C3: offer ids / sender keys the player blocked or reported. TODO(server): send reports.
     var blockedSenders: [String]
     var reportedOffers: [String]
+    /// G4: when the day-2 gift baby arrives. Anchored to the onboarding hatch (+1 day), never to
+    /// a creature's hatch time (hatch-rush moves that). Nil before onboarding. Older saves get it
+    /// inferred on decode (`inferredGiftBabyDueAt`).
+    var giftBabyDueAt: Date?
+    /// T4: ids of widget care events (`CareEvent`) already merged into this save, newest last.
+    /// Makes the merge idempotent; capped at `CreatureStore.appliedCareIdLimit`.
+    var appliedCareEventIds: [String]
 
     init(
         version: Int = SaveData.currentVersion,
@@ -231,7 +238,9 @@ struct SaveData: Codable, Equatable, Sendable {
         geneHintKeys: [String] = [],
         firstSharePromptShown: Bool = false,
         blockedSenders: [String] = [],
-        reportedOffers: [String] = []
+        reportedOffers: [String] = [],
+        giftBabyDueAt: Date? = nil,
+        appliedCareEventIds: [String] = []
     ) {
         self.version = version
         self.playerId = playerId
@@ -254,6 +263,8 @@ struct SaveData: Codable, Equatable, Sendable {
         self.firstSharePromptShown = firstSharePromptShown
         self.blockedSenders = blockedSenders
         self.reportedOffers = reportedOffers
+        self.giftBabyDueAt = giftBabyDueAt
+        self.appliedCareEventIds = appliedCareEventIds
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -261,6 +272,7 @@ struct SaveData: Codable, Equatable, Sendable {
         case sparks, lastSurpriseDay, cosmetics, hatchCounter, discoveries, seasonBadges, tradeOffers
         case starterGenomes, ageBand, isClubMember, breedsWithoutNewEntry, lastHatchRushDay, geneHintKeys
         case firstSharePromptShown, blockedSenders, reportedOffers
+        case giftBabyDueAt, appliedCareEventIds
     }
 
     init(from decoder: Decoder) throws {
@@ -287,8 +299,36 @@ struct SaveData: Codable, Equatable, Sendable {
         firstSharePromptShown = try c.decodeIfPresent(Bool.self, forKey: .firstSharePromptShown) ?? false
         blockedSenders = try c.decodeIfPresent([String].self, forKey: .blockedSenders) ?? []
         reportedOffers = try c.decodeIfPresent([String].self, forKey: .reportedOffers) ?? []
+        giftBabyDueAt = try c.decodeIfPresent(Date.self, forKey: .giftBabyDueAt)
+        appliedCareEventIds = try c.decodeIfPresent([String].self, forKey: .appliedCareEventIds) ?? []
         if version < 2 { migrateToV2() }
         if version < 3 { migrateToV3() }
+        // Additive v3 field (no version bump): fill from existing data once, then it is stored.
+        if giftBabyDueAt == nil { giftBabyDueAt = inferredGiftBabyDueAt }
+    }
+
+    /// Onboarding time + 1 day, recovered from saves written before `giftBabyDueAt` existed.
+    /// The starter adult (slot 1) is created at the onboarding hatch and is backdated to be
+    /// exactly adult then; adults can't be hatch-rushed, so its schedule still pins that moment.
+    /// Fallback: the first hatched creature's hatch time (may be early if it was rushed).
+    var inferredGiftBabyDueAt: Date? {
+        guard !creatures.isEmpty else { return nil }
+        let adultId = CreatureFactory.starterId(playerId: playerId, slot: CreatureFactory.Slot.giftAdult)
+        let giftId = CreatureFactory.starterId(playerId: playerId, slot: CreatureFactory.Slot.dayTwoBaby)
+        if let adult = creature(id: adultId)
+            ?? creatures.first(where: { $0.origin == .starter && $0.id != giftId }) {
+            return CareEngine.date(of: .adult, for: adult).addingTimeInterval(CareEngine.day)
+        }
+        let eggId = CreatureFactory.starterId(playerId: playerId, slot: CreatureFactory.Slot.firstEgg)
+        guard let first = creature(id: eggId) ?? creatures.first(where: { $0.origin == .hatched }),
+              first.hatchedAt != nil else { return nil }
+        return CareEngine.hatchDate(first).addingTimeInterval(CareEngine.day)
+    }
+
+    /// G4: the day-2 gift baby is due (onboarding finished and its time has come).
+    func isGiftBabyDue(now: Date) -> Bool {
+        guard onboardingComplete, let due = giftBabyDueAt else { return false }
+        return now >= due
     }
 
     /// v1 -> v2: give existing creatures serials (in save order) and seed the discovery log.

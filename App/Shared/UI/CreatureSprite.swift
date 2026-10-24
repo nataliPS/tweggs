@@ -10,17 +10,23 @@ struct CreatureSprite: View {
     let creature: Creature
     let stage: Stage
     var silhouette: Bool = false
-    /// Mood expression layer (A1). Ignored until MixlingsArt supports it.
+    /// Mood expression layer (A1, art v2). Eggs have no face, so it only shows after hatching.
     var condition: Condition? = nil
 
     var body: some View {
         Group {
+            #if MIXLINGS_ART_V2
+            // A3: MixlingsArt draws the egg itself (stage 0: the egg's own expressed palette +
+            // shift, its pattern on the shell; body/eyes/head/tail/aura ignored).
+            spriteBody
+            #else
             if stage == .egg {
                 EggView(traits: PhenotypeMapper.traits(for: creature))
                     .modifier(SilhouetteModifier(enabled: silhouette))
             } else {
                 spriteBody
             }
+            #endif
         }
         .aspectRatio(1, contentMode: .fit)
         .accessibilityHidden(true)
@@ -72,6 +78,7 @@ private struct SilhouetteModifier: ViewModifier {
 
 /// Simple pixel egg drawn with Canvas (no MixlingsArt dependency), tinted by the
 /// creature's expressed palette so each egg hints at what will hatch.
+/// Fallback only: with `MIXLINGS_ART_V2` eggs are drawn by MixlingsArt (stage 0).
 struct EggView: View {
     let traits: ExpressedTraits
 

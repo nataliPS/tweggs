@@ -1,25 +1,62 @@
 import Foundation
 
+/// One care action done from the widget (T4). Append-only in `active.json`; the app replays
+/// each event once (by `id`) into `collection.json`, so concurrent widget taps never overwrite
+/// each other or the app's data.
+struct CareEvent: Codable, Equatable, Identifiable, Sendable {
+    var id: String
+    var creatureId: String
+    var action: CreatureStore.CareAction
+    var at: Date
+
+    init(id: String = UUID().uuidString.lowercased(), creatureId: String,
+         action: CreatureStore.CareAction, at: Date) {
+        self.id = id
+        self.creatureId = creatureId
+        self.action = action
+        self.at = at
+    }
+}
+
 /// What the widget needs, and nothing more (T4): the active creature and its egg timer.
-/// Written by the app on every save; the widget reads ONLY this file, and its App Intents
-/// (Feed / Pet) write care back into it. The app merges those changes on its next read.
+/// Written by the app on every save; the widget reads ONLY this file. Its App Intents (Feed /
+/// Pet) APPEND a `CareEvent` to `pendingCare` (and update `creature` for display only); the
+/// app merges the events idempotently and drops merged ones when it next refreshes the file.
+/// v2: `pendingCare` replaces v1's in-place stat edits.
 struct ActiveSnapshot: Codable, Equatable, Sendable {
-    static let currentVersion = 1
+    static let currentVersion = 2
 
     var version: Int
-    /// The Home creature with stats as of `creature.lastUpdated`. Nil before onboarding.
+    /// The Home creature with stats as of `creature.lastUpdated` (pending care included).
+    /// Nil before onboarding.
     var creature: Creature?
     /// When the active egg hatches (nil if it's not an egg).
     var eggHatchesAt: Date?
     /// For the widget's "surprise waiting" hint.
     var lastSurpriseDay: String?
+    /// Widget care not yet merged by the app, oldest first.
+    var pendingCare: [CareEvent]
 
     init(version: Int = ActiveSnapshot.currentVersion, creature: Creature? = nil,
-         eggHatchesAt: Date? = nil, lastSurpriseDay: String? = nil) {
+         eggHatchesAt: Date? = nil, lastSurpriseDay: String? = nil, pendingCare: [CareEvent] = []) {
         self.version = version
         self.creature = creature
         self.eggHatchesAt = eggHatchesAt
         self.lastSurpriseDay = lastSurpriseDay
+        self.pendingCare = pendingCare
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case version, creature, eggHatchesAt, lastSurpriseDay, pendingCare
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        version = try c.decodeIfPresent(Int.self, forKey: .version) ?? 1
+        creature = try c.decodeIfPresent(Creature.self, forKey: .creature)
+        eggHatchesAt = try c.decodeIfPresent(Date.self, forKey: .eggHatchesAt)
+        lastSurpriseDay = try c.decodeIfPresent(String.self, forKey: .lastSurpriseDay)
+        pendingCare = try c.decodeIfPresent([CareEvent].self, forKey: .pendingCare) ?? []
     }
 
     init(save: SaveData, now: Date = .now) {
@@ -34,8 +71,8 @@ struct ActiveSnapshot: Codable, Equatable, Sendable {
 ///
 /// Two files (T4):
 /// - `collection.json`: the full `SaveData`. App only.
-/// - `active.json`: `ActiveSnapshot` for the widget. Written by the app after every change;
-///   the widget's intents update its care stats in place.
+/// - `active.json`: `ActiveSnapshot` for the widget. Refreshed by the app after every change;
+///   the widget's intents only append `CareEvent`s to it (see `applyToActive`).
 ///
 /// Atomic writes and file coordination so the app and widget intents don't clobber each other.
 /// Stateless (no in-memory cache) so it is trivially `Sendable`; callers hold `SaveData`.
@@ -47,6 +84,11 @@ struct CreatureStore: Sendable {
     static let legacyFileName = "mixlings-save.json"
 
     static let shared = CreatureStore()
+
+    /// Merged widget event ids kept in the save (dedupe window). Far more than can be pending.
+    static let appliedCareIdLimit = 500
+    /// Pending widget events kept if the app isn't opened for a long time (oldest dropped).
+    static let pendingCareLimit = 200
 
     /// Full save (`collection.json`).
     let fileURL: URL
@@ -111,7 +153,8 @@ struct CreatureStore: Sendable {
     }
 
     /// Read-modify-write under one coordinated write. Merges widget care first, then writes
-    /// `collection.json` and refreshes `active.json`. Returns the saved value.
+    /// `collection.json` and refreshes `active.json` (dropping only the events merged here).
+    /// Returns the saved value.
     @discardableResult
     func update(now: Date = .now, _ body: (inout SaveData) -> Void) -> SaveData {
         migrateLegacyFileIfNeeded()
@@ -126,7 +169,7 @@ struct CreatureStore: Sendable {
             write(current, to: url)
             out = current
         }
-        saveActive(ActiveSnapshot(save: out, now: now))
+        refreshActive(from: out, now: now)
         return out
     }
 
@@ -146,9 +189,52 @@ struct CreatureStore: Sendable {
         coordinate(activeURL, writing: true) { url in write(snapshot, to: url) }
     }
 
-    /// Takes care stats from the snapshot if it is newer (the widget fed/petted while the app
-    /// was in the background). Only stats move; identity, genome and growth stay the app's.
+    /// App: rewrites `active.json` from `save` under ONE coordinated write of that file.
+    /// Events the widget appended that `save` hasn't merged yet (e.g. a tap that landed after
+    /// `update` read the snapshot) are kept, and the display creature includes them.
+    func refreshActive(from save: SaveData, now: Date = .now) {
+        coordinate(activeURL, writing: true) { url in
+            let current = (try? Data(contentsOf: url))
+                .flatMap { try? Self.decoder.decode(ActiveSnapshot.self, from: $0) }
+            var snap = ActiveSnapshot(save: save, now: now)
+            snap.pendingCare = Self.unmerged(current?.pendingCare ?? [], in: save)
+            if var c = snap.creature {
+                for e in snap.pendingCare where e.creatureId == c.id { c = Self.applying(e.action, to: c, at: e.at) }
+                snap.creature = c
+            }
+            write(snap, to: url)
+        }
+    }
+
+    /// Widget events not yet merged into `save`.
+    static func unmerged(_ events: [CareEvent], in save: SaveData) -> [CareEvent] {
+        let done = Set(save.appliedCareEventIds)
+        return events.filter { !done.contains($0.id) }
+    }
+
+    /// Replays widget care into the save. Idempotent: each event id is applied at most once
+    /// (ids are remembered in `appliedCareEventIds`). Events for creatures no longer in the save
+    /// are marked merged and dropped. Only stats move; identity, genome and growth stay the app's.
     static func merge(_ snapshot: ActiveSnapshot, into save: inout SaveData) {
+        let fresh = unmerged(snapshot.pendingCare, in: save)
+        let legacy = snapshot.version < 2
+        if legacy { mergeLegacyStats(snapshot, into: &save) }
+        guard !fresh.isEmpty else { return }
+        var seen = Set<String>()
+        for e in fresh.sorted(by: { $0.at < $1.at }) where seen.insert(e.id).inserted {
+            // v1 file: `creature` already carries every tap, so events are only marked merged.
+            if !legacy, let c = save.creature(id: e.creatureId) {
+                save.replace(applying(e.action, to: c, at: e.at))
+            }
+            save.appliedCareEventIds.append(e.id)
+        }
+        let overflow = save.appliedCareEventIds.count - appliedCareIdLimit
+        if overflow > 0 { save.appliedCareEventIds.removeFirst(overflow) }
+    }
+
+    /// v1 `active.json` (written before the event log): the widget edited stats in place.
+    /// Take them if newer, once, on the first launch after the update.
+    private static func mergeLegacyStats(_ snapshot: ActiveSnapshot, into save: inout SaveData) {
         guard let w = snapshot.creature,
               let i = save.creatures.firstIndex(where: { $0.id == w.id }),
               w.lastUpdated > save.creatures[i].lastUpdated else { return }
@@ -182,7 +268,8 @@ struct CreatureStore: Sendable {
         }
     }
 
-    /// Widget intents: applies a care action to the snapshot creature, touching `active.json` only.
+    /// Widget intents: appends a care event to `active.json` (never touches `collection.json`)
+    /// and updates the snapshot creature for display. Append-only under one coordinated write.
     @discardableResult
     func applyToActive(_ action: CareAction, at now: Date = .now) -> ActiveSnapshot? {
         var out: ActiveSnapshot?
@@ -190,6 +277,12 @@ struct CreatureStore: Sendable {
             guard let data = try? Data(contentsOf: url),
                   var snap = try? Self.decoder.decode(ActiveSnapshot.self, from: data),
                   let c = snap.creature else { return }
+            // A v1 file keeps its version: the app then takes `creature`'s stats (which include
+            // this tap) instead of replaying events, so nothing is applied twice.
+            snap.pendingCare.append(CareEvent(creatureId: c.id, action: action, at: now))
+            if snap.pendingCare.count > Self.pendingCareLimit {
+                snap.pendingCare.removeFirst(snap.pendingCare.count - Self.pendingCareLimit)
+            }
             snap.creature = Self.applying(action, to: c, at: now)
             write(snap, to: url)
             out = snap

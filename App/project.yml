@@ -142,6 +142,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.orizolabs.mixlings.tests
         GENERATE_INFOPLIST_FILE: YES
+        # Same art flag as the host app, so `#if MIXLINGS_ART_V2` tests run.
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) MIXLINGS_ART_V2"
 
 schemes:
   Mixlings:

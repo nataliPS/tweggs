@@ -1,4 +1,5 @@
 import XCTest
+import MixlingsArt
 @testable import Mixlings
 
 /// Expected values hand-derived from the catalog dominance table (Catalog.swift):
@@ -52,4 +53,23 @@ final class PhenotypeMappingTests: XCTestCase {
         // Building the MixlingsArt value must not trap.
         _ = PhenotypeMapper.phenotype(t)
     }
+
+    #if MIXLINGS_ART_V2
+    /// A3: eggs are drawn by MixlingsArt at stage 0 from the egg's own palette / pattern.
+    func testEggUsesArtStageZero() {
+        let c = Creature(id: "egg", name: "E", genome: Array(repeating: [2, 2], count: 8),
+                         origin: .bred, paletteShift: 1, bornAt: .now)
+        let p = PhenotypeMapper.phenotype(for: c, stage: .egg)
+        XCTAssertEqual(p.stage, 0)
+        XCTAssertEqual(p.palette, PhenotypeMapper.traits(for: c).palette)
+        XCTAssertEqual(p.pattern, PhenotypeMapper.traits(for: c).pattern)
+        XCTAssertEqual(p.shift, 1)
+    }
+
+    func testMoodMapsToArtLayer() {
+        XCTAssertEqual(PhenotypeMapper.artMood(.happy), 0)
+        XCTAssertEqual(PhenotypeMapper.artMood(.okay), 1)
+        XCTAssertEqual(PhenotypeMapper.artMood(.sleepy), 2)
+    }
+    #endif
 }

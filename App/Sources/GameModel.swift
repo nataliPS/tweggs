@@ -101,6 +101,8 @@ final class GameModel {
                 save.replace(adult)
             }
             save.activeCreatureId = baby.id
+            // G4: the gift baby is due one day after onboarding, fixed now (hatch-rush can't move it).
+            if save.giftBabyDueAt == nil { save.giftBabyDueAt = now.addingTimeInterval(CareEngine.day) }
         }
     }
 
@@ -110,15 +112,20 @@ final class GameModel {
             ?? save.creatures.first(where: { $0.origin == .hatched })
     }
 
-    /// G4: on day 2 (one day after the first hatch) a second starter baby arrives, so the player
-    /// soon has two teens of their own. Idempotent: the slot-2 id is deterministic.
-    /// Returns the new baby once; nil if not due yet or already given.
+    /// G4: on day 2 (one day after onboarding, `SaveData.giftBabyDueAt`) a second starter baby
+    /// arrives, so the player soon has two teens of their own. Anchored to onboarding, not to the
+    /// first creature's hatch time, so a hatch-rush can't pull the gift forward.
+    /// Idempotent: the slot-2 id is deterministic. Returns the new baby once; nil if not due yet
+    /// or already given.
     @discardableResult
     func grantDayTwoGiftIfDue(now: Date = .now) -> Creature? {
-        guard save.onboardingComplete, let first = firstHatched,
-              now >= CareEngine.hatchDate(first).addingTimeInterval(CareEngine.day) else { return nil }
         let id = CreatureFactory.starterId(playerId: save.playerId, slot: CreatureFactory.Slot.dayTwoBaby)
-        guard save.creature(id: id) == nil else { return nil }
+        guard save.onboardingComplete, save.creature(id: id) == nil else { return nil }
+        if save.giftBabyDueAt == nil {
+            // Onboarded save with nothing to infer from: start the day now (never early).
+            commit { $0.giftBabyDueAt = $0.giftBabyDueAt ?? now.addingTimeInterval(CareEngine.day) }
+        }
+        guard save.isGiftBabyDue(now: now) else { return nil }
         var gift: Creature?
         commit { save in
             guard let egg = CreatureFactory.starter(save: &save, slot: CreatureFactory.Slot.dayTwoBaby, name: "Bo",
@@ -191,6 +198,15 @@ final class GameModel {
         var result: Result<Void, EconomyEngine.SinkError> = .failure(.notFound)
         commit { result = EconomyEngine.buy(item, save: &$0) }
         return result
+    }
+
+    // MARK: Breeding (G7)
+
+    /// A breed confirmed for this player: the child joins (slot or sanctuary) and the pity
+    /// counter moves. TODO(server): call from the server-confirmed breed result handler (the
+    /// friend-link flow); local previews never call this, so they can't farm the hint.
+    func completeBreed(child: Creature, now: Date = .now) {
+        commit { EconomyEngine.completeBreed(&$0, child: child, now: now) }
     }
 
     // MARK: Club (C7)
@@ -283,8 +299,12 @@ final class GameModel {
 
     private func commit(_ change: (inout SaveData) -> Void) {
         save = store.update { save in
+            let now = Date.now
+            let missingBefore = EconomyEngine.missingCount(save, now: now)
             change(&save)
-            CollectingEngine.awardSeasonBadges(&save, now: .now)
+            // G7: any new season entry (not only from a breed) restarts the pity counter.
+            EconomyEngine.resetPityIfNewEntry(&save, missingBefore: missingBefore, now: now)
+            CollectingEngine.awardSeasonBadges(&save, now: now)
         }
         WidgetCenter.shared.reloadAllTimelines()
     }
