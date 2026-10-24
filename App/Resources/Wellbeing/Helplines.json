@@ -1,5 +1,5 @@
 {
-  "_todo": "TODO: verify numbers before release (Щит). Every number, name and website must be re-checked against the official source before each release. Empty number = not verified yet: show name + fallback link only. Never guess a number.",
+  "_todo": "Verified by Щит on 2026-10-24 (see per-line sourceUrl/verifiedAt). Re-check every number, name and website against the official source before each release. Empty number = not verified: show name + fallback link only. Never guess a number.",
   "version": 1,
   "verified": false,
   "fallback": {
@@ -15,15 +15,19 @@
           "id": "ua.lifeline",
           "name": "Lifeline Ukraine",
           "number": "7333",
-          "website": null,
-          "kind": "crisis"
+          "website": "https://lifelineukraine.com",
+          "kind": "crisis",
+          "sourceUrl": "https://www.lifelineukraine.com/en/about",
+          "verifiedAt": "2026-10-24"
         },
         {
           "id": "ua.children",
-          "name": "National children's hotline (La Strada-Ukraine)",
-          "number": "",
-          "website": null,
-          "kind": "youth"
+          "name": "National children's and youth hotline (La Strada-Ukraine)",
+          "number": "116111",
+          "website": "https://la-strada.org.ua",
+          "kind": "youth",
+          "sourceUrl": "https://la-strada.org.ua/en/faq/faq.html",
+          "verifiedAt": "2026-10-24"
         }
       ]
     },
@@ -35,15 +39,19 @@
           "id": "ee.children",
           "name": "Lasteabi (child helpline)",
           "number": "116111",
-          "website": null,
-          "kind": "youth"
+          "website": "https://www.lasteabi.ee",
+          "kind": "youth",
+          "sourceUrl": "https://www.sotsiaalkindlustusamet.ee/en/child-and-adult-need-help/child-protection-and-family-support/child-helpline-116111",
+          "verifiedAt": "2026-10-24"
         },
         {
           "id": "ee.support",
-          "name": "Emotional support line",
-          "number": "",
+          "name": "Emotional support helpline (Victim Support)",
+          "number": "116123",
           "website": null,
-          "kind": "crisis"
+          "kind": "crisis",
+          "sourceUrl": "https://sotsiaalkindlustusamet.ee/en/child-and-adult-need-help/mental-health-crisis/emotional-support-helpline-116-123",
+          "verifiedAt": "2026-10-24"
         }
       ]
     },
@@ -53,17 +61,21 @@
       "lines": [
         {
           "id": "lv.children",
-          "name": "Child and youth helpline",
+          "name": "Uzticības tālrunis (child and adolescent helpline)",
           "number": "116111",
-          "website": null,
-          "kind": "youth"
+          "website": "https://uzticibastalrunis.lv",
+          "kind": "youth",
+          "sourceUrl": "https://childhelplineinternational.org/latvia-uzticibas-talrunis-child-and-adolescent-helpline-116-111/",
+          "verifiedAt": "2026-10-24"
         },
         {
           "id": "lv.support",
-          "name": "Skalbes (emotional support)",
+          "name": "Skalbes (crisis line)",
           "number": "116123",
           "website": null,
-          "kind": "crisis"
+          "kind": "crisis",
+          "sourceUrl": "https://www.lsm.lv/raksts/zinas/latvija/27.01.2026-krizes-talruni-tomer-nenodos-psihiskas-veselibas-centra-parvaldiba.a631776/",
+          "verifiedAt": "2026-10-24"
         }
       ]
     },
@@ -75,15 +87,19 @@
           "id": "lt.children",
           "name": "Vaikų linija (child helpline)",
           "number": "116111",
-          "website": null,
-          "kind": "youth"
+          "website": "https://www.vaikulinija.lt",
+          "kind": "youth",
+          "sourceUrl": "https://childhelplineinternational.org/lithuania-vaiku-linija/",
+          "verifiedAt": "2026-10-24"
         },
         {
           "id": "lt.support",
           "name": "Vilties linija (emotional support)",
           "number": "116123",
-          "website": null,
-          "kind": "crisis"
+          "website": "https://www.viltieslinija.lt",
+          "kind": "crisis",
+          "sourceUrl": "https://help.unhcr.org/lithuania/where-to-find-help-in-lithuania/helpline-services/",
+          "verifiedAt": "2026-10-24"
         }
       ]
     },
@@ -95,15 +111,19 @@
           "id": "pl.children",
           "name": "Telefon Zaufania dla Dzieci i Młodzieży",
           "number": "116111",
-          "website": null,
-          "kind": "youth"
+          "website": "https://116111.pl",
+          "kind": "youth",
+          "sourceUrl": "https://findahelpline.com/organizations/telefon-zaufania-dla-dzieci-i-mlodziezy",
+          "verifiedAt": "2026-10-24"
         },
         {
           "id": "pl.support",
           "name": "Kryzysowy Telefon Zaufania",
           "number": "116123",
           "website": null,
-          "kind": "crisis"
+          "kind": "crisis",
+          "sourceUrl": "https://warszawa19115.pl/en/-/telefony-zaufania-przydatne-infolinie",
+          "verifiedAt": "2026-10-24"
         }
       ]
     },
@@ -113,17 +133,21 @@
       "lines": [
         {
           "id": "de.children",
-          "name": "Nummer gegen Kummer",
+          "name": "Nummer gegen Kummer (Kinder- und Jugendtelefon)",
           "number": "116111",
-          "website": null,
-          "kind": "youth"
+          "website": "https://www.nummergegenkummer.de",
+          "kind": "youth",
+          "sourceUrl": "https://childhelplineinternational.org/germany-kinder-und-jugendtelefon/",
+          "verifiedAt": "2026-10-24"
         },
         {
           "id": "de.support",
           "name": "TelefonSeelsorge",
           "number": "08001110111",
-          "website": null,
-          "kind": "crisis"
+          "website": "https://www.telefonseelsorge.de",
+          "kind": "crisis",
+          "sourceUrl": "https://findahelpline.com/organizations/telefonseelsorge",
+          "verifiedAt": "2026-10-24"
         }
       ]
     },
@@ -136,14 +160,18 @@
           "name": "Samaritans",
           "number": "116123",
           "website": "https://www.samaritans.org",
-          "kind": "crisis"
+          "kind": "crisis",
+          "sourceUrl": "https://www.samaritans.org/how-we-can-help/contact-samaritan/talk-us-phone/",
+          "verifiedAt": "2026-10-24"
         },
         {
           "id": "gb.childline",
           "name": "Childline",
           "number": "08001111",
           "website": "https://www.childline.org.uk",
-          "kind": "youth"
+          "kind": "youth",
+          "sourceUrl": "https://www.childline.org.uk/get-support/contacting-childline/update-from-childline/",
+          "verifiedAt": "2026-10-24"
         }
       ]
     },
@@ -156,7 +184,9 @@
           "name": "988 Suicide & Crisis Lifeline",
           "number": "988",
           "website": "https://988lifeline.org",
-          "kind": "crisis"
+          "kind": "crisis",
+          "sourceUrl": "https://988lifeline.org/get-help/",
+          "verifiedAt": "2026-10-24"
         }
       ]
     },
@@ -169,14 +199,18 @@
           "name": "988 Suicide Crisis Helpline",
           "number": "988",
           "website": null,
-          "kind": "crisis"
+          "kind": "crisis",
+          "sourceUrl": "https://pe.211.ca/result/988-suicide-crisis-helpline--87590905",
+          "verifiedAt": "2026-10-24"
         },
         {
           "id": "ca.kids",
           "name": "Kids Help Phone",
           "number": "18006686868",
           "website": "https://kidshelpphone.ca",
-          "kind": "youth"
+          "kind": "youth",
+          "sourceUrl": "https://kidshelpphone.ca/text-faq/",
+          "verifiedAt": "2026-10-24"
         }
       ]
     },
@@ -189,14 +223,18 @@
           "name": "Lifeline",
           "number": "131114",
           "website": "https://www.lifeline.org.au",
-          "kind": "crisis"
+          "kind": "crisis",
+          "sourceUrl": "https://www.lifeline.org.au/131114/",
+          "verifiedAt": "2026-10-24"
         },
         {
           "id": "au.kids",
           "name": "Kids Helpline",
           "number": "1800551800",
           "website": "https://kidshelpline.com.au",
-          "kind": "youth"
+          "kind": "youth",
+          "sourceUrl": "https://kidshelpline.com.au/sites/default/files/document/KHL%20official%20powerpoint-young%20people-2021-CC-V2.pdf",
+          "verifiedAt": "2026-10-24"
         }
       ]
     }
