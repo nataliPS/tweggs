@@ -8,6 +8,8 @@ import { fileURLToPath } from "node:url";
 import {
   CATALOG, GENE_COUNT, GENE_KEYS, breed, express, rarity, starter, fnv1a32, hex8, mulberry32,
   SEASON_1, comboKey, dailySurprise,
+  HATCH_RUSH_COST, HATCH_RUSH_DAILY_MAX, GENE_HINT_COST, SHOP_PRICE_MIN, SHOP_PRICE_MAX,
+  PITY_THRESHOLD, GEN_BADGES, FREE_SLOTS, CLUB_SLOTS, pairingCanProduce, carrierHint, genBadges,
   type Genome, type Mutation, type BreedInput,
 } from "../src/index.ts";
 
@@ -119,6 +121,22 @@ const collecting = {
   seasons: [SEASON_1],
 };
 
+// Economy (spec §9). Fixed inputs derived from the starter cases; no `gen` draws.
+const econGenomes: Genome[] = starters.slice(0, 8).map((c: any) => c.expected.genome);
+const economy = {
+  constants: {
+    HATCH_RUSH_COST, HATCH_RUSH_DAILY_MAX, GENE_HINT_COST, SHOP_PRICE_MIN, SHOP_PRICE_MAX,
+    PITY_THRESHOLD, GEN_BADGES, FREE_SLOTS, CLUB_SLOTS,
+  },
+  pairings: SEASON_1.entries.flatMap((e) =>
+    [[0, 1], [2, 3], [4, 5], [6, 7]].map(([a, b]) => ({
+      a, b, gene: e.gene, variant: e.variant,
+      canProduce: pairingCanProduce(econGenomes[a], econGenomes[b], e.gene, e.variant),
+    }))),
+  carriers: SEASON_1.entries.map((entry) => ({ entry, indices: carrierHint(econGenomes, entry) })),
+  badges: [0, 1, 4, 5, 6, 9, 10, 11, 42].map((generation) => ({ generation, badges: genBadges(generation) })),
+};
+
 const vectors = {
   specVersion: "0.1",
   generator: "engine-ts/scripts/make-golden.ts",
@@ -128,6 +146,8 @@ const vectors = {
   breeding,
   starters,
   collecting,
+  economyGenomes: econGenomes,
+  economy,
 };
 
 mkdirSync(dirname(outPath), { recursive: true });

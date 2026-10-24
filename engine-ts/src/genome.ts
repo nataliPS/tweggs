@@ -116,9 +116,10 @@ export function express(genome: Genome): number[] {
 }
 
 export function tierForScore(score: number): RarityTier {
-  if (score <= 2) return "common";
-  if (score <= 5) return "uncommon";
-  if (score <= 8) return "rare";
+  // G1 (retro 2026-10-24): common <=1, uncommon 2..3, rare 4..6, legendary >=7.
+  if (score <= 1) return "common";
+  if (score <= 3) return "uncommon";
+  if (score <= 6) return "rare";
   return "legendary";
 }
 
@@ -146,7 +147,7 @@ export function sortMutations(list: readonly Mutation[]): Mutation[] {
     .sort((x, y) => (x.gene !== y.gene ? x.gene - y.gene : x.variant - y.variant));
 }
 
-export const MUTATION_CHANCE = 0.15;
+export const MUTATION_CHANCE = 0.10;
 
 export function breed(input: BreedInput): BreedResult {
   let pa = input.parentA;

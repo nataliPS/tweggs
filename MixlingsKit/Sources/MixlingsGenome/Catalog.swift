@@ -42,8 +42,8 @@ public enum Catalog {
             VariantDef(name: "happy", dominance: 5, rarity: 0, mutationOnly: false),
             VariantDef(name: "sparkle", dominance: 3, rarity: 1, mutationOnly: false),
             VariantDef(name: "oval", dominance: 4, rarity: 0, mutationOnly: false),
-            VariantDef(name: "star", dominance: 2, rarity: 2, mutationOnly: false),
-            VariantDef(name: "cyclops", dominance: 8, rarity: 3, mutationOnly: true),
+            VariantDef(name: "star", dominance: 3, rarity: 2, mutationOnly: false),
+            VariantDef(name: "cyclops", dominance: 7, rarity: 3, mutationOnly: true),
         ]),
         GeneDef(key: "head", variants: [
             VariantDef(name: "none", dominance: 3, rarity: 0, mutationOnly: false),
@@ -53,7 +53,7 @@ public enum Catalog {
             VariantDef(name: "antenna", dominance: 4, rarity: 0, mutationOnly: false),
             VariantDef(name: "leaf", dominance: 3, rarity: 1, mutationOnly: false),
             VariantDef(name: "crest", dominance: 2, rarity: 2, mutationOnly: false),
-            VariantDef(name: "halo", dominance: 8, rarity: 3, mutationOnly: true),
+            VariantDef(name: "halo", dominance: 7, rarity: 3, mutationOnly: true),
         ]),
         GeneDef(key: "pattern", variants: [
             VariantDef(name: "plain", dominance: 4, rarity: 0, mutationOnly: false),
@@ -68,8 +68,8 @@ public enum Catalog {
             VariantDef(name: "puff", dominance: 4, rarity: 0, mutationOnly: false),
             VariantDef(name: "curly", dominance: 5, rarity: 0, mutationOnly: false),
             VariantDef(name: "long", dominance: 4, rarity: 1, mutationOnly: false),
-            VariantDef(name: "flame", dominance: 2, rarity: 2, mutationOnly: false),
-            VariantDef(name: "lightning", dominance: 8, rarity: 3, mutationOnly: true),
+            VariantDef(name: "flame", dominance: 3, rarity: 2, mutationOnly: false),
+            VariantDef(name: "lightning", dominance: 7, rarity: 3, mutationOnly: true),
         ]),
         GeneDef(key: "palette", variants: [
             VariantDef(name: "mint", dominance: 5, rarity: 0, mutationOnly: false),
@@ -84,10 +84,10 @@ public enum Catalog {
             VariantDef(name: "stone", dominance: 6, rarity: 1, mutationOnly: false),
             VariantDef(name: "rose", dominance: 4, rarity: 1, mutationOnly: false),
             VariantDef(name: "cobalt", dominance: 3, rarity: 1, mutationOnly: false),
-            VariantDef(name: "night", dominance: 2, rarity: 2, mutationOnly: false),
+            VariantDef(name: "night", dominance: 4, rarity: 2, mutationOnly: false),
             VariantDef(name: "tangerine", dominance: 2, rarity: 2, mutationOnly: false),
             VariantDef(name: "seafoam", dominance: 4, rarity: 1, mutationOnly: false),
-            VariantDef(name: "ghost", dominance: 9, rarity: 3, mutationOnly: true),
+            VariantDef(name: "ghost", dominance: 7, rarity: 3, mutationOnly: true),
         ]),
         GeneDef(key: "aura", variants: [
             VariantDef(name: "none", dominance: 4, rarity: 0, mutationOnly: false),
@@ -105,7 +105,7 @@ public enum Catalog {
             VariantDef(name: "sneaky", dominance: 3, rarity: 1, mutationOnly: false),
             VariantDef(name: "dreamy", dominance: 2, rarity: 1, mutationOnly: false),
             VariantDef(name: "noble", dominance: 2, rarity: 2, mutationOnly: false),
-            VariantDef(name: "chaotic", dominance: 8, rarity: 3, mutationOnly: true),
+            VariantDef(name: "chaotic", dominance: 7, rarity: 3, mutationOnly: true),
         ]),
     ]
 }

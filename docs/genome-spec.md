@@ -22,7 +22,7 @@ Each creature is diploid: every gene holds two alleles `[a, b]` (allele = intege
 | 7 | `temper`    | 10 | personality, no art |
 
 Variant names/indices match the approved art (`art/render.py`). Variant tables live in `engine-ts/src/catalog.ts` (`CATALOG`) and are mirrored in Swift. Each variant has:
-- `dominance`: integer 1..9 (higher wins)
+- `dominance`: integer 1..9 (higher wins). Retro 2026-10-24 (revised): season-1 late entries star / flame raised 2 → 3 and night 2 → 4; every `mutationOnly` variant has dominance 7 (always expresses over commons), while the mutation chance is lowered to 10% to keep legendaries scarce.
 - `rarity`: 0 common, 1 uncommon, 2 rare, 3 legendary
 - `mutationOnly`: boolean — never appears in starter creatures; only enters via mutation
 
@@ -57,7 +57,7 @@ Input: `parentA`, `parentB` (each `{id: string, genome: [[a,b] x 8]}`), `nonce` 
    - `fromA = parentA.genome[g][rng.int(2)]`
    - `fromB = parentB.genome[g][rng.int(2)]`
    - child gene = `[fromA, fromB]`
-4. Mutation: `roll = rng.float()` (always drawn, even with an empty list). If `unlockedMutations` is non-empty and `roll < 0.15`:
+4. Mutation: `roll = rng.float()` (always drawn, even with an empty list). If `unlockedMutations` is non-empty and `roll < 0.10`:
    - `m = unlockedMutations[rng.int(len)]`
    - replace allele index `rng.int(2)` of gene `m.gene` with `m.variant`.
    Otherwise no further rng calls.
@@ -67,7 +67,7 @@ Input: `parentA`, `parentB` (each `{id: string, genome: [[a,b] x 8]}`), `nonce` 
 ## 5. Rarity
 
 `score = sum over genes of rarity(expressed variant)`.
-Tier: `score <= 2` common, `<= 5` uncommon, `<= 8` rare, else legendary.
+Tier (retro 2026-10-24, G1): `score <= 1` common, `2..3` uncommon, `4..6` rare, `>= 7` legendary.
 
 ## 6. Starter creatures
 
@@ -92,3 +92,22 @@ Implemented in `engine-ts/src/collecting.ts` and mirrored in `MixlingsKit/Source
 - **generation** = `0` without parents, else `max(parent generations) + 1`.
 - **Season** = id, inclusive `startDay`/`endDay` (`yyyy-MM-dd`), 10–15 `(gene, variant)` entries. An entry is found when any owned creature *expresses* it. Season 1 `s1` "Перша весна": 12 entries, 5 common / 4 uncommon / 3 rare, no mutation-only variants.
 - **Daily surprise** (free, once per day, no purchase or re-roll path): `rng = mulberry32(fnv1a32("surprise|" + playerId + "|" + day))`; `roll = rng.int(100)`; `roll < 80` gives sparks `5 + rng.int(21)`, else cosmetic `SURPRISE_COSMETICS[rng.int(4)]`.
+
+## 9. Economy constants and pairing guidance
+
+Implemented in `engine-ts/src/economy.ts` and mirrored in `MixlingsKit/Sources/MixlingsGenome/Economy.swift`; covered by `economy` (+ `economyGenomes`) in the golden vectors. Sparks are earned only, never sold; no sink buys randomness.
+
+| Constant | Value | Meaning |
+|---|---|---|
+| `HATCH_RUSH_COST` | 30 | sparks to skip 1 day of growth (G6) |
+| `HATCH_RUSH_DAILY_MAX` | 1 | hatch-rushes per player per local day |
+| `GENE_HINT_COST` | 20 | sparks for a gene hint (G6) |
+| `SHOP_PRICE_MIN..MAX` | 100..300 | cosmetic shop item price range |
+| `PITY_THRESHOLD` | 15 | breeds without a new season entry before previews highlight carriers (G7) |
+| `GEN_BADGES` | [5, 10] | generation ladder badges (G8) |
+| `FREE_SLOTS` / `CLUB_SLOTS` | 8 / 30 | collection slots |
+
+- `pairingCanProduce(a, b, gene, variant)`: true iff some allele `x` of `a[gene]` and `y` of `b[gene]` give `expressGene(gene, [x, y]) == variant` (mutation ignored). Backs the gene hint.
+- `carrierHint(collection, entry)`: ascending indices of creatures with `entry.variant` in either allele of `entry.gene`. Backs the pity hint.
+- `pityHintActive(n)`: `n >= PITY_THRESHOLD`.
+- `genBadges(generation)`: thresholds in `GEN_BADGES` with `generation >= t`, ascending.

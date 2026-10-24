@@ -13,6 +13,7 @@ test("comboKey joins the 7 visible expressed genes and ignores temper", () => {
   assert.throws(() => comboKey([0, 1]));
   const g: Genome = [[0, 4], [7, 0], [2, 1], [5, 3], [0, 0], [12, 15], [2, 1], [8, 9]];
   assert.equal(comboKeyOfGenome(g), comboKey(express(g)));
+  // G3: drop(6) ties round(6) and cyclops(6) ties dots(6) -> lower index wins.
   assert.equal(comboKeyOfGenome(g), "4-7-1-3-0-15-1");
 });
 

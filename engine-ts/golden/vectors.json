@@ -86,13 +86,13 @@
         },
         {
           "name": "star",
-          "dominance": 2,
+          "dominance": 3,
           "rarity": 2,
           "mutationOnly": false
         },
         {
           "name": "cyclops",
-          "dominance": 8,
+          "dominance": 7,
           "rarity": 3,
           "mutationOnly": true
         }
@@ -146,7 +146,7 @@
         },
         {
           "name": "halo",
-          "dominance": 8,
+          "dominance": 7,
           "rarity": 3,
           "mutationOnly": true
         }
@@ -224,13 +224,13 @@
         },
         {
           "name": "flame",
-          "dominance": 2,
+          "dominance": 3,
           "rarity": 2,
           "mutationOnly": false
         },
         {
           "name": "lightning",
-          "dominance": 8,
+          "dominance": 7,
           "rarity": 3,
           "mutationOnly": true
         }
@@ -314,7 +314,7 @@
         },
         {
           "name": "night",
-          "dominance": 2,
+          "dominance": 4,
           "rarity": 2,
           "mutationOnly": false
         },
@@ -332,7 +332,7 @@
         },
         {
           "name": "ghost",
-          "dominance": 9,
+          "dominance": 7,
           "rarity": 3,
           "mutationOnly": true
         }
@@ -428,7 +428,7 @@
         },
         {
           "name": "chaotic",
-          "dominance": 8,
+          "dominance": 7,
           "rarity": 3,
           "mutationOnly": true
         }
@@ -865,13 +865,13 @@
           0,
           0,
           1,
-          7,
+          12,
           3,
           6
         ],
         "rarity": {
-          "score": 4,
-          "tier": "uncommon"
+          "score": 6,
+          "tier": "rare"
         },
         "mutation": {
           "gene": 6,
@@ -1015,7 +1015,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -1300,7 +1300,7 @@
         ],
         "rarity": {
           "score": 4,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -1388,7 +1388,7 @@
           ],
           "owner": "player_1737"
         },
-        "nonce": "nonce-495586#12",
+        "nonce": "nonce-495586#14",
         "unlockedMutations": [
           {
             "gene": 4,
@@ -1405,8 +1405,8 @@
         ]
       },
       "expected": {
-        "id": "c_823708fd",
-        "seedHex": "9b3da91c",
+        "id": "c_8428c67c",
+        "seedHex": "993da5f6",
         "genome": [
           [
             3,
@@ -1414,19 +1414,19 @@
           ],
           [
             1,
-            7
+            1
           ],
           [
-            2,
+            3,
             2
           ],
           [
-            2,
+            1,
             3
           ],
           [
             1,
-            0
+            1
           ],
           [
             12,
@@ -1434,31 +1434,31 @@
           ],
           [
             2,
-            3
+            2
           ],
           [
-            3,
-            5
+            9,
+            1
           ]
         ],
         "expressed": [
           2,
-          7,
-          2,
-          2,
+          1,
+          3,
+          1,
           1,
           9,
-          3,
-          3
+          2,
+          9
         ],
         "rarity": {
-          "score": 8,
-          "tier": "rare"
+          "score": 7,
+          "tier": "legendary"
         },
         "mutation": {
-          "gene": 6,
-          "variant": 3,
-          "allele": 1
+          "gene": 7,
+          "variant": 9,
+          "allele": 0
         },
         "paletteShift": {
           "player_1737": 0,
@@ -1597,7 +1597,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -1881,7 +1881,7 @@
         ],
         "rarity": {
           "score": 5,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -2034,7 +2034,7 @@
         ],
         "rarity": {
           "score": 5,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": {
           "gene": 6,
@@ -2178,7 +2178,7 @@
         ],
         "rarity": {
           "score": 7,
-          "tier": "rare"
+          "tier": "legendary"
         },
         "mutation": null,
         "paletteShift": {
@@ -2335,7 +2335,7 @@
         ],
         "rarity": {
           "score": 4,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -2563,7 +2563,7 @@
           ],
           "owner": "player_1200"
         },
-        "nonce": "6db738234a4a762b#6",
+        "nonce": "6db738234a4a762b#9",
         "unlockedMutations": [
           {
             "gene": 0,
@@ -2580,19 +2580,19 @@
         ]
       },
       "expected": {
-        "id": "c_c0c9341c",
-        "seedHex": "8d7d464b",
+        "id": "c_bcdbef27",
+        "seedHex": "8a7d4192",
         "genome": [
           [
-            4,
-            2
+            1,
+            1
           ],
           [
             3,
-            5
+            2
           ],
           [
-            1,
+            7,
             2
           ],
           [
@@ -2601,11 +2601,11 @@
           ],
           [
             4,
-            1
+            2
           ],
           [
-            11,
-            14
+            14,
+            10
           ],
           [
             1,
@@ -2617,22 +2617,22 @@
           ]
         ],
         "expressed": [
-          4,
+          1,
           3,
-          1,
+          7,
           2,
-          1,
-          14,
+          2,
+          10,
           1,
           5
         ],
         "rarity": {
           "score": 7,
-          "tier": "rare"
+          "tier": "legendary"
         },
         "mutation": {
-          "gene": 0,
-          "variant": 4,
+          "gene": 2,
+          "variant": 7,
           "allele": 0
         },
         "paletteShift": {
@@ -2921,7 +2921,7 @@
         ],
         "rarity": {
           "score": 8,
-          "tier": "rare"
+          "tier": "legendary"
         },
         "mutation": {
           "gene": 4,
@@ -3065,7 +3065,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -3210,7 +3210,7 @@
         ],
         "rarity": {
           "score": 5,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": {
           "gene": 2,
@@ -3642,7 +3642,7 @@
         ],
         "rarity": {
           "score": 7,
-          "tier": "rare"
+          "tier": "legendary"
         },
         "mutation": null,
         "paletteShift": {
@@ -3730,7 +3730,7 @@
           ],
           "owner": "player_1227"
         },
-        "nonce": "nonce-784280#7",
+        "nonce": "nonce-784280#9",
         "unlockedMutations": [
           {
             "gene": 2,
@@ -3747,11 +3747,11 @@
         ]
       },
       "expected": {
-        "id": "c_1478d7ed",
-        "seedHex": "89d1842d",
+        "id": "c_f645ef5b",
+        "seedHex": "7bd16e23",
         "genome": [
           [
-            3,
+            5,
             3
           ],
           [
@@ -3760,47 +3760,47 @@
           ],
           [
             1,
-            2
+            4
           ],
           [
-            5,
-            5
+            1,
+            3
           ],
           [
             0,
             4
           ],
           [
-            15,
-            13
+            10,
+            15
           ],
           [
-            2,
+            0,
             3
           ],
           [
-            1,
+            2,
             0
           ]
         ],
         "expressed": [
-          3,
+          5,
           7,
           1,
-          5,
+          1,
           0,
           15,
           3,
-          1
+          0
         ],
         "rarity": {
-          "score": 12,
+          "score": 10,
           "tier": "legendary"
         },
         "mutation": {
           "gene": 5,
           "variant": 15,
-          "allele": 0
+          "allele": 1
         },
         "paletteShift": {
           "player_338": 0,
@@ -3939,7 +3939,7 @@
         ],
         "rarity": {
           "score": 4,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -4381,7 +4381,7 @@
         ],
         "rarity": {
           "score": 7,
-          "tier": "rare"
+          "tier": "legendary"
         },
         "mutation": {
           "gene": 3,
@@ -4525,7 +4525,7 @@
         ],
         "rarity": {
           "score": 5,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -4670,7 +4670,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -4809,7 +4809,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -4954,7 +4954,7 @@
         ],
         "rarity": {
           "score": 4,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": {
           "gene": 7,
@@ -5098,7 +5098,7 @@
         ],
         "rarity": {
           "score": 7,
-          "tier": "rare"
+          "tier": "legendary"
         },
         "mutation": null,
         "paletteShift": {
@@ -5247,7 +5247,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -5387,7 +5387,7 @@
         ],
         "rarity": {
           "score": 4,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -5475,7 +5475,7 @@
           ],
           "owner": "player_1373"
         },
-        "nonce": "n#1",
+        "nonce": "n#3",
         "unlockedMutations": [
           {
             "gene": 5,
@@ -5488,8 +5488,8 @@
         ]
       },
       "expected": {
-        "id": "c_4b4d2a67",
-        "seedHex": "2111683f",
+        "id": "c_21000cfb",
+        "seedHex": "23116b65",
         "genome": [
           [
             1,
@@ -5500,47 +5500,47 @@
             3
           ],
           [
-            3,
-            6
+            4,
+            3
           ],
           [
             0,
-            2
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            11,
-            13
+            3
           ],
           [
             1,
+            2
+          ],
+          [
+            15,
+            13
+          ],
+          [
+            0,
             0
           ],
           [
-            9,
-            5
+            4,
+            8
           ]
         ],
         "expressed": [
           1,
           3,
           3,
-          2,
-          2,
-          11,
           0,
-          9
+          2,
+          15,
+          0,
+          4
         ],
         "rarity": {
-          "score": 6,
+          "score": 4,
           "tier": "rare"
         },
         "mutation": {
-          "gene": 7,
-          "variant": 9,
+          "gene": 5,
+          "variant": 15,
           "allele": 0
         },
         "paletteShift": {
@@ -5680,7 +5680,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -6053,7 +6053,7 @@
           ],
           "owner": "player_997"
         },
-        "nonce": "nonce-189292#0",
+        "nonce": "nonce-189292#7",
         "unlockedMutations": [
           {
             "gene": 1,
@@ -6070,23 +6070,23 @@
         ]
       },
       "expected": {
-        "id": "c_fe531e39",
-        "seedHex": "3954790a",
+        "id": "c_0d0e8421",
+        "seedHex": "3454712b",
         "genome": [
           [
             1,
             3
           ],
           [
-            3,
-            3
+            0,
+            5
           ],
           [
-            1,
+            5,
             6
           ],
           [
-            3,
+            1,
             4
           ],
           [
@@ -6098,7 +6098,7 @@
             6
           ],
           [
-            1,
+            2,
             2
           ],
           [
@@ -6108,17 +6108,17 @@
         ],
         "expressed": [
           1,
-          3,
-          1,
+          0,
+          5,
           4,
           1,
           3,
-          1,
+          2,
           0
         ],
         "rarity": {
-          "score": 4,
-          "tier": "uncommon"
+          "score": 6,
+          "tier": "rare"
         },
         "mutation": {
           "gene": 3,
@@ -6261,7 +6261,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -6550,7 +6550,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -6699,7 +6699,7 @@
         ],
         "rarity": {
           "score": 5,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": {
           "gene": 4,
@@ -6996,7 +6996,7 @@
         ],
         "rarity": {
           "score": 5,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -7136,7 +7136,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -7289,7 +7289,7 @@
         ],
         "rarity": {
           "score": 7,
-          "tier": "rare"
+          "tier": "legendary"
         },
         "mutation": {
           "gene": 1,
@@ -7433,7 +7433,7 @@
         ],
         "rarity": {
           "score": 4,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": null,
         "paletteShift": {
@@ -7725,7 +7725,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         },
         "mutation": null,
         "paletteShift": {
@@ -7874,7 +7874,7 @@
         ],
         "rarity": {
           "score": 4,
-          "tier": "uncommon"
+          "tier": "rare"
         },
         "mutation": {
           "gene": 6,
@@ -7942,7 +7942,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         }
       }
     },
@@ -7999,7 +7999,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         }
       }
     },
@@ -8056,7 +8056,7 @@
         ],
         "rarity": {
           "score": 4,
-          "tier": "uncommon"
+          "tier": "rare"
         }
       }
     },
@@ -8170,7 +8170,7 @@
         ],
         "rarity": {
           "score": 5,
-          "tier": "uncommon"
+          "tier": "rare"
         }
       }
     },
@@ -8449,13 +8449,13 @@
           1,
           1,
           2,
-          14,
+          12,
           1,
           1
         ],
         "rarity": {
-          "score": 2,
-          "tier": "common"
+          "score": 3,
+          "tier": "uncommon"
         }
       }
     },
@@ -8506,13 +8506,13 @@
           3,
           0,
           1,
-          7,
+          12,
           2,
           1
         ],
         "rarity": {
-          "score": 4,
-          "tier": "uncommon"
+          "score": 6,
+          "tier": "rare"
         }
       }
     },
@@ -8569,7 +8569,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         }
       }
     },
@@ -8626,7 +8626,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         }
       }
     },
@@ -8683,7 +8683,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         }
       }
     },
@@ -8911,7 +8911,7 @@
         ],
         "rarity": {
           "score": 2,
-          "tier": "common"
+          "tier": "uncommon"
         }
       }
     },
@@ -9052,11 +9052,11 @@
           0,
           0,
           1,
-          7,
+          12,
           3,
           6
         ],
-        "key": "2-1-0-0-1-7-3"
+        "key": "2-1-0-0-1-12-3"
       },
       {
         "expressed": [
@@ -9100,15 +9100,15 @@
       {
         "expressed": [
           2,
-          7,
-          2,
-          2,
+          1,
+          3,
+          1,
           1,
           9,
-          3,
-          3
+          2,
+          9
         ],
-        "key": "2-7-2-2-1-9-3"
+        "key": "2-1-3-1-1-9-2"
       },
       {
         "expressed": [
@@ -9444,6 +9444,818 @@
             "gene": 5,
             "variant": 12
           }
+        ]
+      }
+    ]
+  },
+  "economyGenomes": [
+    [
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        14,
+        7
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    [
+      [
+        3,
+        2
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        8,
+        1
+      ]
+    ],
+    [
+      [
+        0,
+        5
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        5,
+        12
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        4,
+        0
+      ]
+    ],
+    [
+      [
+        5,
+        5
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        6,
+        5
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        13,
+        6
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        14,
+        13
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        1,
+        8
+      ]
+    ],
+    [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        6,
+        0
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        2
+      ]
+    ],
+    [
+      [
+        5,
+        0
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ]
+    ]
+  ],
+  "economy": {
+    "constants": {
+      "HATCH_RUSH_COST": 30,
+      "HATCH_RUSH_DAILY_MAX": 1,
+      "GENE_HINT_COST": 20,
+      "SHOP_PRICE_MIN": 100,
+      "SHOP_PRICE_MAX": 300,
+      "PITY_THRESHOLD": 15,
+      "GEN_BADGES": [
+        5,
+        10
+      ],
+      "FREE_SLOTS": 8,
+      "CLUB_SLOTS": 30
+    },
+    "pairings": [
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 2,
+        "variant": 1,
+        "canProduce": false
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 2,
+        "variant": 1,
+        "canProduce": true
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 2,
+        "variant": 1,
+        "canProduce": false
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 2,
+        "variant": 1,
+        "canProduce": false
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 3,
+        "variant": 1,
+        "canProduce": false
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 3,
+        "variant": 1,
+        "canProduce": true
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 3,
+        "variant": 1,
+        "canProduce": false
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 3,
+        "variant": 1,
+        "canProduce": true
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 5,
+        "variant": 0,
+        "canProduce": false
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 5,
+        "variant": 0,
+        "canProduce": false
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 5,
+        "variant": 0,
+        "canProduce": false
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 5,
+        "variant": 0,
+        "canProduce": true
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 4,
+        "variant": 1,
+        "canProduce": true
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 4,
+        "variant": 1,
+        "canProduce": true
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 4,
+        "variant": 1,
+        "canProduce": false
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 4,
+        "variant": 1,
+        "canProduce": true
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 1,
+        "variant": 3,
+        "canProduce": false
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 1,
+        "variant": 3,
+        "canProduce": true
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 1,
+        "variant": 3,
+        "canProduce": true
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 1,
+        "variant": 3,
+        "canProduce": false
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 2,
+        "variant": 5,
+        "canProduce": true
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 2,
+        "variant": 5,
+        "canProduce": false
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 2,
+        "variant": 5,
+        "canProduce": true
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 2,
+        "variant": 5,
+        "canProduce": false
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 3,
+        "variant": 2,
+        "canProduce": false
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 3,
+        "variant": 2,
+        "canProduce": true
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 3,
+        "variant": 2,
+        "canProduce": true
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 3,
+        "variant": 2,
+        "canProduce": false
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 2,
+        "variant": 3,
+        "canProduce": true
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 2,
+        "variant": 3,
+        "canProduce": true
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 2,
+        "variant": 3,
+        "canProduce": false
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 2,
+        "variant": 3,
+        "canProduce": false
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 6,
+        "variant": 1,
+        "canProduce": true
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 6,
+        "variant": 1,
+        "canProduce": false
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 6,
+        "variant": 1,
+        "canProduce": true
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 6,
+        "variant": 1,
+        "canProduce": false
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 4,
+        "variant": 4,
+        "canProduce": false
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 4,
+        "variant": 4,
+        "canProduce": true
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 4,
+        "variant": 4,
+        "canProduce": false
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 4,
+        "variant": 4,
+        "canProduce": false
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 1,
+        "variant": 6,
+        "canProduce": false
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 1,
+        "variant": 6,
+        "canProduce": false
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 1,
+        "variant": 6,
+        "canProduce": false
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 1,
+        "variant": 6,
+        "canProduce": false
+      },
+      {
+        "a": 0,
+        "b": 1,
+        "gene": 5,
+        "variant": 12,
+        "canProduce": false
+      },
+      {
+        "a": 2,
+        "b": 3,
+        "gene": 5,
+        "variant": 12,
+        "canProduce": true
+      },
+      {
+        "a": 4,
+        "b": 5,
+        "gene": 5,
+        "variant": 12,
+        "canProduce": false
+      },
+      {
+        "a": 6,
+        "b": 7,
+        "gene": 5,
+        "variant": 12,
+        "canProduce": false
+      }
+    ],
+    "carriers": [
+      {
+        "entry": {
+          "gene": 2,
+          "variant": 1
+        },
+        "indices": [
+          3
+        ]
+      },
+      {
+        "entry": {
+          "gene": 3,
+          "variant": 1
+        },
+        "indices": [
+          2,
+          6,
+          7
+        ]
+      },
+      {
+        "entry": {
+          "gene": 5,
+          "variant": 0
+        },
+        "indices": [
+          7
+        ]
+      },
+      {
+        "entry": {
+          "gene": 4,
+          "variant": 1
+        },
+        "indices": [
+          1,
+          3,
+          6,
+          7
+        ]
+      },
+      {
+        "entry": {
+          "gene": 1,
+          "variant": 3
+        },
+        "indices": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "entry": {
+          "gene": 2,
+          "variant": 5
+        },
+        "indices": [
+          1,
+          4,
+          5
+        ]
+      },
+      {
+        "entry": {
+          "gene": 3,
+          "variant": 2
+        },
+        "indices": [
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "entry": {
+          "gene": 2,
+          "variant": 3
+        },
+        "indices": [
+          0,
+          2
+        ]
+      },
+      {
+        "entry": {
+          "gene": 6,
+          "variant": 1
+        },
+        "indices": [
+          0,
+          1,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "entry": {
+          "gene": 4,
+          "variant": 4
+        },
+        "indices": [
+          1,
+          2,
+          3,
+          5,
+          7
+        ]
+      },
+      {
+        "entry": {
+          "gene": 1,
+          "variant": 6
+        },
+        "indices": [
+          2
+        ]
+      },
+      {
+        "entry": {
+          "gene": 5,
+          "variant": 12
+        },
+        "indices": [
+          3
+        ]
+      }
+    ],
+    "badges": [
+      {
+        "generation": 0,
+        "badges": []
+      },
+      {
+        "generation": 1,
+        "badges": []
+      },
+      {
+        "generation": 4,
+        "badges": []
+      },
+      {
+        "generation": 5,
+        "badges": [
+          5
+        ]
+      },
+      {
+        "generation": 6,
+        "badges": [
+          5
+        ]
+      },
+      {
+        "generation": 9,
+        "badges": [
+          5
+        ]
+      },
+      {
+        "generation": 10,
+        "badges": [
+          5,
+          10
+        ]
+      },
+      {
+        "generation": 11,
+        "badges": [
+          5,
+          10
+        ]
+      },
+      {
+        "generation": 42,
+        "badges": [
+          5,
+          10
         ]
       }
     ]

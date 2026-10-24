@@ -85,7 +85,7 @@ public struct GenomeError: Error, Equatable, CustomStringConvertible, Sendable {
 }
 
 public enum Genetics {
-    public static let mutationChance: Double = 0.15
+    public static let mutationChance: Double = 0.10
 
     // MARK: - Helpers
 
@@ -155,9 +155,10 @@ public enum Genetics {
     // MARK: - Rarity (§5)
 
     public static func tier(forScore score: Int) -> RarityTier {
-        if score <= 2 { return .common }
-        if score <= 5 { return .uncommon }
-        if score <= 8 { return .rare }
+        // G1 (retro 2026-10-24): common <=1, uncommon 2...3, rare 4...6, legendary >=7.
+        if score <= 1 { return .common }
+        if score <= 3 { return .uncommon }
+        if score <= 6 { return .rare }
         return .legendary
     }
 

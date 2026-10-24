@@ -50,8 +50,8 @@ export const CATALOG: readonly GeneDef[] = [
     ["happy", 5, C, false],
     ["sparkle", 3, U, false],
     ["oval", 4, C, false],
-    ["star", 2, R, false],
-    ["cyclops", 8, L, true],
+    ["star", 3, R, false],
+    ["cyclops", 7, L, true],
   ]),
   gene("head", [
     ["none", 3, C, false],
@@ -61,7 +61,7 @@ export const CATALOG: readonly GeneDef[] = [
     ["antenna", 4, C, false],
     ["leaf", 3, U, false],
     ["crest", 2, R, false],
-    ["halo", 8, L, true],
+    ["halo", 7, L, true],
   ]),
   gene("pattern", [
     ["plain", 4, C, false],
@@ -76,8 +76,8 @@ export const CATALOG: readonly GeneDef[] = [
     ["puff", 4, C, false],
     ["curly", 5, C, false],
     ["long", 4, U, false],
-    ["flame", 2, R, false],
-    ["lightning", 8, L, true],
+    ["flame", 3, R, false],
+    ["lightning", 7, L, true],
   ]),
   gene("palette", [
     ["mint", 5, C, false],
@@ -92,10 +92,10 @@ export const CATALOG: readonly GeneDef[] = [
     ["stone", 6, U, false],
     ["rose", 4, U, false],
     ["cobalt", 3, U, false],
-    ["night", 2, R, false],
+    ["night", 4, R, false],
     ["tangerine", 2, R, false],
     ["seafoam", 4, U, false],
-    ["ghost", 9, L, true],
+    ["ghost", 7, L, true],
   ]),
   gene("aura", [
     ["none", 4, C, false],
@@ -113,7 +113,7 @@ export const CATALOG: readonly GeneDef[] = [
     ["sneaky", 3, U, false],
     ["dreamy", 2, U, false],
     ["noble", 2, R, false],
-    ["chaotic", 8, L, true],
+    ["chaotic", 7, L, true],
   ]),
 ];
 

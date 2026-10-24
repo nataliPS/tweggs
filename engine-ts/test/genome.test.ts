@@ -52,14 +52,23 @@ test("expression: higher dominance wins, tie -> lower index, order independent",
   assert.throws(() => express(g1.map((p, i) => (i === 0 ? [0, 99] : p)) as Genome));
 });
 
+test("retro G2/G3 dominance values", () => {
+  const dom = (g: number, name: string) => CATALOG[g].variants.find((v) => v.name === name)!.dominance;
+  assert.equal(dom(5, "night"), 4);
+  assert.equal(dom(1, "star"), 3);
+  assert.equal(dom(4, "flame"), 3);
+  for (const gene of CATALOG) for (const v of gene.variants) if (v.mutationOnly) assert.equal(v.dominance, 7, `${gene.key}.${v.name}`);
+});
+
 test("rarity tiers boundaries", () => {
+  // G1: common <=1, uncommon 2..3, rare 4..6, legendary >=7
   assert.equal(tierForScore(0), "common");
-  assert.equal(tierForScore(2), "common");
+  assert.equal(tierForScore(1), "common");
+  assert.equal(tierForScore(2), "uncommon");
   assert.equal(tierForScore(3), "uncommon");
-  assert.equal(tierForScore(5), "uncommon");
+  assert.equal(tierForScore(4), "rare");
   assert.equal(tierForScore(6), "rare");
-  assert.equal(tierForScore(8), "rare");
-  assert.equal(tierForScore(9), "legendary");
+  assert.equal(tierForScore(7), "legendary");
   assert.equal(tierForScore(24), "legendary");
   const allCommon: Genome = Array.from({ length: 8 }, () => [0, 0]);
   assert.deepEqual(rarity(allCommon), { score: 0, tier: "common" });
@@ -125,7 +134,7 @@ test("mutation happens only when unlocked list non-empty", () => {
     }
   }
   const rate = mutated / N;
-  assert.ok(rate > 0.11 && rate < 0.19, `mutation rate ${rate}`);
+  assert.ok(rate > 0.06 && rate < 0.14, `mutation rate ${rate}`);
 });
 
 test("unsorted unlockedMutations are normalised (sorted by gene, variant)", () => {

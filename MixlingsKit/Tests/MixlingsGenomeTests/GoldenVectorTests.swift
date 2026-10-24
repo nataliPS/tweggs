@@ -177,15 +177,24 @@ final class GoldenVectorTests: XCTestCase {
         // palette: mint(5) vs bubblegum(5) tie -> lower index
         XCTAssertEqual(Genetics.expressGene(5, 1, 0), 0)
         XCTAssertEqual(Genetics.expressGene(5, 0, 1), 0)
+        // G2: palette night(4, idx 12) beats lime(3, idx 6)
+        XCTAssertEqual(Genetics.expressGene(5, 12, 6), 12)
+        // night(4) beats a dominance-2 variant: tangerine(2, idx 13)
+        XCTAssertEqual(Genetics.expressGene(5, 13, 12), 12)
+        // G3 (revised): mutation-only variants have dominance 7; mutation chance lowered to 10%
+        for gene in Catalog.genes {
+            for v in gene.variants where v.mutationOnly { XCTAssertEqual(v.dominance, 7, v.name) }
+        }
     }
 
     func testRarityTiers() {
-        XCTAssertEqual(Genetics.tier(forScore: 2), .common)
+        // G1: common <=1, uncommon 2...3, rare 4...6, legendary >=7
+        XCTAssertEqual(Genetics.tier(forScore: 1), .common)
+        XCTAssertEqual(Genetics.tier(forScore: 2), .uncommon)
         XCTAssertEqual(Genetics.tier(forScore: 3), .uncommon)
-        XCTAssertEqual(Genetics.tier(forScore: 5), .uncommon)
+        XCTAssertEqual(Genetics.tier(forScore: 4), .rare)
         XCTAssertEqual(Genetics.tier(forScore: 6), .rare)
-        XCTAssertEqual(Genetics.tier(forScore: 8), .rare)
-        XCTAssertEqual(Genetics.tier(forScore: 9), .legendary)
+        XCTAssertEqual(Genetics.tier(forScore: 7), .legendary)
     }
 
     func testValidation() {
