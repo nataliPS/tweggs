@@ -37,8 +37,9 @@ umbrella, water bottle, fan, sun hat, scarf, beanie, blanket; wet / sweat / shiv
 
 ## 7. Morning wake-up with the creature's voice (MVP stretch → Beta)
 - iOS does not let apps read or hook into alarms set in the system Clock app. So the user sets the wake time INSIDE Tweggs ("Ранок з Tweggs").
-- Implementation: AlarmKit (iOS 26+). Two scheduled alarms: a gentle pre-alarm 2 minutes before (soft yawn + "Good morning… let's start waking up" in the creature's voice) and the main alarm at the set time (brighter melody + voice, snooze). AlarmKit rings through silent mode/Focus and shows a Live Activity / Dynamic Island with the creature waking up.
-- Voice: short bundled clips (< 30 s, .caf) per temperament × language (en, uk), recorded or generated at build time; custom sounds must ship in the app bundle (per developer reports). No personalised name in audio for now.
+- Implementation (rational, approved 2026-10-24): ONE real alarm only — the main alarm via AlarmKit (iOS 26+; rings through silent mode/Focus, Live Activity with the creature waking up, snooze). The pre-alarm is a gentle time-sensitive local notification with the creature's soft voice clip ("Good morning… let's start waking up"), not a second alarm.
+- Pre-alarm offset: off / 1 / 2 / 5 min, default 2. Skipped automatically if the user already opened the app or dismissed the alarm that morning. In silent mode it arrives quietly; the main alarm does the waking.
+- Voice: one short bundled clip (< 30 s, .caf) per temperament × language (en, uk) for the pre-alarm and one melody+voice clip for the main alarm, recorded or generated at build time; custom sounds must ship in the app bundle (per developer reports). No personalised name in audio for now.
 - iOS 17–25 fallback: time-sensitive local notification with the creature sound (does not ring in silent mode — say so in the UI).
 - Reward: "Early bird" streak and a small spark gift when the alarm is stopped on time; never punish snoozing.
 - Permission: AlarmKit authorization requested only when the user enables the feature.
