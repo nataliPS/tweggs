@@ -2,13 +2,20 @@
 
 The creature reacts to the real world. All features are optional, privacy-first and never punish.
 
+## 0. Cross-cutting rules (debrief 2026-10-24, approved)
+- One **activity state machine** decides what the creature does now, by priority: focus → night → weather → pair scene → daily routine.
+- One **line service** (templates; on-device AI when available) for talk, diary and chat bubbles, with one set of guardrails and filters.
+- One **daily spark cap** across all new earning sources (weather items, souvenirs, mini-games, alarm, visits).
+- Care items are always earnable for free; never Club-only.
+- Stage split: MVP = weather, template lines (AI on iOS 26 devices), jump rope (no clip), pair life of your own two creatures + diary, local holidays, widget tap reactions, daily routine scenes, gene-based likes. Beta = AlarmKit wake-up, pedometer walks (CMPedometer, HealthKit later), paintings, birthday, Focus filter, mini-game clip, friends graph → visits → Duo → Crew. Later = AI diary/visit stories, Remote Config holidays, HealthKit.
+
 ## 1. Weather (MVP)
 - Source: Apple WeatherKit (500k calls/month included; attribution "Weather" + legal link required). Fetch at most every 3 h per device (BGAppRefresh + on app open); cache in App Group so the widget reads cached state only.
 - Location: approximate (city-level) with permission; never stored server-side; fallback = city chosen manually; no permission = neutral weather.
 - States → visuals → care item:
   | Weather | Creature | Care item (cosmetic, kept in collection) |
   |---|---|---|
-  | rain / drizzle | droplets, wet sheen, sad ears | umbrella |
+  | rain / drizzle | droplets, wet sheen, happily splashing in puddles (cosy, never sad) | umbrella |
   | heat ≥ 28 °C / strong UV | sweat drop, squint | water bottle, fan, sun hat |
   | snow / ≤ 0 °C | snowflakes, shiver frame | scarf, beanie |
   | wind ≥ 30 km/h | ears & tail blown | — |
@@ -41,11 +48,11 @@ umbrella, water bottle, fan, sun hat, scarf, beanie, blanket; wet / sweat / shiv
 - Pre-alarm offset: off / 1 / 2 / 5 min, default 2. Skipped automatically if the user already opened the app or dismissed the alarm that morning. In silent mode it arrives quietly; the main alarm does the waking.
 - Voice: one short bundled clip (< 30 s, .caf) per temperament × language (en, uk) for the pre-alarm and one melody+voice clip for the main alarm, recorded or generated at build time; custom sounds must ship in the app bundle (per developer reports). No personalised name in audio for now.
 - iOS 17–25 fallback: time-sensitive local notification with the creature sound (does not ring in silent mode — say so in the UI).
-- Reward: "Early bird" streak and a small spark gift when the alarm is stopped on time; never punish snoozing.
+- Reward: "Early mornings" total counter (never resets) and a small spark gift when the alarm is stopped on time; never punish snoozing.
 - Permission: AlarmKit authorization requested only when the user enables the feature.
 
 ## 8. Boredom quests & mini-games (MVP)
-- Trigger: joy below ~40 (or random 1×/day) → bubble "I'm bored…" + suggested activity. Never a penalty if ignored.
+- Trigger (revised): random moments, max 2×/day → bubble "I have an idea!" + suggested activity (no hidden joy drain). Never a penalty if ignored.
 - Jump rope (first mini-game): player taps in rhythm, creature jumps; rope speed ramps; combo counter; 20–40 s session; rewards: joy +, sparks by combo (capped/day), personal best, optional 6 s share clip. The rope becomes a collection item.
 - Next mini-games on the same framework: catch the ball, hide-and-seek, grow a flower.
 
@@ -63,3 +70,36 @@ umbrella, water bottle, fan, sun hat, scarf, beanie, blanket; wet / sweat / shiv
 - On return: diary "My visit to <friend>" (templated + guarded AI lines), a souvenir and possibly a jointly painted picture for the Gallery; friendship level between the two creatures rises; suggestion "They became friends — breed them?".
 - Server: `visits/{id}` {visitorCreatureId, ownerUid, hostUid, start, end, status}; functions `startVisit`, `recallVisit`, scheduled `endVisits`; the visitor's genome is shown read-only on the host device.
 - Safety: friends only, emoji-only interactions, block/report, no personal data in stories, under-13 offline mode excludes visits.
+
+
+## 11. Duo mode (Beta, after friends graph) — approved
+- Wholesome shared world for two players (couples OR best friends). Label "Duo"; under-16 framing "Best friends"; no romantic/sexual content.
+- Mutual-consent link via invite between existing friends only (no strangers/matching). Gated by age band.
+- Shared house shown on both widgets; each partner decorates own slots (owner pips); "Decorated together" two-tone wallpaper.
+- Duo creature: each partner gives one parent; co-owned; grows like any creature (no shared upkeep).
+- "Morning wave": each taps once a day; both waved → duo dance; one → wave back. Counter "days we both waved" never resets.
+- Anniversaries: day 7/30/100/365 + hatch day → party frame, free cosmetic, plaque.
+- Care relay feed ("Alex gave Pip an umbrella"), fridge notes from emote + pixel-prop combos (max 3/day, no free text).
+- RED LINES: no location/weather/time zone of partner, no online/last-seen/opened-app status, no read receipts, no steps/wake data sharing, no relationship score, no jealousy or guilt, no shared streak that dies; AI never comments on the partner.
+- Unlink: one-sided, quiet (no "X left you"), cooldown on re-link, block/report in the same place; each keeps own creatures, duo creature becomes twins (one each), shared paintings copied, items return to origin; house saved to Gallery as a memory.
+
+## 12. Crew mode (Beta) — approved
+- 3–5 friends; big house with a room each; crew mascot from a gene relay (each donates one gene, deterministic); roll call with emotes; group scenes (band, picnic, sleepover); shared crew painting with a layer each; leavers keep a copy of the mascot.
+
+## 13. New "alive" ideas (approved)
+| Idea | Stage |
+|---|---|
+| Widget tap reactions (pat, poke, feed) | MVP |
+| Daily routine scenes (breakfast, backpack, homework, dinner) | MVP |
+| Likes & dislikes from genes ("loves rain, hates wind") | MVP |
+| Charging = snack time; Low Power Mode = blanket nap | MVP |
+| First unlock of the day: stretch + "Morning!" (umbrella by the door if rain) | MVP |
+| Real sky in the window (moon phase, golden hour) | Beta |
+| Day-of-week moods (sleepy Monday, Friday dance) | Beta |
+| Lock Screen pokes / hugs to a friend (max 3/day) | Beta |
+| Guest-book stamp from visitors; painting exchange | Beta |
+| Weekly "Wrapped" share card | Beta |
+| Memory jar (first snow, first friend, first visit) resurfacing on anniversaries | Beta |
+| Personal chirp + haptic from genes | Later |
+| Duo jump rope; morning link with a friend | Later |
+| Dynamic Island peek / study buddy | Later |

@@ -36,3 +36,14 @@ Widget never touches Firestore. Budget alert at $25/month. Target < $25/month at
 
 ## Deploy
 Functions deploy only after `engine-ts` golden tests pass in CI.
+
+
+## Friends graph (prerequisite for visits, Duo, Crew) — Beta
+| Path | Fields |
+|---|---|
+| `invites/{code}` | creatorUid, kind (friend/duo/crew), expiresAt (+24h), usedBy |
+| `friends/{uid}/list/{friendUid}` | since, nickname? |
+| `visits/{id}` | visitorCreatureId, ownerUid, hostUid, start, end, status |
+| `duos/{id}` | members[2], status, createdAt; `duos/{id}/house/state` |
+| `crews/{id}` | members[3..5], status; `crews/{id}/house/state` |
+Functions: `createInvite`, `acceptInvite`, `removeFriend`, `startVisit`, `recallVisit`, scheduled `endVisits`, `unlinkDuo`, `leaveCrew`, `sendPoke` (≤3/day). Rules: members read their duo/crew docs and members' creatures read-only; house writes rules-validated per-slot (owner only); everything else via functions. Partners never receive location, status or activity data.
