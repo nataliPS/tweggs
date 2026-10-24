@@ -1,0 +1,529 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ is feeling sleepy. A little care will cheer them up!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ трохи сонний. Трохи турботи — і настрій покращиться!"
+          }
+        }
+      }
+    },
+    "%lld percent": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld відсотків"
+          }
+        }
+      }
+    },
+    "%lld taps left": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Залишилось торкань: %lld"
+          }
+        }
+      }
+    },
+    "A friend wants to breed!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Друг хоче схрестити мікслінгів!"
+          }
+        }
+      }
+    },
+    "A gift for you": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подарунок для тебе"
+          }
+        }
+      }
+    },
+    "Adult": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дорослий"
+          }
+        }
+      }
+    },
+    "Baby": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Малюк"
+          }
+        }
+      }
+    },
+    "Becomes %@ in %@": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Стане: %1$@ через %2$@"
+          }
+        }
+      }
+    },
+    "Belly": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ситість"
+          }
+        }
+      }
+    },
+    "Breed": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрещування"
+          }
+        }
+      }
+    },
+    "Breed with my Mixling!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрести свого мікслінга з моїм!"
+          }
+        }
+      }
+    },
+    "Breeding with friends is coming soon.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрещування з друзями — незабаром."
+          }
+        }
+      }
+    },
+    "Check on your Mixling and give it a snack or a pat.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевір свого мікслінга, нагодуй або погладь його."
+          }
+        }
+      }
+    },
+    "Choose a parent": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обери батька"
+          }
+        }
+      }
+    },
+    "Collection": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Колекція"
+          }
+        }
+      }
+    },
+    "Common": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Звичайний"
+          }
+        }
+      }
+    },
+    "Continue": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Далі"
+          }
+        }
+      }
+    },
+    "Egg": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Яйце"
+          }
+        }
+      }
+    },
+    "Feed": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нагодувати"
+          }
+        }
+      }
+    },
+    "Feed Mixling": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нагодувати мікслінга"
+          }
+        }
+      }
+    },
+    "Fully grown — ready to breed!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Виріс — готовий до схрещування!"
+          }
+        }
+      }
+    },
+    "Fun": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Веселощі"
+          }
+        }
+      }
+    },
+    "Happy": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Щасливий"
+          }
+        }
+      }
+    },
+    "Here is a grown-up Mixling to keep your baby company. Adults can breed with friends' Mixlings.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ось дорослий мікслінг, щоб малюку не було самотньо. Дорослі можуть схрещуватися з мікслінгами друзів."
+          }
+        }
+      }
+    },
+    "Home": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дім"
+          }
+        }
+      }
+    },
+    "It hatched!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вилупився!"
+          }
+        }
+      }
+    },
+    "Legendary": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Легендарний"
+          }
+        }
+      }
+    },
+    "Let's mix our Mixlings! %@ is waiting.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрестімо наших мікслінгів! %@ чекає."
+          }
+        }
+      }
+    },
+    "Let's play!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Граймо!"
+          }
+        }
+      }
+    },
+    "Mixling": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мікслінг"
+          }
+        }
+      }
+    },
+    "Mixlings": {
+      "shouldTranslate": false
+    },
+    "Mood": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настрій"
+          }
+        }
+      }
+    },
+    "Mutation!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мутація!"
+          }
+        }
+      }
+    },
+    "Name your Mixling": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дай ім'я своєму мікслінгу"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Гаразд"
+          }
+        }
+      }
+    },
+    "Offer %@": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пропозиція %@"
+          }
+        }
+      }
+    },
+    "Okay": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нормально"
+          }
+        }
+      }
+    },
+    "Only adults can breed. Keep caring for your Mixling!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Схрещуватися можуть лише дорослі. Продовжуй піклуватися про свого мікслінга!"
+          }
+        }
+      }
+    },
+    "Open Mixlings to hatch your egg": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відкрий Mixlings, щоб вилупити яйце"
+          }
+        }
+      }
+    },
+    "Pet": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Погладити"
+          }
+        }
+      }
+    },
+    "Pet Mixling": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Погладити мікслінга"
+          }
+        }
+      }
+    },
+    "Play": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Грати"
+          }
+        }
+      }
+    },
+    "Preview": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Попередній перегляд"
+          }
+        }
+      }
+    },
+    "Preview a hybrid": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Попередній перегляд гібрида"
+          }
+        }
+      }
+    },
+    "Preview uses a local random seed. Real results are decided when your friend accepts.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перегляд використовує локальне випадкове зерно. Справжній результат визначиться, коли друг прийме запрошення."
+          }
+        }
+      }
+    },
+    "Rare": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Рідкісний"
+          }
+        }
+      }
+    },
+    "Share link": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поділитися посиланням"
+          }
+        }
+      }
+    },
+    "Sleepy": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сонний"
+          }
+        }
+      }
+    },
+    "Teen": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Підліток"
+          }
+        }
+      }
+    },
+    "Uncommon": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Незвичайний"
+          }
+        }
+      }
+    },
+    "Welcome to Mixlings": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вітаємо в Mixlings"
+          }
+        }
+      }
+    },
+    "Your first egg is ready. Tap it to help it hatch!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Твоє перше яйце готове. Торкнися, щоб допомогти йому вилупитися!"
+          }
+        }
+      }
+    },
+    "Your hybrid and your friend's twin": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Твій гібрид і близнюк друга"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
