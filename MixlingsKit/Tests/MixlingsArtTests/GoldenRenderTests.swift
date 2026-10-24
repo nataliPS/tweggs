@@ -6,6 +6,7 @@ import XCTest
 private struct RenderGolden: Decodable {
     struct Case: Decodable {
         let pheno: Phenotype
+        let silhouette: Bool?
         let sha256: String
         let rgba_hex: String
     }
@@ -47,13 +48,14 @@ final class GoldenRenderTests: XCTestCase {
     func testGoldenRendersPixelIdentical() throws {
         let golden = try loadGolden()
         XCTAssertEqual(golden.size, MixlingsRenderer.size)
-        XCTAssertEqual(golden.cases.count, 74)
+        XCTAssertEqual(golden.cases.count, 146)
         var matched = 0
         for (i, c) in golden.cases.enumerated() {
             guard let want = decodeHex(c.rgba_hex) else {
                 XCTFail("case \(i): bad rgba_hex"); continue
             }
-            let got = MixlingsRenderer.render(c.pheno)
+            let got = (c.silhouette ?? false) ? MixlingsRenderer.renderSilhouette(c.pheno)
+                                              : MixlingsRenderer.render(c.pheno)
             XCTAssertEqual(got.width, 32)
             XCTAssertEqual(got.height, 32)
             XCTAssertEqual(got.rgba.count, want.count, "case \(i): byte count")
@@ -61,13 +63,53 @@ final class GoldenRenderTests: XCTestCase {
                 let px = k / 4
                 let w = Array(want[(px * 4)..<(px * 4 + 4)])
                 let g = Array(got.rgba[(px * 4)..<(px * 4 + 4)])
-                XCTFail("case \(i) \(c.pheno): first differing pixel \(px) (x=\(px % 32), y=\(px / 32)) "
+                XCTFail("case \(i) \(c.pheno) silhouette=\(c.silhouette ?? false): first differing pixel \(px) (x=\(px % 32), y=\(px / 32)) "
                         + "want RGBA \(w) got \(g)")
             } else if got.rgba.count == want.count {
                 matched += 1
             }
         }
         XCTAssertEqual(matched, golden.cases.count, "\(matched)/\(golden.cases.count) golden renders matched")
+    }
+
+    func testGoldenCoversStagesMoodsAndSilhouettes() throws {
+        let golden = try loadGolden()
+        XCTAssertEqual(Set(golden.cases.map { $0.pheno.stage }), [0, 1, 2, 3])
+        XCTAssertEqual(Set(golden.cases.map { $0.pheno.mood }), [0, 1, 2])
+        XCTAssertTrue(golden.cases.contains { $0.silhouette == true })
+    }
+
+    func testPhenotypeDefaultsAreAdultNeutral() throws {
+        let p = Phenotype(body: 0, eyes: 0, head: 0, pattern: 0, tail: 0, palette: 0, aura: 0)
+        XCTAssertEqual(p.mood, 0)
+        XCTAssertEqual(p.stage, 3)
+        // Older JSON without mood/stage/shift/seed still decodes, with defaults.
+        let json = #"{"body":1,"eyes":2,"head":3,"pattern":4,"tail":5,"palette":6,"aura":1}"#
+        let d = try JSONDecoder().decode(Phenotype.self, from: Data(json.utf8))
+        XCTAssertEqual(d.stage, 3)
+        XCTAssertEqual(d.mood, 0)
+        XCTAssertEqual(d.shift, 0)
+    }
+
+    func testSilhouetteIsOneColourWithKnockedOutEyes() {
+        let p = Phenotype(body: 0, eyes: 1, head: 1, pattern: 2, tail: 3, palette: 4, aura: 1)
+        let sil = MixlingsRenderer.renderSilhouette(p)
+        var opaque = 0
+        for i in stride(from: 0, to: sil.rgba.count, by: 4) {
+            let a = sil.rgba[i + 3]
+            XCTAssertTrue(a == 0 || a == 255)
+            if a == 255 {
+                opaque += 1
+                XCTAssertEqual(Array(sil.rgba[i..<i + 3]), [255, 255, 255])
+            }
+        }
+        XCTAssertGreaterThan(opaque, 200)
+        // Eye pixels (round adult, eye row y=18) are knocked out inside the body.
+        XCTAssertEqual(sil.rgba[(18 * 32 + 19) * 4 + 3], 0)
+        XCTAssertEqual(sil.rgba[(18 * 32 + 12) * 4 + 3], 0)
+        XCTAssertEqual(sil.rgba[(18 * 32 + 16) * 4 + 3], 255)
+        let colour = MixlingsRenderer.render(p)
+        XCTAssertNotEqual(colour.rgba, sil.rgba)
     }
 
     func testPythonRoundIsBankers() {

@@ -27,7 +27,8 @@ import CoreGraphics
 extension PixelBuffer {
     /// CGImage of this buffer scaled by `scale` with nearest-neighbour.
     /// CoreGraphics only supports premultiplied RGBA for 8-bit sRGB images, so the
-    /// straight-alpha bytes are premultiplied here (only aura==2 pixels are translucent).
+    /// straight-alpha bytes are premultiplied here (current art is fully opaque or fully
+    /// transparent, so this is a no-op safety net).
     public func cgImage(scale: Int = 1) -> CGImage? {
         let src = scaled(by: scale)
         var bytes = src.rgba
@@ -53,6 +54,11 @@ extension MixlingsRenderer {
     /// Render and return a CGImage upscaled with nearest-neighbour.
     public static func cgImage(_ p: Phenotype, scale: Int = 8) -> CGImage? {
         return render(p).cgImage(scale: scale)
+    }
+
+    /// Lock Screen silhouette (white on transparent) as a CGImage.
+    public static func silhouetteCGImage(_ p: Phenotype, scale: Int = 8) -> CGImage? {
+        return renderSilhouette(p).cgImage(scale: scale)
     }
 }
 #endif

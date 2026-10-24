@@ -1,17 +1,20 @@
-// Independent TypeScript port of art/render.py `render(p, scale=1)`.
+// Independent TypeScript port of art/render.py `render_raw(p, silhouette)`.
 // Purpose: prove the algorithm is portable (rounding, colorsys, ordering) before
 // trusting the Swift port (MixlingsKit/Sources/MixlingsArt), which mirrors this file.
 // Run: node art/ts-port/check.ts
 
 export const S = 32;
+export const EGG = 0, BABY = 1, TEEN = 2, ADULT = 3;
 
 export interface Pheno {
   body: number; eyes: number; head: number; pattern: number; tail: number;
   palette: number; aura: number; shift: number; seed: number;
+  mood?: number;  // 0 neutral (small smile), 1 "o", 2 hungry wobble; default 0
+  stage?: number; // 0 egg, 1 baby, 2 teen, 3 adult; default 3
 }
 type RGB = [number, number, number];
-type Role = "base" | "shade" | "accent" | "light" | "outline" | "eye" | "white" | "blush";
-interface Px { role: Role; solid: boolean }
+type Role = "base" | "shade" | "accent" | "light" | "outline" | "eye" | "white" | "blush" | "mouth";
+interface Px { role: Role; solid: boolean; knock: boolean }
 
 // ------------------------------------------------------------ python semantics
 /** Python round(x) for floats: round-half-to-even. */
@@ -82,21 +85,24 @@ function hlsToRgb(h: number, l: number, s: number): [number, number, number] {
 export const PALETTES: [number, number, number, number][] = [
   [0x7ED4A6, 0x4FA77E, 0xFFCB5C, 0xC9F2DA], // mint
   [0xF7A6C4, 0xD2759A, 0x7CC6FE, 0xFFD9E7], // bubblegum
-  [0x8FB8FF, 0x5C86D6, 0xFF9F68, 0xD4E3FF], // sky
+  [0x8FA6FF, 0x5C70D6, 0xFF9F68, 0xD4DCFF], // sky
   [0xFFD36E, 0xE0A93D, 0xFF6F91, 0xFFF0C2], // sunny
   [0xC3A6FF, 0x9479D9, 0x7EF0C8, 0xE7DCFF], // lavender
   [0xFF9B7A, 0xD9704F, 0x6EE7F2, 0xFFD3C4], // coral
-  [0x9BE15D, 0x6DB33A, 0xFF7AD9, 0xDDF7C4], // lime
-  [0x6FD6E8, 0x3FA8BC, 0xFFE066, 0xCDF4FA], // aqua
+  [0xBCE34F, 0x88B226, 0xFF7AD9, 0xEAF8C0], // lime
+  [0x4FD9EE, 0x25A8C2, 0xFFE066, 0xC6F6FD], // aqua
   [0xE8E2D0, 0xBDB4A0, 0xFF8A5B, 0xFFFFFF], // cream
   [0xA0A8B8, 0x727B8E, 0xFFD166, 0xD9DEE7], // stone
   [0xFF7AA2, 0xD24F79, 0xFFE27A, 0xFFC6D7], // rose
   [0x5E6BFF, 0x3C46C9, 0xFF9EE5, 0xB9BFFF], // cobalt
   [0x3D3D4E, 0x26262F, 0x7DF9FF, 0x6A6A82], // night (rare)
   [0xFFB347, 0xD98A1F, 0x8E7CFF, 0xFFE0B0], // tangerine
-  [0xB8F2E6, 0x7FC7B8, 0xFF8FAB, 0xE6FBF6], // seafoam
+  [0xC0F5E4, 0x80C7AF, 0xFF8FAB, 0xE8FCF5], // seafoam
   [0xF2F2F2, 0xC9C9D6, 0xFFB3F0, 0xFFFFFF], // ghost (rare)
 ];
+const GHOST = 15;
+const GHOST_OUTLINE: RGB = [0x8E, 0x8A, 0xA8];
+const TWIN_SHIFT = 0.08;
 const hx = (c: number): RGB => [(c >> 16) & 0xFF, (c >> 8) & 0xFF, c & 0xFF];
 
 function shiftHue(rgb: RGB, amount: number): RGB {
@@ -113,21 +119,24 @@ function palette(idx: number, shift: number): Record<Role, RGB> {
   let base = hx(row[0]), shade = hx(row[1]), light = hx(row[3]);
   const accent = hx(row[2]);
   if (shift !== 0) {
-    const amt = 0.035 * shift;
+    const amt = TWIN_SHIFT * shift;
     base = shiftHue(base, amt); shade = shiftHue(shade, amt); light = shiftHue(light, amt);
   }
   let outline = darken(shade, 0.45);
   const lum = 0.299 * base[0] + 0.587 * base[1] + 0.114 * base[2];
   const dark = lum < 90;
   if (dark) outline = [18, 18, 24];
+  if (idx === GHOST) outline = GHOST_OUTLINE;
   return { base, shade, accent, light, outline,
-    eye: dark ? accent : [34, 30, 46], white: [255, 255, 255], blush: [255, 140, 160] };
+    eye: dark ? accent : [34, 30, 46], white: [255, 255, 255], blush: [255, 140, 160],
+    mouth: dark ? light : darken(shade, 0.45) };
 }
 
 // ------------------------------------------------------------ masks (32x32 bool grids)
 type Mask = boolean[]; // index y*S+x
 const newMask = (): Mask => new Array(S * S).fill(false);
 const inMask = (m: Mask, x: number, y: number) => x >= 0 && x < S && y >= 0 && y < S && m[y * S + x];
+const union = (a: Mask, b: Mask): Mask => a.map((t, i) => t || b[i]);
 
 function ellipse(cx: number, cy: number, rx: number, ry: number): Mask {
   const m = newMask();
@@ -146,6 +155,12 @@ function rrect(x0: number, y0: number, x1: number, y1: number, r: number): Mask 
   }
   return m;
 }
+/** Symmetric mask from per-row half-widths: row y0+i covers x 16-k .. 15+k. */
+function rowsMask(y0: number, halves: number[]): Mask {
+  const m = newMask();
+  halves.forEach((k, i) => { for (let x = 16 - k; x < 16 + k; x++) m[(y0 + i) * S + x] = true; });
+  return m;
+}
 /** Mask points in Python sorted() order: by x, then y. */
 function sortedPoints(m: Mask): [number, number][] {
   const out: [number, number][] = [];
@@ -153,20 +168,41 @@ function sortedPoints(m: Mask): [number, number][] {
   return out;
 }
 
-function bodyMask(v: number): Mask {
-  let m: Mask;
-  if (v === 0) m = ellipse(16, 20, 9.5, 8.5);
-  else if (v === 1) m = ellipse(16, 19, 7.5, 10.5);
-  else if (v === 2) { const a = ellipse(16, 15, 6.5, 6), b = ellipse(16, 22, 9.5, 7); m = a.map((t, i) => t || b[i]); }
-  else if (v === 3) m = rrect(7, 11, 24, 28, 5);
-  else if (v === 4) {
-    m = newMask();
-    for (let y = 9; y < 29; y++) {
-      const t = (y - 9) / 19;
-      const w = 9.5 * Math.pow(Math.sin(Math.PI * Math.min(1.0, t * 0.62 + 0.08)), 0.9);
-      for (let x = 0; x < S; x++) if (Math.abs(x + 0.5 - 16) <= w) m[y * S + x] = true;
-    }
-  } else m = ellipse(16, 22, 11.5, 6.5);
+const DROP_ROWS: Record<number, [number, number[]]> = {
+  [ADULT]: [9, [3, 4, 4, 5, 6, 7, 7, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8]],
+  [TEEN]: [13, [2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 6]],
+  [BABY]: [17, [2, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 4]],
+};
+const EGG_ROWS: [number, number[]] = [11, [2, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 6, 6, 5, 3]];
+
+function bodyAdult(v: number): Mask {
+  if (v === 0) return ellipse(16, 20, 9.5, 8.5);
+  if (v === 1) return ellipse(16, 19, 7.5, 10.5);
+  if (v === 2) return union(ellipse(16, 15, 5, 6), ellipse(16, 22, 9.5, 7));
+  if (v === 3) return rrect(7, 11, 24, 28, 2);
+  if (v === 4) return rowsMask(...DROP_ROWS[ADULT]);
+  return ellipse(16, 22, 11.5, 6.5);
+}
+function bodyTeen(v: number): Mask {
+  if (v === 0) return ellipse(16, 22, 7.5, 7);
+  if (v === 1) return ellipse(16, 21, 6, 8.5);
+  if (v === 2) return union(ellipse(16, 18.5, 4, 5), ellipse(16, 24, 7.5, 5.5));
+  if (v === 3) return rrect(9, 15, 22, 28, 2);
+  if (v === 4) return rowsMask(...DROP_ROWS[TEEN]);
+  return ellipse(16, 23.5, 9.5, 5.5);
+}
+function bodyBaby(v: number): Mask {
+  if (v === 0) return ellipse(16, 23.5, 6, 5.5);
+  if (v === 1) return ellipse(16, 23, 4.5, 6.5);
+  if (v === 2) return union(ellipse(16, 21.5, 3, 3.5), ellipse(16, 25, 6, 4));
+  if (v === 3) return rrect(10, 18, 21, 28, 1);
+  if (v === 4) return rowsMask(...DROP_ROWS[BABY]);
+  return ellipse(16, 25, 7.5, 4);
+}
+
+function bodyMask(v: number, stage: number): Mask {
+  if (stage === EGG) return rowsMask(...EGG_ROWS);
+  const m = stage === ADULT ? bodyAdult(v) : stage === TEEN ? bodyTeen(v) : bodyBaby(v);
   let bottom = -1;
   for (const [, y] of sortedPoints(m)) bottom = Math.max(bottom, y);
   for (const fx of [11, 12, 19, 20]) if (inMask(m, fx, bottom)) { if (bottom + 1 < S) m[(bottom + 1) * S + fx] = true; }
@@ -193,97 +229,101 @@ class Canvas {
   px: (Px | null)[] = new Array(S * S).fill(null);
   get(x: number, y: number) { return this.px[y * S + x]; }
   has(x: number, y: number) { return this.px[y * S + x] !== null; }
-  set(x: number, y: number, role: Role, solid = true) { this.px[y * S + x] = { role, solid }; }
-  put(x: number, y: number, role: Role, solid = true) { if (x >= 0 && x < S && y >= 0 && y < S) this.set(x, y, role, solid); }
+  set(x: number, y: number, role: Role, solid = true, knock = false) { this.px[y * S + x] = { role, solid, knock }; }
+  put(x: number, y: number, role: Role, solid = true, knock = false) {
+    if (x >= 0 && x < S && y >= 0 && y < S) this.set(x, y, role, solid, knock);
+  }
 }
 
 // ------------------------------------------------------------ sprites
-function sprite(rows: string[]): [number, number, string][] {
-  const out: [number, number, string][] = [];
+type Sprite = [number, number, string][];
+function sprite(rows: string[]): Sprite {
+  const out: Sprite = [];
   rows.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== ".") out.push([x, y, ch]); }));
   return out;
 }
-const EYES: Record<number, [number, number, string][]> = {
-  0: sprite(["KK", "KK"]),
+const ROLE: Record<string, Role> = { B: "base", S: "shade", A: "accent", L: "light", K: "eye", W: "white", M: "mouth", a: "accent" };
+
+// Right eye; the left eye is its mirror (x -> 31 - x) when EYE_MIRROR, else a shifted copy.
+const EYES: Record<number, Sprite> = {
+  0: sprite(["KK", "KK", "KK"]),
   1: sprite([".KK.", "KWKK", "KKKK", ".KK."]),
-  2: sprite(["KKK"]),
-  3: sprite([".K.", "K.K"]),
-  4: sprite(["KKK", "KWK", "KKK"]),
-  5: sprite(["KK", "WK", "KK"]),
+  2: sprite(["KKKK", "...K"]),
+  3: sprite([".KKK.", "K...K", "K...K"]),
+  4: sprite([".WK.", "WWWK", "KWKK", ".KK."]),
+  5: sprite([".K.", "WKK", "KKK", ".K."]),
   6: sprite([".K.", "KAK", ".K."]),
+  7: sprite([".KKKK.", "KWWKKK", "KWKKKK", "KKKKKK", ".KKKK."]),
 };
-const CYCLOPS = sprite([".KKKK.", "KWWKKK", "KWKKKK", "KKKKKK", ".KKKK."]);
-const ROLE: Record<string, Role> = { B: "base", S: "shade", A: "accent", L: "light", K: "eye", W: "white", O: "outline" };
+const EYE_MIRROR: Record<number, boolean> = { 0: false, 1: false, 2: true, 3: true, 4: false, 5: false, 6: false, 7: false };
+const MOODS: Record<number, [number, Sprite]> = {
+  0: [14, sprite(["M..M", ".MM."])],
+  1: [14, sprite([".MM.", "M..M", ".MM."])],
+  2: [13, sprite([".M..M.", "M.MM.M"])],
+};
 
-function drawHead(c: Canvas, v: number, a: Anchors) {
-  const t = a.top;
-  if (v === 1) {
-    for (const side of [-1, 1]) {
-      const cx = 16 + side * 5;
-      for (let i = 0; i < 4; i++) for (let dx = -(3 - i); dx <= 3 - i; dx++) c.put(cx + dx, t - i + 1, "base");
-      c.put(cx, t, "accent"); c.put(cx, t - 1, "accent");
-    }
-  } else if (v === 2) {
-    for (const side of [-1, 1]) {
-      const cx = 16 + side * 4;
-      for (let i = 0; i < 7; i++) {
-        for (const dx of [-1, 0, 1]) c.put(cx + dx, t - i + 1, "base");
-        if (i >= 1 && i <= 5) c.put(cx, t - i + 1, "light");
-      }
-    }
-  } else if (v === 3) {
-    const rows: [number, number[]][] = [[0, [3, 4, 5, 6]], [-1, [4, 5, 6]], [-2, [5, 6, 7]], [-3, [6, 7]], [-4, [7, 8]], [-5, [8]]];
-    for (const side of [-1, 1]) for (const [dy, xs] of rows) for (const dx of xs)
-      c.put(16 + side * dx, t + dy, dy > -2 ? "light" : "accent");
-  } else if (v === 4) {
-    for (let i = 1; i < 5; i++) c.put(16, t - i, "shade");
-    for (const dx of [-1, 0, 1]) for (const dy of [-1, 0, 1]) if (Math.abs(dx) + Math.abs(dy) < 2) c.put(16 + dx, t - 6 + dy, "accent");
-  } else if (v === 5) {
-    c.put(16, t - 1, "shade"); c.put(16, t - 2, "shade");
-    for (const p of [[-1, -3], [-2, -3], [-2, -4], [-3, -4], [-1, -4]]) c.put(16 + p[0], t + p[1], "accent");
-    for (const p of [[1, -2], [2, -3], [2, -2], [3, -3], [1, -3]]) c.put(16 + p[0], t + p[1], "accent");
-  } else if (v === 6) {
-    for (const dx of [-4, 0, 4]) {
-      const hgt = dx !== 0 ? 3 : 4;
-      for (let k = 0; k < hgt; k++) {
-        const n = hgt - 1 - k;
-        // python: range(-(n)//2 - 1 + 1, n//2 + 1)  (unary minus binds before //)
-        for (let w = floorDiv(-n, 2) - 1 + 1; w < floorDiv(n, 2) + 1; w++) c.put(16 + dx + w, t - k, "accent");
-      }
-    }
-  } else if (v === 7) {
-    for (let x = 11; x < 22; x++) {
-      if (x === 11 || x === 21) continue;
-      c.put(x, t - 5, "accent", false); c.put(x, t - 3, "accent", false);
-    }
-    c.put(11, t - 4, "accent", false); c.put(21, t - 4, "accent", false);
-  }
-}
+type Part = [number, number, string[]];
+const HEADS: Record<number, Record<number, Part>> = {
+  [ADULT]: {
+    1: [8, -4, ["...B........B...", "..BAB......BAB..", "..BAB......BAB..", ".BAAAB....BAAAB.", ".BAAAB....BAAAB.", "BBBBBBB..BBBBBBB"]],
+    2: [11, -5, ["BBB....BBB", "BLB....BLB", "BLB....BLB", "BLB....BLB", "BLB....BLB", "BLB....BLB", "BBB....BBB"]],
+    3: [7, -5, ["A................A", "AA..............AA", ".AA............AA.", ".AAA..........AAA.", "..LLL........LLL..", "..LLLL......LLLL.."]],
+    4: [15, -7, [".A.", "AAA", ".A.", ".S.", ".S.", ".S.", ".S."]],
+    5: [13, -4, ["AAA....", ".AA.AAA", "...SAA.", "...S..."]],
+    6: [10, -5, [".....AA.....", "....AAAA....", ".A..AAAA..A.", ".AA.AAAA.AA.", ".AAAAAAAAAA.", ".SSSSSSSSSS."]],
+    7: [10, -5, [".aaaaaaaaaa.", "a..........a", ".aaaaaaaaaa."]],
+  },
+  [TEEN]: {
+    1: [9, -3, ["..B........B..", ".BAB......BAB.", ".BAAB....BAAB.", "BBBBB....BBBBB"]],
+    2: [11, -4, ["BBB....BBB", "BLB....BLB", "BLB....BLB", "BBB....BBB"]],
+    3: [8, -3, ["A..............A", "AA............AA", ".LL..........LL.", ".LLL........LLL."]],
+    4: [15, -5, [".A.", "AAA", ".A.", ".S.", ".S."]],
+    5: [13, -3, ["AA..AA", ".AASA.", "...S.."]],
+    6: [12, -4, ["...AA...", ".A.AA.A.", ".AAAAAA.", "SSSSSSSS"]],
+    7: [12, -5, [".aaaaaa.", "a......a", ".aaaaaa."]],
+  },
+  [BABY]: {
+    1: [10, -2, ["..B......B..", ".BAB....BAB."]],
+    2: [11, -3, [".BB....BB.", ".BL....LB.", ".BB....BB."]],
+    3: [10, -2, ["A..........A", ".LL......LL."]],
+    4: [15, -3, [".A.", "AAA", ".S."]],
+    5: [14, -2, ["AA.A", "..S."]],
+    6: [13, -2, [".AA.", "AAAA"]],
+    7: [13, -4, [".aaaa.", "a....a", ".aaaa."]],
+  },
+};
+const TAILS: Record<number, Record<number, Part>> = {
+  [ADULT]: {
+    1: [-1, -2, [".BBB.", "BLBBB", "BBBBS", "BBBSS", ".SSS."]],
+    2: [0, -5, ["..BBBB.", ".B....B", ".B.BB.B", ".B.B..B", "BB..BB.", "B......"]],
+    3: [0, -6, [".....AAA", ".....AAA", ".....AAA", "....BB..", "...BB...", "..BB....", "BBB.....", "BB......"]],
+    4: [0, -6, ["....A", "...AA", "..ABA", ".ABBA", "ABBB.", "BBB..", "BB..."]],
+    5: [0, -6, [".....A", "...AAA", "...AA.", ".AAA..", ".AA...", ".AA...", "AA...."]],
+  },
+  [TEEN]: {
+    1: [-1, -1, ["BBB", "BBS", ".S."]],
+    2: [0, -2, [".BB", "B.B", "BB."]],
+    3: [0, -2, ["..A", ".B.", "B.."]],
+    4: [0, -2, [".A", "BA", "B."]],
+    5: [0, -2, ["..A", ".A.", "AA."]],
+  },
+};
 
-function thick(c: Canvas, tx: number, ty: number, pts: number[][], role: Role) {
-  for (const [dx, dy] of pts) { c.put(tx + dx, ty + dy, role); c.put(tx + dx, ty + dy + 1, role); }
+function stamp(c: Canvas, x0: number, y0: number, rows: string[]) {
+  for (const [x, y, ch] of sprite(rows)) c.put(x0 + x, y0 + y, ROLE[ch], ch !== "a");
 }
-function putMask(c: Canvas, m: Mask, role: Role) {
-  for (const [x, y] of sortedPoints(m)) c.put(x, y, role);
+function drawHead(c: Canvas, v: number, a: Anchors, stage: number) {
+  const part = HEADS[stage]?.[v];
+  if (part) stamp(c, part[0], a.top + part[1], part[2]);
 }
-function drawTail(c: Canvas, v: number, a: Anchors) {
-  const tx = a.tailX, ty = a.tailY;
-  if (v === 1) putMask(c, ellipse(tx + 1.5, ty + 0.5, 2.4, 2.4), "light");
-  else if (v === 2) thick(c, tx, ty, [[0, 0], [1, 0], [2, -1], [3, -2], [3, -3], [2, -4], [1, -4]], "base");
-  else if (v === 3) {
-    thick(c, tx, ty, [[0, 0], [1, 0], [2, -1], [3, -2], [4, -3], [5, -4]], "base");
-    putMask(c, ellipse(tx + 6.5, ty - 4.5, 1.6, 1.6), "accent");
-  } else if (v === 4) {
-    for (const [dx, dy] of [[0, 0], [1, 0], [1, -1], [2, -1], [2, -2], [3, -2], [2, -3], [3, -4], [1, -2], [0, -1], [3, -3], [4, -3], [3, -5]])
-      c.put(tx + dx, ty + dy, "accent");
-  } else if (v === 5) {
-    for (const [dx, dy] of [[0, 0], [1, 0], [1, -1], [2, -1], [2, -2], [1, -2], [1, -3], [2, -3], [3, -3], [3, -4], [4, -4], [4, -5], [3, -5], [5, -5], [5, -6]])
-      c.put(tx + dx, ty + dy, "accent");
-  }
+function drawTail(c: Canvas, v: number, a: Anchors, stage: number) {
+  const part = TAILS[stage]?.[v];
+  if (part) stamp(c, a.tailX + part[0], a.tailY + part[1], part[2]);
 }
 
-function applyPattern(c: Canvas, m: Mask, v: number, a: Anchors, seed: number) {
-  const rnd = new Mulberry(mul32(seed, 2654435761));
+const SPOT_GRID = [[-7, -2], [5, -3], [-3, 2], [4, 3], [-8, 4], [0, 6], [6, -7], [-5, 7]];
+
+function applyPattern(c: Canvas, m: Mask, v: number, a: Anchors) {
   const top = a.top, bottom = a.bottom;
   const pts = sortedPoints(m);
   if (v === 1) {
@@ -291,14 +331,13 @@ function applyPattern(c: Canvas, m: Mask, v: number, a: Anchors, seed: number) {
     const e = ellipse(16, cy, 5, (bottom - top) * 0.28);
     for (const [x, y] of sortedPoints(e)) if (inMask(m, x, y)) c.set(x, y, "light");
   } else if (v === 2) {
-    let spots = 0, tries = 0;
-    while (spots < 4 && tries < 60) {
-      tries++;
-      const [x, y] = rnd.choice(pts);
-      if (y <= a.eyeY + 1 && Math.abs(x - 16) < 6) continue;
-      const ok = inMask(m, x, y) && inMask(m, x + 1, y) && inMask(m, x, y + 1) && inMask(m, x + 1, y + 1);
-      if (ok) {
-        for (const dx of [0, 1]) for (const dy of [0, 1]) c.set(x + dx, y + dy, "accent");
+    let spots = 0;
+    for (const [dx, dy] of SPOT_GRID) {
+      if (spots === 4) break;
+      const x = 16 + dx, y = a.midY + dy;
+      if (y <= a.eyeY + 2 && -7 <= dx && dx <= 5) continue;
+      if (inMask(m, x, y) && inMask(m, x + 1, y) && inMask(m, x, y + 1) && inMask(m, x + 1, y + 1)) {
+        for (const i of [0, 1]) for (const j of [0, 1]) c.set(x + i, y + j, "accent");
         spots++;
       }
     }
@@ -307,24 +346,36 @@ function applyPattern(c: Canvas, m: Mask, v: number, a: Anchors, seed: number) {
   } else if (v === 4) {
     for (const [x, y] of pts) if (y < top + (bottom - top) * 0.3) c.set(x, y, "accent");
   } else if (v === 5) {
-    for (const dx of [-1, 1]) for (const k of [0, 2]) {
-      const px = 16 + dx * (a.eyeDx + 1 + floorDiv(k, 2)), py = a.eyeY + 2 + (k % 2);
-      if (inMask(m, px, py)) c.set(px, py, "shade");
+    for (const [dx, dy] of [[0, 0], [2, 0], [1, 1]]) {
+      const x = 16 + a.eyeDx + 1 + dx, y = a.eyeY + 3 + dy;
+      for (const px of [x, 31 - x]) if (inMask(m, px, y)) c.set(px, y, "accent");
     }
   }
 }
 
-/**
- * Python picks the highlight anchor with `sorted(mask, key=...)[:1]`; the key ties
- * for every body, so the winner is the first tied point in CPython *set iteration
- * order* (hash-table layout), not something portable. The mask depends only on the
- * body variant, so the winner is a per-body constant. Recorded from CPython 3.13.
- */
-export const HIGHLIGHT_TIE_WINNER: [number, number][] = [[9, 14], [13, 9], [10, 12], [9, 12], [13, 9], [6, 18]];
-export let tieMode: "table" | "lex" = "table";
-export function setTieMode(m: "table" | "lex") { tieMode = m; }
+const EGG_SPOTS = [[12, 14], [18, 12], [16, 18], [11, 21], [19, 22], [15, 25]];
+const EGG_FRECKLES = [[13, 14], [18, 13], [20, 18], [11, 19], [16, 22], [19, 25]];
 
-function shadeBody(c: Canvas, m: Mask, bodyVariant: number) {
+function eggPattern(c: Canvas, m: Mask, v: number) {
+  const pts = sortedPoints(m);
+  if (v === 1) {
+    for (const [x, y] of pts) if (y >= 22) c.set(x, y, "light");
+  } else if (v === 2) {
+    for (const [x, y] of EGG_SPOTS) for (const i of [0, 1]) for (const j of [0, 1])
+      if (inMask(m, x + i, y + j)) c.set(x + i, y + j, "accent");
+  } else if (v === 3) {
+    for (const [x, y] of pts) {
+      const z = floorDiv(x, 2) % 2;
+      if (y === 18 + z || y === 19 + z || y === 23 + z) c.set(x, y, "accent");
+    }
+  } else if (v === 4) {
+    for (const [x, y] of pts) if (y < 16) c.set(x, y, "accent");
+  } else if (v === 5) {
+    for (const [x, y] of EGG_FRECKLES) if (inMask(m, x, y)) c.set(x, y, "accent");
+  }
+}
+
+function shadeBody(c: Canvas, m: Mask) {
   const pts = sortedPoints(m);
   const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
@@ -335,42 +386,45 @@ function shadeBody(c: Canvas, m: Mask, bodyVariant: number) {
       }
     }
   }
-  // highlight upper-left: min key, tie-break see HIGHLIGHT_TIE_WINNER
-  const key = (x: number, y: number) => (x - cx) + (y - cy);
+  // highlight: middle of the points with minimal x + y (sorted order)
   let best = Infinity;
-  for (const [x, y] of pts) best = Math.min(best, key(x, y));
-  const ties = pts.filter(([x, y]) => key(x, y) === best); // lex (x, y) order
-  let tl = ties[0];
-  if (tieMode === "table") {
-    const w = HIGHLIGHT_TIE_WINNER[bodyVariant >= 0 && bodyVariant <= 4 ? bodyVariant : 5];
-    if (ties.some(p => p[0] === w[0] && p[1] === w[1])) tl = w;
-  }
-  if (tl) {
-    const [x, y] = tl;
-    for (const [px, py] of [[x + 2, y + 2], [x + 3, y + 2], [x + 2, y + 3]])
-      if (inMask(m, px, py) && c.get(px, py)!.role === "base") c.set(px, py, "white");
-  }
+  for (const [x, y] of pts) best = Math.min(best, x + y);
+  const ties = pts.filter(([x, y]) => x + y === best);
+  const [x, y] = ties[floorDiv(ties.length - 1, 2)];
+  for (const [px, py] of [[x + 2, y + 2], [x + 3, y + 2], [x + 2, y + 3]])
+    if (inMask(m, px, py) && c.get(px, py)!.role === "base") c.set(px, py, "white");
+}
+
+interface EyeLayout { spr: Sprite; x0: number; y0: number; w: number; h: number; dx: number }
+function eyeLayout(v: number, a: Anchors): EyeLayout {
+  const spr = EYES[v];
+  const w = Math.max(...spr.map(s => s[0])) + 1;
+  const h = Math.max(...spr.map(s => s[1])) + 1;
+  const dx = Math.max(a.eyeDx, floorDiv(w, 2) + 1);
+  return { spr, x0: 16 + dx - floorDiv(w, 2), y0: a.eyeY - floorDiv(h, 2), w, h, dx };
 }
 
 function drawEyes(c: Canvas, v: number, a: Anchors) {
-  const ey = a.eyeY, dx = a.eyeDx;
+  const { spr, x0, y0, w } = eyeLayout(v, a);
   if (v === 7) {
-    for (const [x, y, ch] of CYCLOPS) c.put(16 - 3 + x, ey - 2 + y, ROLE[ch]);
+    for (const [x, y, ch] of spr) c.put(13 + x, y0 + y, ROLE[ch], true, true);
     return;
   }
-  const spr = EYES[v];
-  if (!spr) return; // python: KeyError for unknown variants
-  const w = Math.max(...spr.map(s => s[0])) + 1;
-  const h = Math.max(...spr.map(s => s[1])) + 1;
-  for (const side of [-1, 1]) {
-    const cx = 16 + side * dx;
-    const x0 = side < 0 ? cx - floorDiv(w, 2) : cx - floorDiv(w - 1, 2);
-    for (const [x, y, ch] of spr) {
-      const xx = side > 0 ? x : (w - 1 - x);
-      c.put(x0 + xx, ey - floorDiv(h, 2) + y, ROLE[ch]);
-    }
+  for (const [x, y, ch] of spr) {
+    c.put(x0 + x, y0 + y, ROLE[ch], true, true);
+    const lx = EYE_MIRROR[v] ? 31 - (x0 + x) : 31 - (x0 + w - 1) + x;
+    c.put(lx, y0 + y, ROLE[ch], true, true);
   }
-  for (const side of [-1, 1]) c.put(16 + side * (dx + 2), ey + 2, "blush");
+}
+
+function drawFace(c: Canvas, m: Mask, eyes: number, mood: number, a: Anchors) {
+  const { y0, w, h, dx } = eyeLayout(eyes, a);
+  const my = y0 + h + (h >= 3 ? 1 : 2);
+  const [mx, mouth] = MOODS[mood] ?? MOODS[0];
+  for (const [x, y, ch] of mouth) c.put(mx + x, my + y, ROLE[ch]);
+  const by = a.eyeY + 2;
+  const bx = eyes !== 7 ? 16 + dx + floorDiv(w + 1, 2) + 1 : 21;
+  for (const x of [bx, 31 - bx]) if (inMask(m, x, by)) c.put(x, by, "blush");
 }
 
 function outline(c: Canvas) {
@@ -381,7 +435,7 @@ function outline(c: Canvas) {
     for (const [nx, ny] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]])
       if (nx >= 0 && nx < S && ny >= 0 && ny < S && !c.has(nx, ny)) out[ny * S + nx] = true;
   }
-  for (let i = 0; i < S * S; i++) if (out[i]) c.px[i] = { role: "outline", solid: false };
+  for (let i = 0; i < S * S; i++) if (out[i]) c.px[i] = { role: "outline", solid: false, knock: false };
 }
 
 const radians = (d: number) => d * (Math.PI / 180.0); // CPython: x * degToRad
@@ -396,6 +450,7 @@ function drawAura(v: number, seed: number): [number, number, Role][] {
     }
   } else if (v === 2) {
     for (let a = 0; a < 360; a += 9) {
+      if (floorDiv(a, 9) % 5 >= 3) continue;
       const r = 14.5;
       const x = pyRound(16 + r * Math.cos(radians(a)));
       const y = pyRound(18 + r * 0.85 * Math.sin(radians(a)));
@@ -411,26 +466,49 @@ function drawAura(v: number, seed: number): [number, number, Role][] {
   return extra;
 }
 
-/** 32x32 RGBA, row-major, straight alpha (identical to Python render(p, 1).tobytes()). */
-export function render(p: Pheno): Uint8Array {
-  const pal = palette(p.palette, p.shift);
-  const mask = bodyMask(p.body);
-  const a = anchors(mask);
+function build(p: Pheno, silhouette: boolean): Canvas {
+  const stage = p.stage ?? ADULT;
+  const mask = bodyMask(p.body, stage);
   const c = new Canvas();
-  drawTail(c, p.tail, a);
-  putMask(c, mask, "base");
-  drawHead(c, p.head, a);
+  if (stage === EGG) {
+    for (const [x, y] of sortedPoints(mask)) c.set(x, y, "base");
+    eggPattern(c, mask, p.pattern);
+    shadeBody(c, mask);
+    outline(c);
+    return c;
+  }
+  const a = anchors(mask);
+  drawTail(c, p.tail, a, stage);
+  for (const [x, y] of sortedPoints(mask)) c.set(x, y, "base");
+  drawHead(c, p.head, a, stage);
   for (const [x, y] of sortedPoints(mask)) if (!c.has(x, y)) c.set(x, y, "base");
-  applyPattern(c, mask, p.pattern, a, p.seed);
-  shadeBody(c, mask, p.body);
+  applyPattern(c, mask, p.pattern, a);
+  shadeBody(c, mask);
   outline(c);
   drawEyes(c, p.eyes, a);
+  if (!silhouette) drawFace(c, mask, p.eyes, p.mood ?? 0, a);
+  return c;
+}
 
+/** 32x32 RGBA, row-major, straight alpha (identical to Python render_raw(p, silhouette).tobytes()). */
+export function render(p: Pheno, silhouette = false): Uint8Array {
+  const c = build(p, silhouette);
   const buf = new Uint8Array(S * S * 4);
-  for (const [x, y, role] of drawAura(p.aura, p.seed)) {
-    if (x >= 0 && x < S && y >= 0 && y < S && !c.has(x, y)) {
-      const col = pal[role], i = (y * S + x) * 4;
-      buf[i] = col[0]; buf[i + 1] = col[1]; buf[i + 2] = col[2]; buf[i + 3] = p.aura === 2 ? 170 : 255;
+  if (silhouette) {
+    for (let i = 0; i < S * S; i++) {
+      const px = c.px[i];
+      if (!px || px.knock) continue;
+      buf[i * 4] = 255; buf[i * 4 + 1] = 255; buf[i * 4 + 2] = 255; buf[i * 4 + 3] = 255;
+    }
+    return buf;
+  }
+  const pal = palette(p.palette, p.shift);
+  if ((p.stage ?? ADULT) === ADULT) {
+    for (const [x, y, role] of drawAura(p.aura, p.seed)) {
+      if (x >= 0 && x < S && y >= 0 && y < S && !c.has(x, y)) {
+        const col = pal[role], i = (y * S + x) * 4;
+        buf[i] = col[0]; buf[i + 1] = col[1]; buf[i + 2] = col[2]; buf[i + 3] = 255;
+      }
     }
   }
   for (let i = 0; i < S * S; i++) {
