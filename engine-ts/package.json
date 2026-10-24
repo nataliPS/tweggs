@@ -1,0 +1,15 @@
+{
+  "name": "@mixlings/engine",
+  "version": "0.1.0",
+  "description": "Mixlings genome engine (reference implementation of docs/genome-spec.md)",
+  "type": "module",
+  "private": true,
+  "main": "src/index.ts",
+  "engines": { "node": ">=22.18" },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "golden": "node scripts/make-golden.ts && node scripts/gen-swift-catalog.ts",
+    "gen:swift": "node scripts/gen-swift-catalog.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  }
+}

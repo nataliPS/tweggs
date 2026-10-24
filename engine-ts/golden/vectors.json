@@ -1,0 +1,9049 @@
+{
+  "specVersion": "0.1",
+  "generator": "engine-ts/scripts/make-golden.ts",
+  "catalog": [
+    {
+      "index": 0,
+      "key": "body",
+      "variants": [
+        {
+          "name": "bean",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "round",
+          "dominance": 6,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "tall",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "blob",
+          "dominance": 3,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "star",
+          "dominance": 2,
+          "rarity": 2,
+          "mutationOnly": false
+        },
+        {
+          "name": "crystal",
+          "dominance": 7,
+          "rarity": 3,
+          "mutationOnly": true
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "key": "eyes",
+      "variants": [
+        {
+          "name": "dot",
+          "dominance": 6,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "wide",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "sleepy",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "happy",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "cyclops",
+          "dominance": 2,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "heart",
+          "dominance": 3,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "starry",
+          "dominance": 2,
+          "rarity": 2,
+          "mutationOnly": false
+        },
+        {
+          "name": "void",
+          "dominance": 8,
+          "rarity": 3,
+          "mutationOnly": true
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "key": "head",
+      "variants": [
+        {
+          "name": "none",
+          "dominance": 3,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "ears",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "horns",
+          "dominance": 6,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "antenna",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "crest",
+          "dominance": 4,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "leaf",
+          "dominance": 3,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "crown",
+          "dominance": 2,
+          "rarity": 2,
+          "mutationOnly": false
+        },
+        {
+          "name": "flamehorns",
+          "dominance": 8,
+          "rarity": 3,
+          "mutationOnly": true
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "key": "pattern",
+      "variants": [
+        {
+          "name": "plain",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "spots",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "stripes",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "belly",
+          "dominance": 3,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "freckles",
+          "dominance": 2,
+          "rarity": 2,
+          "mutationOnly": false
+        },
+        {
+          "name": "galaxy",
+          "dominance": 7,
+          "rarity": 3,
+          "mutationOnly": true
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "key": "tail",
+      "variants": [
+        {
+          "name": "none",
+          "dominance": 3,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "nub",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "curl",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "fluff",
+          "dominance": 4,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "spikes",
+          "dominance": 2,
+          "rarity": 2,
+          "mutationOnly": false
+        },
+        {
+          "name": "comet",
+          "dominance": 8,
+          "rarity": 3,
+          "mutationOnly": true
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "key": "palette",
+      "variants": [
+        {
+          "name": "mint",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "peach",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "sky",
+          "dominance": 6,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "lilac",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "lemon",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "coral",
+          "dominance": 6,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "moss",
+          "dominance": 3,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "slate",
+          "dominance": 3,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "berry",
+          "dominance": 5,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "ocean",
+          "dominance": 6,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "sunset",
+          "dominance": 4,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "frost",
+          "dominance": 3,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "ember",
+          "dominance": 2,
+          "rarity": 2,
+          "mutationOnly": false
+        },
+        {
+          "name": "midnight",
+          "dominance": 2,
+          "rarity": 2,
+          "mutationOnly": false
+        },
+        {
+          "name": "gold",
+          "dominance": 8,
+          "rarity": 3,
+          "mutationOnly": true
+        },
+        {
+          "name": "prism",
+          "dominance": 9,
+          "rarity": 3,
+          "mutationOnly": true
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "key": "aura",
+      "variants": [
+        {
+          "name": "none",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "sparkle",
+          "dominance": 3,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "glow",
+          "dominance": 2,
+          "rarity": 2,
+          "mutationOnly": false
+        },
+        {
+          "name": "storm",
+          "dominance": 7,
+          "rarity": 3,
+          "mutationOnly": true
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "key": "temper",
+      "variants": [
+        {
+          "name": "calm",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "playful",
+          "dominance": 6,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "shy",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "brave",
+          "dominance": 5,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "grumpy",
+          "dominance": 4,
+          "rarity": 0,
+          "mutationOnly": false
+        },
+        {
+          "name": "curious",
+          "dominance": 3,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "sneaky",
+          "dominance": 3,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "dreamy",
+          "dominance": 2,
+          "rarity": 1,
+          "mutationOnly": false
+        },
+        {
+          "name": "noble",
+          "dominance": 2,
+          "rarity": 2,
+          "mutationOnly": false
+        },
+        {
+          "name": "chaotic",
+          "dominance": 8,
+          "rarity": 3,
+          "mutationOnly": true
+        }
+      ]
+    }
+  ],
+  "hashes": [
+    {
+      "input": "",
+      "value": 2166136261,
+      "hex": "811c9dc5"
+    },
+    {
+      "input": "a",
+      "value": 3826002220,
+      "hex": "e40c292c"
+    },
+    {
+      "input": "foobar",
+      "value": 3214735720,
+      "hex": "bf9cf968"
+    },
+    {
+      "input": "|",
+      "value": 4178332219,
+      "hex": "f90c4a3b"
+    },
+    {
+      "input": "a|b|n",
+      "value": 3986100176,
+      "hex": "ed970fd0"
+    },
+    {
+      "input": "é",
+      "value": 513665217,
+      "hex": "1e9de8c1"
+    },
+    {
+      "input": "日本語",
+      "value": 2153733351,
+      "hex": "805f5ce7"
+    },
+    {
+      "input": "🐣",
+      "value": 646801113,
+      "hex": "268d66d9"
+    },
+    {
+      "input": "starter|p|0",
+      "value": 1743878132,
+      "hex": "67f177f4"
+    }
+  ],
+  "rng": [
+    {
+      "seed": 0,
+      "next": [
+        1144304738,
+        1416247,
+        958946056,
+        627933444,
+        2007157716,
+        2340967985,
+        2642484575,
+        2787370982,
+        1958536065,
+        2496316458
+      ],
+      "int7": [
+        3,
+        0,
+        5,
+        5,
+        4,
+        6,
+        3,
+        4,
+        3,
+        6
+      ],
+      "float": [
+        0.26642920868471265,
+        0.0003297457005828619,
+        0.2232720274478197,
+        0.1462021479383111,
+        0.46732782293111086
+      ]
+    },
+    {
+      "seed": 42,
+      "next": [
+        2581720956,
+        1925393290,
+        3661312704,
+        2876485805,
+        750819978,
+        2261697747,
+        1173505300,
+        2683257857,
+        3717185310,
+        2028586305
+      ],
+      "int7": [
+        3,
+        2,
+        0,
+        4,
+        6,
+        1,
+        2,
+        0,
+        6,
+        4
+      ],
+      "float": [
+        0.6011037519201636,
+        0.44829055899754167,
+        0.8524657934904099,
+        0.6697340414393693,
+        0.17481389874592423
+      ]
+    },
+    {
+      "seed": 3735928559,
+      "next": [
+        4043151706,
+        1147597007,
+        3315858022,
+        1538288752,
+        2042435954,
+        3600176436,
+        484360372,
+        1362401224,
+        379893202,
+        1051950098
+      ],
+      "int7": [
+        6,
+        4,
+        1,
+        0,
+        6,
+        3,
+        6,
+        2,
+        3,
+        3
+      ],
+      "float": [
+        0.9413696140982211,
+        0.26719574979506433,
+        0.772033357527107,
+        0.35816076025366783,
+        0.47554167779162526
+      ]
+    }
+  ],
+  "breeding": [
+    {
+      "name": "breed_00",
+      "input": {
+        "parentA": {
+          "id": "m_2",
+          "genome": [
+            [
+              2,
+              1
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              4,
+              9
+            ]
+          ],
+          "owner": "player_22"
+        },
+        "parentB": {
+          "id": "m_7",
+          "genome": [
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              1,
+              8
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "owner": "player_1548"
+        },
+        "nonce": "nonce-750442",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_6985e952",
+        "seedHex": "d7cb1048",
+        "genome": [
+          [
+            1,
+            0
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            10,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            9,
+            0
+          ]
+        ],
+        "expressed": [
+          1,
+          5,
+          0,
+          1,
+          5,
+          1,
+          0,
+          9
+        ],
+        "rarity": {
+          "score": 6,
+          "tier": "rare"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_22": 0,
+          "player_1548": 1
+        }
+      }
+    },
+    {
+      "name": "breed_01",
+      "input": {
+        "parentA": {
+          "id": "mx-76008",
+          "genome": [
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              4,
+              10
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "owner": "player_531"
+        },
+        "parentB": {
+          "id": "mx-43674",
+          "genome": [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              5,
+              8
+            ]
+          ],
+          "owner": "player_1029"
+        },
+        "nonce": "nonce-262085#7",
+        "unlockedMutations": [
+          {
+            "gene": 0,
+            "variant": 5
+          },
+          {
+            "gene": 3,
+            "variant": 5
+          },
+          {
+            "gene": 5,
+            "variant": 14
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_a4ec6725",
+        "seedHex": "325150e7",
+        "genome": [
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            6
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            0,
+            14
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            8,
+            6
+          ]
+        ],
+        "expressed": [
+          2,
+          1,
+          0,
+          0,
+          1,
+          14,
+          0,
+          6
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": {
+          "gene": 5,
+          "variant": 14,
+          "allele": 1
+        },
+        "paletteShift": {
+          "player_1029": 0,
+          "player_531": 1
+        }
+      }
+    },
+    {
+      "name": "breed_02",
+      "input": {
+        "parentA": {
+          "id": "mx-27315",
+          "genome": [
+            [
+              4,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              4
+            ]
+          ],
+          "owner": "player_53"
+        },
+        "parentB": {
+          "id": "mx-82433",
+          "genome": [
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              12,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              5,
+              6
+            ]
+          ],
+          "owner": "player_1203"
+        },
+        "nonce": "n",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_a354ef78",
+        "seedHex": "95b968c7",
+        "genome": [
+          [
+            4,
+            4
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "expressed": [
+          4,
+          0,
+          1,
+          2,
+          2,
+          0,
+          0,
+          4
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_53": 0,
+          "player_1203": 1
+        }
+      }
+    },
+    {
+      "name": "breed_03",
+      "input": {
+        "parentA": {
+          "id": "m_7",
+          "genome": [
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              4
+            ]
+          ],
+          "owner": "player_124"
+        },
+        "parentB": {
+          "id": "Creature25",
+          "genome": [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "owner": "player_1964"
+        },
+        "nonce": "",
+        "unlockedMutations": [
+          {
+            "gene": 4,
+            "variant": 5
+          },
+          {
+            "gene": 6,
+            "variant": 3
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_6992219e",
+        "seedHex": "2a84d3a0",
+        "genome": [
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        "expressed": [
+          2,
+          3,
+          5,
+          1,
+          4,
+          9,
+          0,
+          1
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1964": 0,
+          "player_124": 1
+        }
+      }
+    },
+    {
+      "name": "breed_04",
+      "input": {
+        "parentA": {
+          "id": "mx-65990",
+          "genome": [
+            [
+              2,
+              4
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              12
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "owner": "player_182"
+        },
+        "parentB": {
+          "id": "ž627",
+          "genome": [
+            [
+              1,
+              4
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "owner": "player_1786"
+        },
+        "nonce": "977b7912d8298b11",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_45ff90ac",
+        "seedHex": "6760c2f3",
+        "genome": [
+          [
+            2,
+            1
+          ],
+          [
+            6,
+            6
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            12,
+            6
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "expressed": [
+          1,
+          6,
+          2,
+          0,
+          2,
+          6,
+          1,
+          0
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_182": 0,
+          "player_1786": 1
+        }
+      }
+    },
+    {
+      "name": "breed_05",
+      "input": {
+        "parentA": {
+          "id": "日本644",
+          "genome": [
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              9,
+              11
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "owner": "player_6"
+        },
+        "parentB": {
+          "id": "mx-75864",
+          "genome": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              9,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              7
+            ]
+          ],
+          "owner": "player_1737"
+        },
+        "nonce": "nonce-495586#12",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          },
+          {
+            "gene": 4,
+            "variant": 5
+          },
+          {
+            "gene": 7,
+            "variant": 9
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_823708fd",
+        "seedHex": "9b3da91c",
+        "genome": [
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            7
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "expressed": [
+          2,
+          7,
+          2,
+          2,
+          5,
+          9,
+          2,
+          3
+        ],
+        "rarity": {
+          "score": 9,
+          "tier": "legendary"
+        },
+        "mutation": {
+          "gene": 4,
+          "variant": 5,
+          "allele": 1
+        },
+        "paletteShift": {
+          "player_1737": 0,
+          "player_6": 1
+        }
+      }
+    },
+    {
+      "name": "breed_06",
+      "input": {
+        "parentA": {
+          "id": "Creature28",
+          "genome": [
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          "owner": "player_672"
+        },
+        "parentB": {
+          "id": "Ω462",
+          "genome": [
+            [
+              1,
+              2
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              5,
+              13
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              7
+            ]
+          ],
+          "owner": "player_1994"
+        },
+        "nonce": "ü-92",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_fecad1a6",
+        "seedHex": "13137024",
+        "genome": [
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            13,
+            5
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            8,
+            7
+          ]
+        ],
+        "expressed": [
+          1,
+          3,
+          3,
+          3,
+          0,
+          5,
+          0,
+          7
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_672": 0,
+          "player_1994": 1
+        }
+      }
+    },
+    {
+      "name": "breed_07",
+      "input": {
+        "parentA": {
+          "id": "mx-38051",
+          "genome": [
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              8,
+              9
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          "owner": "player_882"
+        },
+        "parentB": {
+          "id": "ß235",
+          "genome": [
+            [
+              4,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              9
+            ]
+          ],
+          "owner": "player_882"
+        },
+        "nonce": "ü-5",
+        "unlockedMutations": [
+          {
+            "gene": 7,
+            "variant": 9
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_9e6a8699",
+        "seedHex": "7bdb1fc3",
+        "genome": [
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            9
+          ]
+        ],
+        "expressed": [
+          2,
+          1,
+          3,
+          0,
+          2,
+          8,
+          1,
+          9
+        ],
+        "rarity": {
+          "score": 5,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_882": 0
+        }
+      }
+    },
+    {
+      "name": "breed_08",
+      "input": {
+        "parentA": {
+          "id": "Creature33",
+          "genome": [
+            [
+              4,
+              4
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              7,
+              1
+            ]
+          ],
+          "owner": "player_812"
+        },
+        "parentB": {
+          "id": "🐣174",
+          "genome": [
+            [
+              3,
+              4
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              12
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              6,
+              8
+            ]
+          ],
+          "owner": "player_1350"
+        },
+        "nonce": "n",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_c5354684",
+        "seedHex": "834cc4ec",
+        "genome": [
+          [
+            4,
+            3
+          ],
+          [
+            0,
+            6
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            7,
+            8
+          ]
+        ],
+        "expressed": [
+          3,
+          0,
+          1,
+          2,
+          3,
+          1,
+          1,
+          7
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_812": 0,
+          "player_1350": 1
+        }
+      }
+    },
+    {
+      "name": "breed_09",
+      "input": {
+        "parentA": {
+          "id": "Creature2",
+          "genome": [
+            [
+              2,
+              0
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              8,
+              7
+            ]
+          ],
+          "owner": "player_536"
+        },
+        "parentB": {
+          "id": "Creature25",
+          "genome": [
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              6,
+              13
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "owner": "player_1602"
+        },
+        "nonce": "ü-38#19",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          },
+          {
+            "gene": 2,
+            "variant": 7
+          },
+          {
+            "gene": 5,
+            "variant": 14
+          },
+          {
+            "gene": 7,
+            "variant": 9
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_5cc3a3d7",
+        "seedHex": "a36a4a9a",
+        "genome": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            14,
+            13
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            7,
+            1
+          ]
+        ],
+        "expressed": [
+          2,
+          3,
+          1,
+          2,
+          1,
+          14,
+          0,
+          1
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": {
+          "gene": 5,
+          "variant": 14,
+          "allele": 0
+        },
+        "paletteShift": {
+          "player_536": 0,
+          "player_1602": 1
+        }
+      }
+    },
+    {
+      "name": "breed_10",
+      "input": {
+        "parentA": {
+          "id": "Creature37",
+          "genome": [
+            [
+              2,
+              1
+            ],
+            [
+              7,
+              6
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          "owner": "player_10"
+        },
+        "parentB": {
+          "id": "Creature5",
+          "genome": [
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              13,
+              8
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "owner": "player_1584"
+        },
+        "nonce": "ü-94",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_e027cf17",
+        "seedHex": "096834a5",
+        "genome": [
+          [
+            1,
+            2
+          ],
+          [
+            7,
+            4
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "expressed": [
+          1,
+          7,
+          4,
+          1,
+          3,
+          8,
+          3,
+          3
+        ],
+        "rarity": {
+          "score": 9,
+          "tier": "legendary"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_10": 0,
+          "player_1584": 1
+        }
+      }
+    },
+    {
+      "name": "breed_11",
+      "input": {
+        "parentA": {
+          "id": "日本913",
+          "genome": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              8
+            ]
+          ],
+          "owner": "player_545"
+        },
+        "parentB": {
+          "id": "ß180",
+          "genome": [
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              8
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "owner": "player_1290"
+        },
+        "nonce": "",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          },
+          {
+            "gene": 2,
+            "variant": 7
+          },
+          {
+            "gene": 3,
+            "variant": 5
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_5fa83213",
+        "seedHex": "925dac33",
+        "genome": [
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            6,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            8,
+            7
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            6,
+            8
+          ]
+        ],
+        "expressed": [
+          1,
+          3,
+          2,
+          2,
+          2,
+          8,
+          1,
+          6
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1290": 0,
+          "player_545": 1
+        }
+      }
+    },
+    {
+      "name": "breed_12",
+      "input": {
+        "parentA": {
+          "id": "m_1",
+          "genome": [
+            [
+              1,
+              0
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              6,
+              13
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          "owner": "player_128"
+        },
+        "parentB": {
+          "id": "Creature24",
+          "genome": [
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              9,
+              4
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          "owner": "player_1930"
+        },
+        "nonce": "36c51f2588c078a2",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_4b75869a",
+        "seedHex": "da648bdb",
+        "genome": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            6,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            4,
+            6
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            7,
+            8
+          ]
+        ],
+        "expressed": [
+          1,
+          0,
+          4,
+          3,
+          1,
+          4,
+          1,
+          7
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1930": 0,
+          "player_128": 1
+        }
+      }
+    },
+    {
+      "name": "breed_13",
+      "input": {
+        "parentA": {
+          "id": "mx-71089",
+          "genome": [
+            [
+              1,
+              2
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              8
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              5
+            ]
+          ],
+          "owner": "player_235"
+        },
+        "parentB": {
+          "id": "Creature34",
+          "genome": [
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              13,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              5
+            ]
+          ],
+          "owner": "player_1200"
+        },
+        "nonce": "6db738234a4a762b#6",
+        "unlockedMutations": [
+          {
+            "gene": 0,
+            "variant": 5
+          },
+          {
+            "gene": 2,
+            "variant": 7
+          },
+          {
+            "gene": 3,
+            "variant": 5
+          },
+          {
+            "gene": 6,
+            "variant": 3
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_c0c9341c",
+        "seedHex": "8d7d464b",
+        "genome": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            7,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            13,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "expressed": [
+          1,
+          3,
+          7,
+          2,
+          1,
+          3,
+          1,
+          5
+        ],
+        "rarity": {
+          "score": 5,
+          "tier": "uncommon"
+        },
+        "mutation": {
+          "gene": 2,
+          "variant": 7,
+          "allele": 0
+        },
+        "paletteShift": {
+          "player_1200": 0,
+          "player_235": 1
+        }
+      }
+    },
+    {
+      "name": "breed_14",
+      "input": {
+        "parentA": {
+          "id": "mx-99581",
+          "genome": [
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "owner": "player_928"
+        },
+        "parentB": {
+          "id": "mx-45640",
+          "genome": [
+            [
+              2,
+              5
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "owner": "player_1117"
+        },
+        "nonce": "ü-22",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_2c2835a0",
+        "seedHex": "5028bd46",
+        "genome": [
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "expressed": [
+          1,
+          3,
+          2,
+          1,
+          5,
+          5,
+          0,
+          0
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1117": 0,
+          "player_928": 1
+        }
+      }
+    },
+    {
+      "name": "breed_15",
+      "input": {
+        "parentA": {
+          "id": "m_1",
+          "genome": [
+            [
+              5,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          "owner": "player_90"
+        },
+        "parentB": {
+          "id": "Creature10",
+          "genome": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              10,
+              6
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          "owner": "player_1999"
+        },
+        "nonce": "",
+        "unlockedMutations": [
+          {
+            "gene": 3,
+            "variant": 5
+          },
+          {
+            "gene": 5,
+            "variant": 14
+          },
+          {
+            "gene": 5,
+            "variant": 15
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_8238383b",
+        "seedHex": "d8abb3ce",
+        "genome": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            6,
+            14
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            8
+          ]
+        ],
+        "expressed": [
+          0,
+          1,
+          3,
+          0,
+          2,
+          14,
+          3,
+          2
+        ],
+        "rarity": {
+          "score": 6,
+          "tier": "rare"
+        },
+        "mutation": {
+          "gene": 5,
+          "variant": 14,
+          "allele": 1
+        },
+        "paletteShift": {
+          "player_1999": 0,
+          "player_90": 1
+        }
+      }
+    },
+    {
+      "name": "breed_16",
+      "input": {
+        "parentA": {
+          "id": "Creature49",
+          "genome": [
+            [
+              4,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              8,
+              12
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "owner": "player_123"
+        },
+        "parentB": {
+          "id": "ž775",
+          "genome": [
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              11,
+              8
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "owner": "player_1370"
+        },
+        "nonce": "ü-63",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_499cc6ca",
+        "seedHex": "2b51488e",
+        "genome": [
+          [
+            4,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            8,
+            8
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "expressed": [
+          3,
+          2,
+          1,
+          1,
+          1,
+          8,
+          1,
+          2
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_123": 0,
+          "player_1370": 1
+        }
+      }
+    },
+    {
+      "name": "breed_17",
+      "input": {
+        "parentA": {
+          "id": "é854",
+          "genome": [
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              12
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "owner": "player_43"
+        },
+        "parentB": {
+          "id": "mx-65695",
+          "genome": [
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              13,
+              6
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              5,
+              8
+            ]
+          ],
+          "owner": "player_43"
+        },
+        "nonce": "0c1cd70d22bc250f#5",
+        "unlockedMutations": [
+          {
+            "gene": 6,
+            "variant": 3
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_44cc701e",
+        "seedHex": "41a06a11",
+        "genome": [
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            5,
+            0
+          ]
+        ],
+        "expressed": [
+          0,
+          3,
+          1,
+          2,
+          3,
+          3,
+          3,
+          0
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": {
+          "gene": 6,
+          "variant": 3,
+          "allele": 1
+        },
+        "paletteShift": {
+          "player_43": 0
+        }
+      }
+    },
+    {
+      "name": "breed_18",
+      "input": {
+        "parentA": {
+          "id": "Creature37",
+          "genome": [
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              5,
+              7
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "owner": "player_303"
+        },
+        "parentB": {
+          "id": "m_2",
+          "genome": [
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "owner": "player_1530"
+        },
+        "nonce": "nonce-888302",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_f47a5f26",
+        "seedHex": "f88047a1",
+        "genome": [
+          [
+            0,
+            4
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "expressed": [
+          0,
+          3,
+          2,
+          2,
+          0,
+          2,
+          0,
+          4
+        ],
+        "rarity": {
+          "score": 0,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_303": 0,
+          "player_1530": 1
+        }
+      }
+    },
+    {
+      "name": "breed_19",
+      "input": {
+        "parentA": {
+          "id": "mx-49920",
+          "genome": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              13
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          "owner": "player_956"
+        },
+        "parentB": {
+          "id": "m_1",
+          "genome": [
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "owner": "player_1915"
+        },
+        "nonce": "n",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          },
+          {
+            "gene": 7,
+            "variant": 9
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_2bc2d70f",
+        "seedHex": "c5dce2ee",
+        "genome": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            8
+          ]
+        ],
+        "expressed": [
+          0,
+          0,
+          1,
+          0,
+          2,
+          2,
+          0,
+          0
+        ],
+        "rarity": {
+          "score": 0,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1915": 0,
+          "player_956": 1
+        }
+      }
+    },
+    {
+      "name": "breed_20",
+      "input": {
+        "parentA": {
+          "id": "Creature30",
+          "genome": [
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              6,
+              7
+            ]
+          ],
+          "owner": "player_80"
+        },
+        "parentB": {
+          "id": "m_072aef1d",
+          "genome": [
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "owner": "player_1555"
+        },
+        "nonce": "ec14d45be3e40149",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_edb485e2",
+        "seedHex": "aacc23aa",
+        "genome": [
+          [
+            4,
+            3
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            0,
+            6
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            6,
+            2
+          ]
+        ],
+        "expressed": [
+          3,
+          1,
+          0,
+          0,
+          1,
+          5,
+          1,
+          2
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_80": 0,
+          "player_1555": 1
+        }
+      }
+    },
+    {
+      "name": "breed_21",
+      "input": {
+        "parentA": {
+          "id": "mx-57674",
+          "genome": [
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              6,
+              1
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              11,
+              11
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "owner": "player_338"
+        },
+        "parentB": {
+          "id": "mx-63494",
+          "genome": [
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              6,
+              13
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              9,
+              0
+            ]
+          ],
+          "owner": "player_1227"
+        },
+        "nonce": "nonce-784280#7",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          },
+          {
+            "gene": 2,
+            "variant": 7
+          },
+          {
+            "gene": 6,
+            "variant": 3
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_1478d7ed",
+        "seedHex": "89d1842d",
+        "genome": [
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            7,
+            2
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            11,
+            13
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "expressed": [
+          3,
+          7,
+          7,
+          5,
+          0,
+          11,
+          3,
+          1
+        ],
+        "rarity": {
+          "score": 14,
+          "tier": "legendary"
+        },
+        "mutation": {
+          "gene": 2,
+          "variant": 7,
+          "allele": 0
+        },
+        "paletteShift": {
+          "player_338": 0,
+          "player_1227": 1
+        }
+      }
+    },
+    {
+      "name": "breed_22",
+      "input": {
+        "parentA": {
+          "id": "Creature2",
+          "genome": [
+            [
+              0,
+              4
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              8,
+              5
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "owner": "player_760"
+        },
+        "parentB": {
+          "id": "m_3",
+          "genome": [
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              12,
+              5
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "owner": "player_1488"
+        },
+        "nonce": "n",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_72cc6b1e",
+        "seedHex": "f972b131",
+        "genome": [
+          [
+            0,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            8,
+            12
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            6
+          ]
+        ],
+        "expressed": [
+          0,
+          0,
+          3,
+          2,
+          4,
+          8,
+          0,
+          1
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_760": 0,
+          "player_1488": 1
+        }
+      }
+    },
+    {
+      "name": "breed_23",
+      "input": {
+        "parentA": {
+          "id": "é438",
+          "genome": [
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              5
+            ]
+          ],
+          "owner": "player_876"
+        },
+        "parentB": {
+          "id": "Creature49",
+          "genome": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              5,
+              5
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "owner": "player_1405"
+        },
+        "nonce": "ü-47",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          },
+          {
+            "gene": 2,
+            "variant": 7
+          },
+          {
+            "gene": 7,
+            "variant": 9
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_915f03b0",
+        "seedHex": "9339caef",
+        "genome": [
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "expressed": [
+          2,
+          0,
+          3,
+          1,
+          2,
+          2,
+          2,
+          1
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1405": 0,
+          "player_876": 1
+        }
+      }
+    },
+    {
+      "name": "breed_24",
+      "input": {
+        "parentA": {
+          "id": "Ω464",
+          "genome": [
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              5,
+              5
+            ]
+          ],
+          "owner": "player_582"
+        },
+        "parentB": {
+          "id": "m_995408da",
+          "genome": [
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              12,
+              3
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "owner": "player_1197"
+        },
+        "nonce": "ü-36",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_47452360",
+        "seedHex": "db39098f",
+        "genome": [
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        "expressed": [
+          2,
+          1,
+          4,
+          3,
+          0,
+          5,
+          1,
+          1
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1197": 0,
+          "player_582": 1
+        }
+      }
+    },
+    {
+      "name": "breed_25",
+      "input": {
+        "parentA": {
+          "id": "Ω497",
+          "genome": [
+            [
+              5,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              10,
+              14
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              1
+            ]
+          ],
+          "owner": "player_619"
+        },
+        "parentB": {
+          "id": "Creature11",
+          "genome": [
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              8,
+              1
+            ]
+          ],
+          "owner": "player_1055"
+        },
+        "nonce": "n#5",
+        "unlockedMutations": [
+          {
+            "gene": 0,
+            "variant": 5
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_f144bee9",
+        "seedHex": "eaa95def",
+        "genome": [
+          [
+            5,
+            5
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            7
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "expressed": [
+          5,
+          1,
+          7,
+          5,
+          1,
+          10,
+          0,
+          1
+        ],
+        "rarity": {
+          "score": 10,
+          "tier": "legendary"
+        },
+        "mutation": {
+          "gene": 0,
+          "variant": 5,
+          "allele": 0
+        },
+        "paletteShift": {
+          "player_1055": 0,
+          "player_619": 1
+        }
+      }
+    },
+    {
+      "name": "breed_26",
+      "input": {
+        "parentA": {
+          "id": "m_6",
+          "genome": [
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              6
+            ]
+          ],
+          "owner": "player_10"
+        },
+        "parentB": {
+          "id": "m_301df59a",
+          "genome": [
+            [
+              4,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              4,
+              13
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          "owner": "player_1409"
+        },
+        "nonce": "nonce-328879",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_f3c83862",
+        "seedHex": "9b989459",
+        "genome": [
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            13
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            7,
+            6
+          ]
+        ],
+        "expressed": [
+          1,
+          1,
+          3,
+          1,
+          3,
+          4,
+          1,
+          6
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1409": 0,
+          "player_10": 1
+        }
+      }
+    },
+    {
+      "name": "breed_27",
+      "input": {
+        "parentA": {
+          "id": "Creature40",
+          "genome": [
+            [
+              1,
+              2
+            ],
+            [
+              5,
+              5
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              9,
+              4
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              6,
+              8
+            ]
+          ],
+          "owner": "player_362"
+        },
+        "parentB": {
+          "id": "é470",
+          "genome": [
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              9,
+              5
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "owner": "player_362"
+        },
+        "nonce": "nonce-945257",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_01383b79",
+        "seedHex": "44f3229d",
+        "genome": [
+          [
+            1,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            9
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "expressed": [
+          1,
+          5,
+          2,
+          0,
+          0,
+          9,
+          0,
+          0
+        ],
+        "rarity": {
+          "score": 1,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_362": 0
+        }
+      }
+    },
+    {
+      "name": "breed_28",
+      "input": {
+        "parentA": {
+          "id": "Creature37",
+          "genome": [
+            [
+              4,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              10
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              8
+            ]
+          ],
+          "owner": "player_768"
+        },
+        "parentB": {
+          "id": "m_aec40641",
+          "genome": [
+            [
+              1,
+              3
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              5,
+              5
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              5
+            ]
+          ],
+          "owner": "player_1882"
+        },
+        "nonce": "n",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_f0b6df21",
+        "seedHex": "fe834824",
+        "genome": [
+          [
+            4,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            6,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            10,
+            5
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            8,
+            5
+          ]
+        ],
+        "expressed": [
+          1,
+          1,
+          2,
+          1,
+          1,
+          5,
+          1,
+          5
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_768": 0,
+          "player_1882": 1
+        }
+      }
+    },
+    {
+      "name": "breed_29",
+      "input": {
+        "parentA": {
+          "id": "m_7c90763f",
+          "genome": [
+            [
+              0,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              8,
+              1
+            ]
+          ],
+          "owner": "player_125"
+        },
+        "parentB": {
+          "id": "Creature38",
+          "genome": [
+            [
+              2,
+              1
+            ],
+            [
+              6,
+              1
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              12,
+              5
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          "owner": "player_1576"
+        },
+        "nonce": "#2",
+        "unlockedMutations": [
+          {
+            "gene": 4,
+            "variant": 5
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_733900f2",
+        "seedHex": "d83e498f",
+        "genome": [
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expressed": [
+          1,
+          1,
+          3,
+          1,
+          5,
+          5,
+          0,
+          1
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": {
+          "gene": 4,
+          "variant": 5,
+          "allele": 1
+        },
+        "paletteShift": {
+          "player_1576": 0,
+          "player_125": 1
+        }
+      }
+    },
+    {
+      "name": "breed_30",
+      "input": {
+        "parentA": {
+          "id": "m_404636d6",
+          "genome": [
+            [
+              4,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              15,
+              3
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              9,
+              9
+            ]
+          ],
+          "owner": "player_360"
+        },
+        "parentB": {
+          "id": "Creature4",
+          "genome": [
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              11
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              7,
+              4
+            ]
+          ],
+          "owner": "player_1290"
+        },
+        "nonce": "nonce-445511",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_6160b223",
+        "seedHex": "d58649e1",
+        "genome": [
+          [
+            4,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            7,
+            9
+          ]
+        ],
+        "expressed": [
+          2,
+          2,
+          7,
+          5,
+          3,
+          3,
+          0,
+          9
+        ],
+        "rarity": {
+          "score": 10,
+          "tier": "legendary"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1290": 0,
+          "player_360": 1
+        }
+      }
+    },
+    {
+      "name": "breed_31",
+      "input": {
+        "parentA": {
+          "id": "m_2",
+          "genome": [
+            [
+              4,
+              3
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              0,
+              12
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "owner": "player_987"
+        },
+        "parentB": {
+          "id": "mx-38724",
+          "genome": [
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              5,
+              11
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          "owner": "player_1784"
+        },
+        "nonce": "nonce-332536",
+        "unlockedMutations": [
+          {
+            "gene": 2,
+            "variant": 7
+          },
+          {
+            "gene": 5,
+            "variant": 14
+          },
+          {
+            "gene": 5,
+            "variant": 15
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_a7c5a10c",
+        "seedHex": "284555bb",
+        "genome": [
+          [
+            3,
+            4
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            5
+          ]
+        ],
+        "expressed": [
+          3,
+          1,
+          1,
+          1,
+          3,
+          5,
+          0,
+          0
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_987": 0,
+          "player_1784": 1
+        }
+      }
+    },
+    {
+      "name": "breed_32",
+      "input": {
+        "parentA": {
+          "id": "m_75fc2530",
+          "genome": [
+            [
+              4,
+              1
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              11
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "owner": "player_430"
+        },
+        "parentB": {
+          "id": "é866",
+          "genome": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              5,
+              11
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              1
+            ]
+          ],
+          "owner": "player_1534"
+        },
+        "nonce": "nonce-368808",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_7685951f",
+        "seedHex": "35508573",
+        "genome": [
+          [
+            1,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            11
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "expressed": [
+          1,
+          4,
+          0,
+          1,
+          1,
+          1,
+          2,
+          1
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_430": 0,
+          "player_1534": 1
+        }
+      }
+    },
+    {
+      "name": "breed_33",
+      "input": {
+        "parentA": {
+          "id": "Creature15",
+          "genome": [
+            [
+              0,
+              1
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              13,
+              10
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "owner": "player_34"
+        },
+        "parentB": {
+          "id": "m_ab0d4dfb",
+          "genome": [
+            [
+              4,
+              4
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              5,
+              8
+            ]
+          ],
+          "owner": "player_1373"
+        },
+        "nonce": "n#1",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          },
+          {
+            "gene": 2,
+            "variant": 7
+          },
+          {
+            "gene": 3,
+            "variant": 5
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_4b4d2a67",
+        "seedHex": "2111683f",
+        "genome": [
+          [
+            1,
+            4
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            10,
+            7
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "expressed": [
+          1,
+          7,
+          3,
+          2,
+          2,
+          10,
+          0,
+          3
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": {
+          "gene": 1,
+          "variant": 7,
+          "allele": 0
+        },
+        "paletteShift": {
+          "player_34": 0,
+          "player_1373": 1
+        }
+      }
+    },
+    {
+      "name": "breed_34",
+      "input": {
+        "parentA": {
+          "id": "m_60ef3ca0",
+          "genome": [
+            [
+              2,
+              1
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              11,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "owner": "player_475"
+        },
+        "parentB": {
+          "id": "mx-24098",
+          "genome": [
+            [
+              3,
+              2
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              2,
+              9
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "owner": "player_1666"
+        },
+        "nonce": "",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_3af052d4",
+        "seedHex": "4878124a",
+        "genome": [
+          [
+            2,
+            2
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "expressed": [
+          2,
+          0,
+          4,
+          3,
+          4,
+          2,
+          0,
+          1
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_475": 0,
+          "player_1666": 1
+        }
+      }
+    },
+    {
+      "name": "breed_35",
+      "input": {
+        "parentA": {
+          "id": "mx-5202",
+          "genome": [
+            [
+              3,
+              0
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              11,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              7
+            ]
+          ],
+          "owner": "player_812"
+        },
+        "parentB": {
+          "id": "Creature35",
+          "genome": [
+            [
+              3,
+              3
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              8,
+              11
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "owner": "player_1080"
+        },
+        "nonce": "nonce-487646",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_4600c314",
+        "seedHex": "e6d099ea",
+        "genome": [
+          [
+            3,
+            0
+          ],
+          [
+            6,
+            6
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            11,
+            11
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            7
+          ]
+        ],
+        "expressed": [
+          0,
+          6,
+          7,
+          1,
+          5,
+          11,
+          0,
+          1
+        ],
+        "rarity": {
+          "score": 9,
+          "tier": "legendary"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1080": 0,
+          "player_812": 1
+        }
+      }
+    },
+    {
+      "name": "breed_36",
+      "input": {
+        "parentA": {
+          "id": "mx-77182",
+          "genome": [
+            [
+              0,
+              2
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              9,
+              8
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "owner": "player_89"
+        },
+        "parentB": {
+          "id": "m_a2167c79",
+          "genome": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "owner": "player_1212"
+        },
+        "nonce": "3f83d3d0453a0ce5",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_9ad62845",
+        "seedHex": "3758ef4f",
+        "genome": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            6,
+            8
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expressed": [
+          1,
+          2,
+          2,
+          1,
+          2,
+          8,
+          0,
+          2
+        ],
+        "rarity": {
+          "score": 1,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1212": 0,
+          "player_89": 1
+        }
+      }
+    },
+    {
+      "name": "breed_37",
+      "input": {
+        "parentA": {
+          "id": "m_6",
+          "genome": [
+            [
+              4,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "owner": "player_997"
+        },
+        "parentB": {
+          "id": "m_9",
+          "genome": [
+            [
+              3,
+              1
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "owner": "player_997"
+        },
+        "nonce": "nonce-189292#0",
+        "unlockedMutations": [
+          {
+            "gene": 1,
+            "variant": 7
+          },
+          {
+            "gene": 6,
+            "variant": 3
+          },
+          {
+            "gene": 7,
+            "variant": 9
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_fe531e39",
+        "seedHex": "3954790a",
+        "genome": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            7
+          ]
+        ],
+        "expressed": [
+          1,
+          3,
+          1,
+          3,
+          1,
+          2,
+          3,
+          0
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": {
+          "gene": 6,
+          "variant": 3,
+          "allele": 1
+        },
+        "paletteShift": {
+          "player_997": 0
+        }
+      }
+    },
+    {
+      "name": "breed_38",
+      "input": {
+        "parentA": {
+          "id": "é213",
+          "genome": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          "owner": "player_777"
+        },
+        "parentB": {
+          "id": "mx-4874",
+          "genome": [
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              8
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              0,
+              8
+            ]
+          ],
+          "owner": "player_1059"
+        },
+        "nonce": "nonce-425628",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_824a4b10",
+        "seedHex": "ca71f32f",
+        "genome": [
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            8,
+            6
+          ]
+        ],
+        "expressed": [
+          0,
+          0,
+          2,
+          0,
+          1,
+          2,
+          1,
+          6
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1059": 0,
+          "player_777": 1
+        }
+      }
+    },
+    {
+      "name": "breed_39",
+      "input": {
+        "parentA": {
+          "id": "m_4",
+          "genome": [
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              7,
+              11
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              7,
+              4
+            ]
+          ],
+          "owner": "player_548"
+        },
+        "parentB": {
+          "id": "mx-75876",
+          "genome": [
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "owner": "player_1652"
+        },
+        "nonce": "n",
+        "unlockedMutations": [
+          {
+            "gene": 6,
+            "variant": 3
+          },
+          {
+            "gene": 7,
+            "variant": 9
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_72453e9d",
+        "seedHex": "2beadb06",
+        "genome": [
+          [
+            3,
+            3
+          ],
+          [
+            6,
+            4
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "expressed": [
+          3,
+          4,
+          0,
+          1,
+          3,
+          8,
+          0,
+          1
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_548": 0,
+          "player_1652": 1
+        }
+      }
+    },
+    {
+      "name": "breed_40",
+      "input": {
+        "parentA": {
+          "id": "mx-21479",
+          "genome": [
+            [
+              1,
+              0
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              14,
+              12
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              6,
+              3
+            ]
+          ],
+          "owner": "player_285"
+        },
+        "parentB": {
+          "id": "m_4d97446e",
+          "genome": [
+            [
+              4,
+              1
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "owner": "player_1167"
+        },
+        "nonce": "nonce-306329",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_e532f9bf",
+        "seedHex": "8590cd32",
+        "genome": [
+          [
+            1,
+            0
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            7,
+            14
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "expressed": [
+          1,
+          5,
+          0,
+          1,
+          0,
+          14,
+          1,
+          3
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1167": 0,
+          "player_285": 1
+        }
+      }
+    },
+    {
+      "name": "breed_41",
+      "input": {
+        "parentA": {
+          "id": "m_7",
+          "genome": [
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              10,
+              7
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              8,
+              8
+            ]
+          ],
+          "owner": "player_937"
+        },
+        "parentB": {
+          "id": "m_3b00d8d5",
+          "genome": [
+            [
+              3,
+              3
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              0,
+              6
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              9,
+              4
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              5
+            ]
+          ],
+          "owner": "player_1954"
+        },
+        "nonce": "e8c27a877e89efb7#2",
+        "unlockedMutations": [
+          {
+            "gene": 6,
+            "variant": 3
+          },
+          {
+            "gene": 7,
+            "variant": 9
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_c2388356",
+        "seedHex": "0dbb5dc5",
+        "genome": [
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            9,
+            8
+          ]
+        ],
+        "expressed": [
+          3,
+          1,
+          3,
+          3,
+          2,
+          4,
+          0,
+          9
+        ],
+        "rarity": {
+          "score": 5,
+          "tier": "uncommon"
+        },
+        "mutation": {
+          "gene": 7,
+          "variant": 9,
+          "allele": 0
+        },
+        "paletteShift": {
+          "player_1954": 0,
+          "player_937": 1
+        }
+      }
+    },
+    {
+      "name": "breed_42",
+      "input": {
+        "parentA": {
+          "id": "mx-48483",
+          "genome": [
+            [
+              4,
+              4
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "owner": "player_208"
+        },
+        "parentB": {
+          "id": "m_9",
+          "genome": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              5
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              11,
+              7
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          "owner": "player_1840"
+        },
+        "nonce": "ü-95",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_c8441e96",
+        "seedHex": "48bb64cd",
+        "genome": [
+          [
+            1,
+            4
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            11,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            7,
+            3
+          ]
+        ],
+        "expressed": [
+          1,
+          1,
+          1,
+          1,
+          3,
+          2,
+          1,
+          3
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1840": 0,
+          "player_208": 1
+        }
+      }
+    },
+    {
+      "name": "breed_43",
+      "input": {
+        "parentA": {
+          "id": "ß146",
+          "genome": [
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              6
+            ]
+          ],
+          "owner": "player_752"
+        },
+        "parentB": {
+          "id": "ß922",
+          "genome": [
+            [
+              0,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              10,
+              5
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "owner": "player_1149"
+        },
+        "nonce": "ü-28",
+        "unlockedMutations": [
+          {
+            "gene": 0,
+            "variant": 5
+          },
+          {
+            "gene": 1,
+            "variant": 7
+          },
+          {
+            "gene": 2,
+            "variant": 7
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_30b86061",
+        "seedHex": "5bca0a55",
+        "genome": [
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            6,
+            5
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            6,
+            1
+          ]
+        ],
+        "expressed": [
+          4,
+          1,
+          5,
+          1,
+          4,
+          5,
+          1,
+          1
+        ],
+        "rarity": {
+          "score": 6,
+          "tier": "rare"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_752": 0,
+          "player_1149": 1
+        }
+      }
+    },
+    {
+      "name": "breed_44",
+      "input": {
+        "parentA": {
+          "id": "é529",
+          "genome": [
+            [
+              3,
+              0
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "owner": "player_713"
+        },
+        "parentB": {
+          "id": "ß75",
+          "genome": [
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "owner": "player_1978"
+        },
+        "nonce": "aefc7c0f98ca4b5f",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_75eb0d45",
+        "seedHex": "a55f70f6",
+        "genome": [
+          [
+            4,
+            0
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "expressed": [
+          0,
+          5,
+          1,
+          0,
+          1,
+          2,
+          0,
+          1
+        ],
+        "rarity": {
+          "score": 0,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1978": 0,
+          "player_713": 1
+        }
+      }
+    },
+    {
+      "name": "breed_45",
+      "input": {
+        "parentA": {
+          "id": "m_9",
+          "genome": [
+            [
+              3,
+              1
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              8,
+              11
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "owner": "player_749"
+        },
+        "parentB": {
+          "id": "m_bd455511",
+          "genome": [
+            [
+              4,
+              1
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              7
+            ]
+          ],
+          "owner": "player_1146"
+        },
+        "nonce": "#12",
+        "unlockedMutations": [
+          {
+            "gene": 3,
+            "variant": 5
+          },
+          {
+            "gene": 5,
+            "variant": 14
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_a33cb000",
+        "seedHex": "907b287b",
+        "genome": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            8,
+            10
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            6,
+            3
+          ]
+        ],
+        "expressed": [
+          1,
+          1,
+          2,
+          5,
+          2,
+          8,
+          0,
+          3
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        },
+        "mutation": {
+          "gene": 3,
+          "variant": 5,
+          "allele": 0
+        },
+        "paletteShift": {
+          "player_749": 0,
+          "player_1146": 1
+        }
+      }
+    },
+    {
+      "name": "breed_46",
+      "input": {
+        "parentA": {
+          "id": "Ω706",
+          "genome": [
+            [
+              0,
+              4
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              10
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              8
+            ]
+          ],
+          "owner": "player_848"
+        },
+        "parentB": {
+          "id": "m_7358d512",
+          "genome": [
+            [
+              4,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              13,
+              5
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          "owner": "player_1462"
+        },
+        "nonce": "n",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_4e261647",
+        "seedHex": "77a4693c",
+        "genome": [
+          [
+            4,
+            0
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            13,
+            10
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            6,
+            8
+          ]
+        ],
+        "expressed": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          10,
+          1,
+          6
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1462": 0,
+          "player_848": 1
+        }
+      }
+    },
+    {
+      "name": "breed_47",
+      "input": {
+        "parentA": {
+          "id": "Creature45",
+          "genome": [
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              8
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "owner": "player_180"
+        },
+        "parentB": {
+          "id": "é513",
+          "genome": [
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "owner": "player_180"
+        },
+        "nonce": "",
+        "unlockedMutations": [
+          {
+            "gene": 0,
+            "variant": 5
+          },
+          {
+            "gene": 4,
+            "variant": 5
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_cde08845",
+        "seedHex": "9c5d7718",
+        "genome": [
+          [
+            2,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "expressed": [
+          5,
+          0,
+          1,
+          0,
+          4,
+          8,
+          1,
+          0
+        ],
+        "rarity": {
+          "score": 7,
+          "tier": "rare"
+        },
+        "mutation": {
+          "gene": 0,
+          "variant": 5,
+          "allele": 1
+        },
+        "paletteShift": {
+          "player_180": 0
+        }
+      }
+    },
+    {
+      "name": "breed_48",
+      "input": {
+        "parentA": {
+          "id": "m_1",
+          "genome": [
+            [
+              3,
+              0
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              8
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          "owner": "player_425"
+        },
+        "parentB": {
+          "id": "m_0",
+          "genome": [
+            [
+              4,
+              0
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              5,
+              0
+            ]
+          ],
+          "owner": "player_1290"
+        },
+        "nonce": "",
+        "unlockedMutations": []
+      },
+      "expected": {
+        "id": "c_dbf82818",
+        "seedHex": "fb37413c",
+        "genome": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            7
+          ]
+        ],
+        "expressed": [
+          0,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "rarity": {
+          "score": 0,
+          "tier": "common"
+        },
+        "mutation": null,
+        "paletteShift": {
+          "player_1290": 0,
+          "player_425": 1
+        }
+      }
+    },
+    {
+      "name": "breed_49",
+      "input": {
+        "parentA": {
+          "id": "Creature9",
+          "genome": [
+            [
+              3,
+              4
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              7
+            ]
+          ],
+          "owner": "player_302"
+        },
+        "parentB": {
+          "id": "ž876",
+          "genome": [
+            [
+              2,
+              3
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          "owner": "player_1006"
+        },
+        "nonce": "#0",
+        "unlockedMutations": [
+          {
+            "gene": 3,
+            "variant": 5
+          },
+          {
+            "gene": 5,
+            "variant": 15
+          },
+          {
+            "gene": 6,
+            "variant": 3
+          }
+        ]
+      },
+      "expected": {
+        "id": "c_b606a7bb",
+        "seedHex": "19c0b3d2",
+        "genome": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            7,
+            4
+          ]
+        ],
+        "expressed": [
+          3,
+          3,
+          0,
+          5,
+          1,
+          2,
+          3,
+          4
+        ],
+        "rarity": {
+          "score": 7,
+          "tier": "rare"
+        },
+        "mutation": {
+          "gene": 6,
+          "variant": 3,
+          "allele": 0
+        },
+        "paletteShift": {
+          "player_302": 0,
+          "player_1006": 1
+        }
+      }
+    }
+  ],
+  "starters": [
+    {
+      "name": "starter_00",
+      "input": {
+        "playerId": "",
+        "slot": 0
+      },
+      "expected": {
+        "genome": [
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            6
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "expressed": [
+          1,
+          0,
+          3,
+          3,
+          2,
+          4,
+          1,
+          2
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_01",
+      "input": {
+        "playerId": "p",
+        "slot": 1
+      },
+      "expected": {
+        "genome": [
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            10,
+            7
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "expressed": [
+          0,
+          0,
+          2,
+          3,
+          1,
+          10,
+          1,
+          3
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        }
+      }
+    },
+    {
+      "name": "starter_02",
+      "input": {
+        "playerId": "игрок",
+        "slot": 2
+      },
+      "expected": {
+        "genome": [
+          [
+            3,
+            2
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            12,
+            12
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            8,
+            1
+          ]
+        ],
+        "expressed": [
+          2,
+          3,
+          2,
+          1,
+          3,
+          12,
+          2,
+          1
+        ],
+        "rarity": {
+          "score": 5,
+          "tier": "uncommon"
+        }
+      }
+    },
+    {
+      "name": "starter_03",
+      "input": {
+        "playerId": "player_160b0179",
+        "slot": 3
+      },
+      "expected": {
+        "genome": [
+          [
+            0,
+            4
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "expressed": [
+          0,
+          3,
+          1,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "rarity": {
+          "score": 0,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_04",
+      "input": {
+        "playerId": "player_92e1bf95",
+        "slot": 0
+      },
+      "expected": {
+        "genome": [
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            6,
+            5
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            8,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "expressed": [
+          4,
+          0,
+          5,
+          2,
+          3,
+          0,
+          1,
+          0
+        ],
+        "rarity": {
+          "score": 5,
+          "tier": "uncommon"
+        }
+      }
+    },
+    {
+      "name": "starter_05",
+      "input": {
+        "playerId": "player_9ffa5358",
+        "slot": 1
+      },
+      "expected": {
+        "genome": [
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            8,
+            7
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            8
+          ]
+        ],
+        "expressed": [
+          1,
+          1,
+          2,
+          2,
+          2,
+          8,
+          1,
+          1
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_06",
+      "input": {
+        "playerId": "player_97b5128f",
+        "slot": 2
+      },
+      "expected": {
+        "genome": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "expressed": [
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        "rarity": {
+          "score": 1,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_07",
+      "input": {
+        "playerId": "player_7e2c3aa7",
+        "slot": 3
+      },
+      "expected": {
+        "genome": [
+          [
+            4,
+            0
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "expressed": [
+          0,
+          2,
+          2,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "rarity": {
+          "score": 0,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_08",
+      "input": {
+        "playerId": "player_7b043d64",
+        "slot": 0
+      },
+      "expected": {
+        "genome": [
+          [
+            3,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            6,
+            5
+          ]
+        ],
+        "expressed": [
+          0,
+          1,
+          1,
+          0,
+          2,
+          2,
+          1,
+          5
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_09",
+      "input": {
+        "playerId": "player_bbf26b74",
+        "slot": 1
+      },
+      "expected": {
+        "genome": [
+          [
+            1,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            13,
+            11
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        "expressed": [
+          1,
+          5,
+          2,
+          1,
+          2,
+          11,
+          1,
+          1
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_10",
+      "input": {
+        "playerId": "player_f4b1234a",
+        "slot": 2
+      },
+      "expected": {
+        "genome": [
+          [
+            4,
+            3
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            10,
+            7
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        "expressed": [
+          3,
+          0,
+          3,
+          0,
+          1,
+          10,
+          2,
+          1
+        ],
+        "rarity": {
+          "score": 4,
+          "tier": "uncommon"
+        }
+      }
+    },
+    {
+      "name": "starter_11",
+      "input": {
+        "playerId": "player_6f479656",
+        "slot": 3
+      },
+      "expected": {
+        "genome": [
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            8
+          ]
+        ],
+        "expressed": [
+          0,
+          3,
+          3,
+          2,
+          2,
+          2,
+          0,
+          2
+        ],
+        "rarity": {
+          "score": 0,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_12",
+      "input": {
+        "playerId": "player_1d5272db",
+        "slot": 0
+      },
+      "expected": {
+        "genome": [
+          [
+            0,
+            0
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            8,
+            13
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "expressed": [
+          0,
+          3,
+          2,
+          3,
+          2,
+          8,
+          1,
+          1
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        }
+      }
+    },
+    {
+      "name": "starter_13",
+      "input": {
+        "playerId": "player_28622b87",
+        "slot": 1
+      },
+      "expected": {
+        "genome": [
+          [
+            1,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            6,
+            10
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            7
+          ]
+        ],
+        "expressed": [
+          1,
+          3,
+          3,
+          1,
+          0,
+          10,
+          1,
+          0
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_14",
+      "input": {
+        "playerId": "player_e3963098",
+        "slot": 2
+      },
+      "expected": {
+        "genome": [
+          [
+            1,
+            4
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            6,
+            5
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            8,
+            3
+          ]
+        ],
+        "expressed": [
+          1,
+          0,
+          5,
+          2,
+          3,
+          2,
+          0,
+          3
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_15",
+      "input": {
+        "playerId": "player_24c28c27",
+        "slot": 3
+      },
+      "expected": {
+        "genome": [
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "expressed": [
+          1,
+          2,
+          3,
+          3,
+          1,
+          10,
+          0,
+          2
+        ],
+        "rarity": {
+          "score": 2,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_16",
+      "input": {
+        "playerId": "player_82578ca7",
+        "slot": 0
+      },
+      "expected": {
+        "genome": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "expressed": [
+          1,
+          3,
+          2,
+          2,
+          1,
+          5,
+          1,
+          2
+        ],
+        "rarity": {
+          "score": 1,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_17",
+      "input": {
+        "playerId": "player_ee5d8322",
+        "slot": 1
+      },
+      "expected": {
+        "genome": [
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            7,
+            2
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            7
+          ]
+        ],
+        "expressed": [
+          0,
+          1,
+          3,
+          1,
+          2,
+          2,
+          0,
+          0
+        ],
+        "rarity": {
+          "score": 0,
+          "tier": "common"
+        }
+      }
+    },
+    {
+      "name": "starter_18",
+      "input": {
+        "playerId": "player_53080f3d",
+        "slot": 2
+      },
+      "expected": {
+        "genome": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            6,
+            4
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "expressed": [
+          1,
+          0,
+          4,
+          1,
+          2,
+          3,
+          2,
+          3
+        ],
+        "rarity": {
+          "score": 3,
+          "tier": "uncommon"
+        }
+      }
+    },
+    {
+      "name": "starter_19",
+      "input": {
+        "playerId": "player_76b6b65c",
+        "slot": 3
+      },
+      "expected": {
+        "genome": [
+          [
+            1,
+            3
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "expressed": [
+          1,
+          0,
+          1,
+          1,
+          0,
+          5,
+          1,
+          1
+        ],
+        "rarity": {
+          "score": 1,
+          "tier": "common"
+        }
+      }
+    }
+  ]
+}
