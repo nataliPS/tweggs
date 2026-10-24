@@ -84,14 +84,16 @@ enum PhenotypeMapper {
     // `artMood` and `silhouetteImage` below.
 
     /// Phenotype for drawing `c` at `stage` with an optional mood expression.
-    static func phenotype(for c: Creature, stage: Stage, condition: Condition? = nil) -> Phenotype {
+    /// `look` adds living-world layers through `ArtAdapter` (no-op unless `MIXLINGS_ART_LIVING`).
+    static func phenotype(for c: Creature, stage: Stage, condition: Condition? = nil,
+                          look: LivingLook = .plain) -> Phenotype {
         #if MIXLINGS_ART_V2
         var p = phenotype(for: c)
         p.stage = artStage(stage)
         p.mood = artMood(condition)
-        return p
+        return ArtAdapter.apply(look, to: p)
         #else
-        return phenotype(for: c)
+        return ArtAdapter.apply(look, to: phenotype(for: c))
         #endif
     }
 

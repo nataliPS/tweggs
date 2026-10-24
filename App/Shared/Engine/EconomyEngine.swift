@@ -249,3 +249,41 @@ enum EconomyEngine {
         }
     }
 }
+
+// MARK: - Daily spark cap (living-world spec §0)
+
+/// New earning sources (living world). The daily surprise is NOT one of them: it keeps its own
+/// once-per-day rule and never counts against the cap.
+enum SparkSource: String, Codable, CaseIterable, Sendable {
+    case weatherItem, jumpRope, souvenir, alarm, visit
+}
+
+extension EconomyEngine {
+    /// One cap across all `SparkSource`s per local day. TODO(server): live-ops config (T5).
+    static let dailySparkCap = 60
+
+    /// Sparks still earnable today from capped sources.
+    static func sparkCapRemaining(_ save: SaveData, now: Date, timeZone: TimeZone = .current) -> Int {
+        let today = CollectingEngine.dayKey(now, timeZone: timeZone)
+        let earned = save.living.sparkCapDay == today ? save.living.sparkCapEarned : 0
+        return max(0, dailySparkCap - earned)
+    }
+
+    /// Grants up to `amount` sparks from a capped source and returns what was actually granted
+    /// (0 once today's cap is reached; never negative, never takes sparks away).
+    @discardableResult
+    static func grantCappedSparks(_ save: inout SaveData, amount: Int, source: SparkSource, now: Date,
+                                  timeZone: TimeZone = .current) -> Int {
+        guard amount > 0 else { return 0 }
+        let today = CollectingEngine.dayKey(now, timeZone: timeZone)
+        if save.living.sparkCapDay != today {
+            save.living.sparkCapDay = today
+            save.living.sparkCapEarned = 0
+        }
+        let granted = min(amount, max(0, dailySparkCap - save.living.sparkCapEarned))
+        guard granted > 0 else { return 0 }
+        save.living.sparkCapEarned += granted
+        save.sparks += granted
+        return granted
+    }
+}

@@ -30,6 +30,17 @@ final class GameModel {
     /// G4: the day-2 gift baby that was just added (shown once as a sheet).
     var newGift: Creature? = nil
 
+    // MARK: Living world state (see GameModel+Living.swift)
+
+    /// Cached weather (App Group `weather.json`), nil = neutral.
+    var weather: WeatherSnapshot? = LivingCache.shared.loadWeather()
+    /// Last known charging / Low Power Mode state.
+    var device: DeviceSnapshot? = LivingCache.shared.loadDevice()
+    /// "While you were away" diary waiting to be shown.
+    var awayDiary: AwayDiary? = nil
+    /// Latest on-device AI line for the Home bubble (nil = template).
+    var aiLine: Line? = nil
+
     /// Re-read from disk (widget intents may have changed it while we were in background).
     func reload() {
         // Re-read from disk, but never replace state with a fresh, unsaved SaveData
@@ -297,7 +308,8 @@ final class GameModel {
 
     // MARK: Private
 
-    private func commit(_ change: (inout SaveData) -> Void) {
+    /// Internal (not private) so the living-world extension (`GameModel+Living.swift`) can use it.
+    func commit(_ change: (inout SaveData) -> Void) {
         save = store.update { save in
             let now = Date.now
             let missingBefore = EconomyEngine.missingCount(save, now: now)

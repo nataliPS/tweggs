@@ -7,6 +7,7 @@ import MixlingsGenome
 struct MixlingsWidgetBundle: WidgetBundle {
     var body: some Widget {
         MixlingWidget()
+        HouseWidget()
     }
 }
 
@@ -33,6 +34,13 @@ struct MixlingEntry: TimelineEntry {
     let condition: Condition
     /// Today's free daily surprise is still unopened at `date`.
     var surpriseWaiting: Bool = false
+    /// Living world (§0): what the creature is doing at `date` (ActivityStateMachine).
+    var activity: Activity? = nil
+    var look: LivingLook = .plain
+    /// Housemate for pair scenes (§9), projected to `date`.
+    var partner: Creature? = nil
+    /// Short template line for the medium widget.
+    var line: String? = nil
 }
 
 struct MixlingProvider: TimelineProvider {
@@ -51,40 +59,74 @@ struct MixlingProvider: TimelineProvider {
         if context.isPreview && creature == nil {
             creature = Self.sampleCreature // widget gallery before onboarding
         }
-        completion(Self.entry(for: creature, at: .now, lastSurpriseDay: snap?.lastSurpriseDay))
+        let ctx = Self.context(snap: snap)
+        let act = ActivityStateMachine.activity(at: .now, context: ctx)
+        completion(Self.entry(for: creature, at: .now, lastSurpriseDay: snap?.lastSurpriseDay,
+                              activity: act, partner: snap?.partner, givenItems: snap?.givenItems ?? [:]))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<MixlingEntry>) -> Void) {
         let snap = CreatureStore.shared.loadActive()
-        completion(Self.timeline(for: snap?.creature, from: .now, lastSurpriseDay: snap?.lastSurpriseDay))
+        completion(Self.timeline(for: snap?.creature, from: .now, lastSurpriseDay: snap?.lastSurpriseDay,
+                                 partner: snap?.partner, givenItems: snap?.givenItems ?? [:],
+                                 context: Self.context(snap: snap)))
+    }
+
+    /// Cached weather + device state + pair id. The widget never fetches anything (§1).
+    static func context(snap: ActiveSnapshot?) -> ActivityContext {
+        var pairId: String?
+        if let a = snap?.creature, let b = snap?.partner { pairId = HousePair.pairId(a, b) }
+        return ActivityContext(timeZone: .current, weather: LivingCache.shared.loadWeather(),
+                               device: LivingCache.shared.loadDevice(), pairId: pairId)
     }
 
     /// Pure, testable timeline builder. `lastSurpriseDay` drives the "surprise waiting" hint,
     /// which flips on by itself at local midnight because each entry checks its own date.
+    /// Living world: one `ActivityStateMachine.schedule` entry per step (scene, night, weather,
+    /// alive frames; the first entry after the night gets the morning stretch).
     static func timeline(for creature: Creature?, from now: Date,
-                         lastSurpriseDay: String? = nil) -> Timeline<MixlingEntry> {
+                         lastSurpriseDay: String? = nil, partner: Creature? = nil,
+                         givenItems: [String: Int] = [:],
+                         context: ActivityContext = ActivityContext()) -> Timeline<MixlingEntry> {
         guard let creature else {
             // Not onboarded yet: one entry, refresh in an hour (the app also reloads on change).
             return Timeline(entries: [entry(for: nil, at: now)],
                             policy: .after(now.addingTimeInterval(3600)))
         }
-        let count = Int(horizon / step)
-        let entries = (0...count).map { i in
-            entry(for: creature, at: now.addingTimeInterval(Double(i) * step), lastSurpriseDay: lastSurpriseDay)
+        let schedule = ActivityStateMachine.schedule(from: now, context: context, step: step, horizon: horizon)
+        let entries = schedule.map { s in
+            entry(for: creature, at: s.date, lastSurpriseDay: lastSurpriseDay, activity: s.activity,
+                  partner: partner, givenItems: givenItems, timeZone: context.timeZone)
         }
         return Timeline(entries: entries, policy: .atEnd)
     }
 
-    static func entry(for creature: Creature?, at date: Date, lastSurpriseDay: String? = nil) -> MixlingEntry {
+    static func entry(for creature: Creature?, at date: Date, lastSurpriseDay: String? = nil,
+                      activity: Activity? = nil, partner: Creature? = nil,
+                      givenItems: [String: Int] = [:], timeZone: TimeZone = .current) -> MixlingEntry {
         guard let creature else {
             return MixlingEntry(date: date, creature: nil, stage: .egg, condition: .okay)
+        }
+        var look = LivingLook.plain
+        var line: String?
+        if let a = activity {
+            var item = LivingEngine.displayedItem(givenItems: givenItems, weather: a.weather, at: date, timeZone: timeZone)
+            if a.alive == .lowPower { item = .blanket }
+            look = LivingLook(weather: a.weather, item: item, alive: a.alive)
+            if CareEngine.stage(creature, at: date) != .egg {
+                line = LineService.homeLine(for: creature, activity: a, now: date, timeZone: timeZone).text
+            }
         }
         return MixlingEntry(
             date: date,
             creature: CareEngine.decay(creature, to: date),
             stage: CareEngine.stage(creature, at: date),
             condition: CareEngine.condition(creature, at: date),
-            surpriseWaiting: CollectingEngine.canOpenSurprise(lastSurpriseDay: lastSurpriseDay, now: date)
+            surpriseWaiting: CollectingEngine.canOpenSurprise(lastSurpriseDay: lastSurpriseDay, now: date),
+            activity: activity,
+            look: look,
+            partner: partner.map { CareEngine.decay($0, to: date) },
+            line: line
         )
     }
 
@@ -130,11 +172,18 @@ private struct WidgetSprite: View {
     let stage: Stage
     /// A1 mood layer (smile / "o" / hungry wobble) for this entry's moment.
     let condition: Condition
+    var look: LivingLook = .plain
     @Environment(\.widgetRenderingMode) private var renderingMode
 
     var body: some View {
-        CreatureSprite(creature: creature, stage: stage,
-                       silhouette: renderingMode != .fullColor, condition: condition)
+        // §13 tap reaction: tapping the creature pokes it (pendingCare event) instead of opening the app.
+        Button(intent: PokeMixlingIntent()) {
+            CreatureSprite(creature: creature, stage: stage,
+                           silhouette: renderingMode != .fullColor, condition: condition, look: look)
+        }
+        .buttonStyle(.plain)
+        .disabled(stage == .egg)
+        .accessibilityLabel(Text("Poke Mixling"))
     }
 }
 
@@ -144,7 +193,7 @@ private struct SmallView: View {
     var body: some View {
         if let c = entry.creature {
             VStack(spacing: 4) {
-                WidgetSprite(creature: c, stage: entry.stage, condition: entry.condition)
+                WidgetSprite(creature: c, stage: entry.stage, condition: entry.condition, look: entry.look)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 HStack(spacing: 4) {
                     Text(c.name)
@@ -179,7 +228,7 @@ private struct MediumView: View {
     var body: some View {
         if let c = entry.creature {
             HStack(spacing: 12) {
-                WidgetSprite(creature: c, stage: entry.stage, condition: entry.condition)
+                WidgetSprite(creature: c, stage: entry.stage, condition: entry.condition, look: entry.look)
                     .frame(maxWidth: 120, maxHeight: .infinity)
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
@@ -195,6 +244,13 @@ private struct MediumView: View {
                     StatBar(label: "Belly", systemImage: "fork.knife", value: c.hungerValue, tint: Theme.hunger)
                     StatBar(label: "Fun", systemImage: "star.fill", value: c.joyValue, tint: Theme.joy)
                     StatBar(label: "Mood", systemImage: "heart.fill", value: c.moodValue, tint: Theme.mood)
+                    if let line = entry.line {
+                        Text(verbatim: line)
+                            .font(Theme.caption(10))
+                            .italic()
+                            .foregroundStyle(Theme.inkSoft)
+                            .lineLimit(1)
+                    }
                     if entry.surpriseWaiting {
                         Label("Surprise waiting", systemImage: "gift.fill")
                             .font(Theme.caption(11))

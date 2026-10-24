@@ -12,6 +12,9 @@ struct CreatureSprite: View {
     var silhouette: Bool = false
     /// Mood expression layer (A1, art v2). Eggs have no face, so it only shows after hatching.
     var condition: Condition? = nil
+    /// Living-world layers (weather, care item, alive frame). Drawn by MixlingsArt when
+    /// `MIXLINGS_ART_LIVING` is on; otherwise a small SF Symbol badge stands in (colour mode only).
+    var look: LivingLook = .plain
 
     var body: some View {
         Group {
@@ -28,13 +31,18 @@ struct CreatureSprite: View {
             }
             #endif
         }
+        .overlay(alignment: .topTrailing) {
+            if !ArtAdapter.drawsLiving, !silhouette, !look.isPlain, stage != .egg {
+                LivingBadge(look: look)
+            }
+        }
         .aspectRatio(1, contentMode: .fit)
         .accessibilityHidden(true)
     }
 
     @ViewBuilder
     private var spriteBody: some View {
-        let p = PhenotypeMapper.phenotype(for: creature, stage: stage, condition: condition)
+        let p = PhenotypeMapper.phenotype(for: creature, stage: stage, condition: condition, look: look)
         #if MIXLINGS_ART_V2
         if silhouette, let cg = PhenotypeMapper.silhouetteImage(p) {
             Rectangle().fill(.primary).mask {
@@ -59,6 +67,40 @@ struct CreatureSprite: View {
         case .teen: return 0.86
         case .adult: return 1
         }
+    }
+}
+
+/// Fallback for the living-world layers while the art is not in MixlingsArt yet.
+private struct LivingBadge: View {
+    let look: LivingLook
+
+    var body: some View {
+        GeometryReader { geo in
+            let side = max(10, geo.size.width * 0.22)
+            HStack(spacing: 2) {
+                ForEach(symbols, id: \.self) { name in
+                    Image(systemName: name)
+                        .font(.system(size: side * 0.6, weight: .bold))
+                        .foregroundStyle(Theme.ink)
+                        .frame(width: side, height: side)
+                        .background(Circle().fill(Theme.card.opacity(0.9)))
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
+
+    private var symbols: [String] {
+        var out: [String] = []
+        switch look.alive {
+        case .charging: out.append("bolt.fill")
+        case .lowPower: out.append("bed.double.fill")
+        case .morning: out.append("sunrise.fill")
+        case .none: break
+        }
+        if let item = look.item { out.append(item.systemImage) }
+        else if look.weather != .none { out.append(look.weather.systemImage) }
+        return Array(out.prefix(2))
     }
 }
 

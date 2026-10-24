@@ -216,6 +216,9 @@ struct SaveData: Codable, Equatable, Sendable {
     /// T4: ids of widget care events (`CareEvent`) already merged into this save, newest last.
     /// Makes the merge idempotent; capped at `CreatureStore.appliedCareIdLimit`.
     var appliedCareEventIds: [String]
+    /// Living world (weather items, spark cap, jump rope, pair life, settings). Additive field
+    /// with a decode default; no version bump needed.
+    var living: LivingState
 
     init(
         version: Int = SaveData.currentVersion,
@@ -240,7 +243,8 @@ struct SaveData: Codable, Equatable, Sendable {
         blockedSenders: [String] = [],
         reportedOffers: [String] = [],
         giftBabyDueAt: Date? = nil,
-        appliedCareEventIds: [String] = []
+        appliedCareEventIds: [String] = [],
+        living: LivingState = LivingState()
     ) {
         self.version = version
         self.playerId = playerId
@@ -265,6 +269,7 @@ struct SaveData: Codable, Equatable, Sendable {
         self.reportedOffers = reportedOffers
         self.giftBabyDueAt = giftBabyDueAt
         self.appliedCareEventIds = appliedCareEventIds
+        self.living = living
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -273,6 +278,7 @@ struct SaveData: Codable, Equatable, Sendable {
         case starterGenomes, ageBand, isClubMember, breedsWithoutNewEntry, lastHatchRushDay, geneHintKeys
         case firstSharePromptShown, blockedSenders, reportedOffers
         case giftBabyDueAt, appliedCareEventIds
+        case living
     }
 
     init(from decoder: Decoder) throws {
@@ -301,6 +307,8 @@ struct SaveData: Codable, Equatable, Sendable {
         reportedOffers = try c.decodeIfPresent([String].self, forKey: .reportedOffers) ?? []
         giftBabyDueAt = try c.decodeIfPresent(Date.self, forKey: .giftBabyDueAt)
         appliedCareEventIds = try c.decodeIfPresent([String].self, forKey: .appliedCareEventIds) ?? []
+        // A malformed living block must never make the save unreadable.
+        living = (try? c.decodeIfPresent(LivingState.self, forKey: .living)) ?? LivingState()
         if version < 2 { migrateToV2() }
         if version < 3 { migrateToV3() }
         // Additive v3 field (no version bump): fill from existing data once, then it is stored.

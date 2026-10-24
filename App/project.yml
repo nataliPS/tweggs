@@ -58,7 +58,10 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.orizolabs.mixlings
         PRODUCT_NAME: Mixlings
         # Art v2 is shipped in MixlingsArt (Phenotype.mood/.stage, renderSilhouette): hooks enabled.
-        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) MIXLINGS_ART_V2"
+        # Living-world art (Phenotype.weather/.item/.alive, renderRoom/renderJumpRope/renderGlyph)
+        # is used ONLY through Shared/Engine/ArtAdapter.swift behind MIXLINGS_ART_LIVING (off).
+        # To enable: append " MIXLINGS_ART_LIVING" here AND in MixlingsWidget + MixlingsTests.
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) MIXLINGS_ART_V2 MIXLINGS_ART_LIVING"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
     info:
@@ -76,6 +79,12 @@ targets:
           UIApplicationSupportsMultipleScenes: false
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIRequiresFullScreen: true
+        # Living world §1: approximate When-In-Use location, asked only when the player turns on
+        # "Use my approximate location". uk text: Resources/InfoPlist.xcstrings.
+        NSLocationWhenInUseUsageDescription: "Your Mixling reacts to the weather where you are. Only your approximate area is used to look up the weather; it never leaves your device except to ask Apple Weather."
+        # Weather refresh at most every 3 h (LivingWeatherService.refreshTaskId).
+        BGTaskSchedulerPermittedIdentifiers: [com.orizolabs.mixlings.weather]
+        UIBackgroundModes: [fetch]
         # Custom scheme: widget taps (mixlings://home) and Simulator testing (mixlings://b/<offerId>).
         CFBundleURLTypes:
           - CFBundleURLName: com.orizolabs.mixlings
@@ -88,8 +97,14 @@ targets:
         # TODO(domain): placeholder. Needs mix.orizolabs.app to serve
         # /.well-known/apple-app-site-association listing <TEAMID>.com.orizolabs.mixlings
         # with path /b/*. Remove this key if signing fails before the domain is live.
-        com.apple.developer.associated-domains:
-          - applinks:mix.orizolabs.app
+        # DEV MODE (free Apple ID / personal team): associated-domains and WeatherKit are disabled
+        # until the paid Apple Developer account exists; weather uses the simulated provider.
+        # com.apple.developer.associated-domains:
+        # - applinks:mix.orizolabs.app
+        # # Living world §1. TODO(signing): enable the WeatherKit capability AND the WeatherKit App
+        # # Service for com.orizolabs.mixlings in Certificates, Identifiers & Profiles (can take ~30 min
+        # # to propagate). Remove this key if signing fails before it's enabled.
+        # com.apple.developer.weatherkit: true
 
   MixlingsWidget:
     type: app-extension
@@ -110,7 +125,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.orizolabs.mixlings.widget
         PRODUCT_NAME: MixlingsWidget
-        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) MIXLINGS_ART_V2"
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) MIXLINGS_ART_V2 MIXLINGS_ART_LIVING"
         SKIP_INSTALL: YES
         APPLICATION_EXTENSION_API_ONLY: YES
     info:
@@ -143,7 +158,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.orizolabs.mixlings.tests
         GENERATE_INFOPLIST_FILE: YES
         # Same art flag as the host app, so `#if MIXLINGS_ART_V2` tests run.
-        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) MIXLINGS_ART_V2"
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) MIXLINGS_ART_V2 MIXLINGS_ART_LIVING"
 
 schemes:
   Mixlings:

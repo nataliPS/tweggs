@@ -1,0 +1,24 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Location permission prompt (living-world weather, approximate location only).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Mixling reacts to the weather where you are. Only your approximate area is used to look up the weather; it never leaves your device except to ask Apple Weather."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Твій Мікслик реагує на погоду там, де ти є. Для прогнозу використовується лише приблизна місцевість; вона нікуди не передається, крім запиту до Apple Weather."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

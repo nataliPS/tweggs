@@ -75,6 +75,9 @@ struct CreatureCardFace: View {
                 }
             }
 
+            // §13: gene-based likes & dislikes (deterministic from the genome).
+            LikesRow(likes: Likes.derive(for: creature), onDark: true)
+
             Spacer(minLength: 0)
 
             parentsRow

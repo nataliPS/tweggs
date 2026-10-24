@@ -21,12 +21,32 @@
         }
       }
     },
+    "%@ isn't a fan of this weather. A little help?": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ не дуже любить таку погоду. Допоможеш?"
+          }
+        }
+      }
+    },
     "%@ just hatched! Breed with me on Tweggs.": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "%@ щойно вилупився! Схрестимо в Tweggs."
+          }
+        }
+      }
+    },
+    "%@ loves this weather!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ обожнює таку погоду!"
           }
         }
       }
@@ -237,6 +257,16 @@
         }
       }
     },
+    "+%lld sparks": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld іскор"
+          }
+        }
+      }
+    },
     "A carrier parent is in this pairing": {
       "localizations": {
         "uk": {
@@ -297,6 +327,16 @@
         }
       }
     },
+    "Again": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ще раз"
+          }
+        }
+      }
+    },
     "Album complete!": {
       "localizations": {
         "uk": {
@@ -327,6 +367,26 @@
         }
       }
     },
+    "At home": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удома"
+          }
+        }
+      }
+    },
+    "At most 2 friendly notifications a day, like a sip of water or a stretch. Never at night.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не більше 2 дружніх сповіщень на день — ковток води чи потягушки. Ніколи вночі."
+          }
+        }
+      }
+    },
     "Aura": {
       "localizations": {
         "uk": {
@@ -343,6 +403,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Малюк"
+          }
+        }
+      }
+    },
+    "Beanie": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Шапочка"
           }
         }
       }
@@ -407,6 +477,16 @@
         }
       }
     },
+    "Blanket": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ковдрочка"
+          }
+        }
+      }
+    },
     "Block": {
       "localizations": {
         "uk": {
@@ -433,6 +513,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Тіло"
+          }
+        }
+      }
+    },
+    "Breakfast": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сніданок"
           }
         }
       }
@@ -507,6 +597,16 @@
         }
       }
     },
+    "Building a pillow fort": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Будують фортецю з подушок"
+          }
+        }
+      }
+    },
     "Buy for %lld sparks": {
       "localizations": {
         "uk": {
@@ -567,6 +667,16 @@
         }
       }
     },
+    "Chatting": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Балакають"
+          }
+        }
+      }
+    },
     "Check on your Mixling and give it a snack or a pat.": {
       "localizations": {
         "uk": {
@@ -593,6 +703,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Обери рік"
+          }
+        }
+      }
+    },
+    "City": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Місто"
+          }
+        }
+      }
+    },
+    "City not found. Try another spelling.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Місто не знайдено. Спробуй інше написання."
+          }
+        }
+      }
+    },
+    "Clear": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ясно"
           }
         }
       }
@@ -627,6 +767,16 @@
         }
       }
     },
+    "Combo %lld": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Комбо %lld"
+          }
+        }
+      }
+    },
     "Common": {
       "localizations": {
         "uk": {
@@ -643,6 +793,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Далі"
+          }
+        }
+      }
+    },
+    "Cooking": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готують"
           }
         }
       }
@@ -697,12 +857,32 @@
         }
       }
     },
+    "Dinner": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вечеря"
+          }
+        }
+      }
+    },
     "Discoverer": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Відкривач"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готово"
           }
         }
       }
@@ -753,6 +933,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Очі"
+          }
+        }
+      }
+    },
+    "Fan": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Віяло"
           }
         }
       }
@@ -949,12 +1139,32 @@
         }
       }
     },
+    "Gentle reminders": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лагідні нагадування"
+          }
+        }
+      }
+    },
     "Give your Mixling a name.": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Дай Мікслику імʼя."
+          }
+        }
+      }
+    },
+    "Great jumping!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чудові стрибки!"
           }
         }
       }
@@ -1011,6 +1221,16 @@
         }
       }
     },
+    "Halloween": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Гелловін"
+          }
+        }
+      }
+    },
     "Happy": {
       "localizations": {
         "uk": {
@@ -1037,6 +1257,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Вилуплюй і схрещуй мікслінгів, щоб заповнити енциклопедію."
+          }
+        }
+      }
+    },
+    "Hatch or welcome a second Mixling and they'll move in together.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Виведи чи прийми другого Мікслика — і вони оселяться разом."
           }
         }
       }
@@ -1091,6 +1321,16 @@
         }
       }
     },
+    "Hello, spring": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Привіт, весно"
+          }
+        }
+      }
+    },
     "Here is a grown-up Mixling to keep your baby company. Adults can breed with friends' Mixlings.": {
       "localizations": {
         "uk": {
@@ -1121,12 +1361,82 @@
         }
       }
     },
+    "Hold on to your ears!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тримай вушка!"
+          }
+        }
+      }
+    },
     "Home": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Дім"
+          }
+        }
+      }
+    },
+    "Homework": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Домашка"
+          }
+        }
+      }
+    },
+    "Hot": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Спекотно"
+          }
+        }
+      }
+    },
+    "House": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хатинка"
+          }
+        }
+      }
+    },
+    "Housemate": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сусід по хатинці"
+          }
+        }
+      }
+    },
+    "I have an idea! Jump rope?": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "У мене ідея! Пострибаємо через скакалку?"
+          }
+        }
+      }
+    },
+    "Independence Day of Ukraine": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "День Незалежності України"
           }
         }
       }
@@ -1141,12 +1451,42 @@
         }
       }
     },
+    "Jump rope": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скакалка"
+          }
+        }
+      }
+    },
+    "Jump!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Стриб!"
+          }
+        }
+      }
+    },
     "Keep at least one Mixling with you.": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Залиш із собою хоча б одного Мікслика."
+          }
+        }
+      }
+    },
+    "Later today": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пізніше сьогодні"
           }
         }
       }
@@ -1221,12 +1561,42 @@
         }
       }
     },
+    "Lines written by on-device AI": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Репліки написав ШІ на твоєму пристрої"
+          }
+        }
+      }
+    },
+    "Living world": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Живий світ"
+          }
+        }
+      }
+    },
     "Look": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Вигляд"
+          }
+        }
+      }
+    },
+    "Loves %@": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Любить: %@"
           }
         }
       }
@@ -1297,6 +1667,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Мікслінг"
+          }
+        }
+      }
+    },
+    "Mixling house": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хатинка Міксликів"
           }
         }
       }
@@ -1444,12 +1824,52 @@
         }
       }
     },
+    "Napping together": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дрімають разом"
+          }
+        }
+      }
+    },
+    "New personal best!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Новий особистий рекорд!"
+          }
+        }
+      }
+    },
     "Next surprise in %@": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Наступний сюрприз через %@"
+          }
+        }
+      }
+    },
+    "Nice!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Клас!"
+          }
+        }
+      }
+    },
+    "Night": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ніч"
           }
         }
       }
@@ -1514,6 +1934,16 @@
         }
       }
     },
+    "Not a fan of %@": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не дуже любить: %@"
+          }
+        }
+      }
+    },
     "Not found yet": {
       "localizations": {
         "uk": {
@@ -1530,6 +1960,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ще не знайдено. %@"
+          }
+        }
+      }
+    },
+    "Not now": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не зараз"
           }
         }
       }
@@ -1644,6 +2084,26 @@
         }
       }
     },
+    "Packing the backpack": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Збирає рюкзак"
+          }
+        }
+      }
+    },
+    "Painting": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Малюють"
+          }
+        }
+      }
+    },
     "Parents unknown": {
       "localizations": {
         "uk": {
@@ -1660,6 +2120,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Візерунок"
+          }
+        }
+      }
+    },
+    "Personal best: %lld": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Особистий рекорд: %lld"
           }
         }
       }
@@ -1704,6 +2174,26 @@
         }
       }
     },
+    "Playing chess": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Грають у шахи"
+          }
+        }
+      }
+    },
+    "Poke Mixling": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тицьнути Мікслика"
+          }
+        }
+      }
+    },
     "Preview": {
       "localizations": {
         "uk": {
@@ -1744,6 +2234,16 @@
         }
       }
     },
+    "Rain": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дощ"
+          }
+        }
+      }
+    },
     "Rare": {
       "localizations": {
         "uk": {
@@ -1754,12 +2254,32 @@
         }
       }
     },
+    "Real weather": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Справжня погода"
+          }
+        }
+      }
+    },
     "Record hatch video": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Записати відео вилуплення"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прибрати"
           }
         }
       }
@@ -1820,6 +2340,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Зберегти"
+          }
+        }
+      }
+    },
+    "Scarf": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Шарфик"
+          }
+        }
+      }
+    },
+    "Score %lld": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Очки: %lld"
+          }
+        }
+      }
+    },
+    "Score %lld · best combo %lld": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Очки: %1$lld · найкраще комбо: %2$lld"
           }
         }
       }
@@ -1894,6 +2444,16 @@
         }
       }
     },
+    "See what your Mixlings are up to at home.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дивись, чим зайняті твої Мікслики вдома."
+          }
+        }
+      }
+    },
     "Send %@'s link. The rarest Mixlings only hatch with friends!": {
       "localizations": {
         "uk": {
@@ -1910,6 +2470,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Надіслати другові"
+          }
+        }
+      }
+    },
+    "Set": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обрати"
           }
         }
       }
@@ -1974,6 +2544,16 @@
         }
       }
     },
+    "Sleeping": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сплять"
+          }
+        }
+      }
+    },
     "Sleepy": {
       "localizations": {
         "uk": {
@@ -1984,12 +2564,42 @@
         }
       }
     },
+    "Sleepy time": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Час спатки"
+          }
+        }
+      }
+    },
+    "Snow": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сніг"
+          }
+        }
+      }
+    },
     "So sleepy… a little cuddle?": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Так хочеться спати… обіймешся?"
+          }
+        }
+      }
+    },
+    "Some lines are written by Apple's on-device model. Only your Mixling's name, temper and the weather type are used. Nothing leaves your device.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Деякі репліки пише модель Apple прямо на пристрої. Використовуються лише імʼя Мікслика, характер і тип погоди. Нічого не залишає твій пристрій."
           }
         }
       }
@@ -2034,6 +2644,36 @@
         }
       }
     },
+    "Stargazing": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дивляться на зорі"
+          }
+        }
+      }
+    },
+    "Start": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Почати"
+          }
+        }
+      }
+    },
+    "Sun hat": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Капелюх від сонця"
+          }
+        }
+      }
+    },
     "Surprise waiting": {
       "localizations": {
         "uk": {
@@ -2060,6 +2700,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Хвіст"
+          }
+        }
+      }
+    },
+    "Tap when the rope is under %@'s feet!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тисни, коли скакалка під лапками в %@!"
           }
         }
       }
@@ -2114,12 +2764,52 @@
         }
       }
     },
+    "Thank you! +%lld sparks": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дякую! +%lld іскор"
+          }
+        }
+      }
+    },
+    "Thank you! So cosy.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дякую! Так затишно."
+          }
+        }
+      }
+    },
+    "Thanks! Maybe another day.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дякую! Може, іншим разом."
+          }
+        }
+      }
+    },
     "Thanks. We'll take a look.": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Дякуємо. Ми перевіримо."
+          }
+        }
+      }
+    },
+    "The jump rope joined your collection!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скакалка тепер у твоїй колекції!"
           }
         }
       }
@@ -2276,6 +2966,16 @@
         }
       }
     },
+    "Umbrella": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Парасолька"
+          }
+        }
+      }
+    },
     "Uncommon": {
       "localizations": {
         "uk": {
@@ -2306,12 +3006,32 @@
         }
       }
     },
+    "Use my approximate location": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Використовувати приблизне місцезнаходження"
+          }
+        }
+      }
+    },
     "Used today. Back tomorrow!": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Вже використано сьогодні. Повертайся завтра!"
+          }
+        }
+      }
+    },
+    "Valentine's Day": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "День закоханих"
           }
         }
       }
@@ -2336,6 +3056,36 @@
         }
       }
     },
+    "Water bottle": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пляшечка води"
+          }
+        }
+      }
+    },
+    "Weather": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Погода"
+          }
+        }
+      }
+    },
+    "Weather data sources": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Джерела даних про погоду"
+          }
+        }
+      }
+    },
     "Welcome to Mixlings": {
       "localizations": {
         "uk": {
@@ -2352,6 +3102,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "У якому році ти народився?"
+          }
+        }
+      }
+    },
+    "While you were away": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поки тебе не було"
+          }
+        }
+      }
+    },
+    "Windy": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вітряно"
+          }
+        }
+      }
+    },
+    "Winter holidays": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зимові свята"
           }
         }
       }
@@ -2484,6 +3264,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ти знайшов усі образи цього сезону."
+          }
+        }
+      }
+    },
+    "Your Mixling reacts to rain, heat, snow and wind. Location is approximate (city level), used only to look up the weather and never stored on our servers. Without it, weather stays neutral.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Твій Мікслик реагує на дощ, спеку, сніг і вітер. Місцезнаходження приблизне (рівень міста), використовується лише для прогнозу й ніколи не зберігається на наших серверах. Без нього погода нейтральна."
           }
         }
       }
@@ -3741,6 +4531,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Хитрий"
+          }
+        }
+      }
+    },
+    "…and more": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "…і ще дещо"
           }
         }
       }

@@ -139,6 +139,18 @@ enum CareEngine {
         return out
     }
 
+    /// Widget poke (§13): a playful boop. A little fun, no hunger cost.
+    static let pokeJoy: Double = 8
+    static let pokeMood: Double = 2
+
+    static func poke(_ c: Creature, at now: Date) -> Creature {
+        var out = decay(c, to: now)
+        guard stage(out, at: now) != .egg else { return out }
+        out.joy = clamp(out.joy + pokeJoy)
+        out.mood = clamp(out.mood + pokeMood)
+        return out
+    }
+
     // MARK: Condition
 
     static func condition(_ c: Creature, at now: Date) -> Condition {

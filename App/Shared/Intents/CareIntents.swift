@@ -28,3 +28,17 @@ struct PetMixlingIntent: AppIntent {
         return .result()
     }
 }
+
+/// §13 widget tap reaction: tapping the creature itself gives it a playful poke (pendingCare
+/// event, merged by the app like Feed / Pet).
+struct PokeMixlingIntent: AppIntent {
+    static let title: LocalizedStringResource = "Poke Mixling"
+
+    init() {}
+
+    func perform() async throws -> some IntentResult {
+        CreatureStore.shared.applyToActive(.poke, at: .now)
+        WidgetCenter.shared.reloadAllTimelines()
+        return .result()
+    }
+}

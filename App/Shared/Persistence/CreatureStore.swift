@@ -36,18 +36,25 @@ struct ActiveSnapshot: Codable, Equatable, Sendable {
     var lastSurpriseDay: String?
     /// Widget care not yet merged by the app, oldest first.
     var pendingCare: [CareEvent]
+    /// Living world (§9): the housemate for pair scenes (display only). Nil = alone.
+    var partner: Creature?
+    /// Living world (§1): weather event id -> care item given (drawn while the event lasts).
+    var givenItems: [String: Int]
 
     init(version: Int = ActiveSnapshot.currentVersion, creature: Creature? = nil,
-         eggHatchesAt: Date? = nil, lastSurpriseDay: String? = nil, pendingCare: [CareEvent] = []) {
+         eggHatchesAt: Date? = nil, lastSurpriseDay: String? = nil, pendingCare: [CareEvent] = [],
+         partner: Creature? = nil, givenItems: [String: Int] = [:]) {
         self.version = version
         self.creature = creature
         self.eggHatchesAt = eggHatchesAt
         self.lastSurpriseDay = lastSurpriseDay
         self.pendingCare = pendingCare
+        self.partner = partner
+        self.givenItems = givenItems
     }
 
     private enum CodingKeys: String, CodingKey {
-        case version, creature, eggHatchesAt, lastSurpriseDay, pendingCare
+        case version, creature, eggHatchesAt, lastSurpriseDay, pendingCare, partner, givenItems
     }
 
     init(from decoder: Decoder) throws {
@@ -56,14 +63,24 @@ struct ActiveSnapshot: Codable, Equatable, Sendable {
         creature = try c.decodeIfPresent(Creature.self, forKey: .creature)
         eggHatchesAt = try c.decodeIfPresent(Date.self, forKey: .eggHatchesAt)
         lastSurpriseDay = try c.decodeIfPresent(String.self, forKey: .lastSurpriseDay)
-        pendingCare = try c.decodeIfPresent([CareEvent].self, forKey: .pendingCare) ?? []
+        // Tolerant: an event with an unknown action (newer widget) is dropped, not the whole file.
+        pendingCare = (try? c.decodeIfPresent([LossyEvent].self, forKey: .pendingCare))?.compactMap(\.event) ?? []
+        partner = try? c.decodeIfPresent(Creature.self, forKey: .partner)
+        givenItems = (try? c.decodeIfPresent([String: Int].self, forKey: .givenItems)) ?? [:]
+    }
+
+    private struct LossyEvent: Decodable {
+        let event: CareEvent?
+        init(from decoder: Decoder) throws { event = try? CareEvent(from: decoder) }
     }
 
     init(save: SaveData, now: Date = .now) {
         let c = save.activeCreature
         self.init(creature: c,
                   eggHatchesAt: c.flatMap { CareEngine.stage($0, at: now) == .egg ? CareEngine.hatchDate($0) : nil },
-                  lastSurpriseDay: save.lastSurpriseDay)
+                  lastSurpriseDay: save.lastSurpriseDay,
+                  partner: HousePair.partner(in: save, now: now),
+                  givenItems: save.living.givenItems)
     }
 }
 
@@ -248,6 +265,8 @@ struct CreatureStore: Sendable {
 
     enum CareAction: String, Codable, Sendable, CaseIterable {
         case feed, play, pet
+        /// Widget poke (§13). Older app builds can't decode it, but only this build writes it.
+        case poke
     }
 
     static func applying(_ action: CareAction, to c: Creature, at now: Date) -> Creature {
@@ -255,6 +274,7 @@ struct CreatureStore: Sendable {
         case .feed: return CareEngine.feed(c, at: now)
         case .play: return CareEngine.play(c, at: now)
         case .pet: return CareEngine.pet(c, at: now)
+        case .poke: return CareEngine.poke(c, at: now)
         }
     }
 

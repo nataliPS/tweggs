@@ -1,4 +1,5 @@
 import SwiftUI
+import BackgroundTasks
 
 @main
 @MainActor
@@ -13,10 +14,22 @@ struct MixlingsApp: App {
                 .onOpenURL { url in
                     model.handle(url: url)
                 }
+                // Cold launch: scenePhase may already be .active, so onChange won't fire.
+                .task { model.livingDidBecomeActive() }
                 .onChange(of: scenePhase) { _, phase in
                     // Widget intents write to the shared file while we're backgrounded.
-                    if phase == .active { model.reload() }
+                    if phase == .active {
+                        model.reload()
+                        model.livingDidBecomeActive()
+                    } else if phase == .background {
+                        model.livingWillResignActive()
+                        LivingWeatherService.shared.scheduleBackgroundRefresh()
+                    }
                 }
+        }
+        // §1: weather refresh at most every 3 h (BGAppRefresh; id listed in Info.plist).
+        .backgroundTask(.appRefresh(LivingWeatherService.refreshTaskId)) {
+            await LivingWeatherService.shared.refreshInBackground()
         }
     }
 }
@@ -51,6 +64,12 @@ struct RootView: View {
         .sheet(item: $model.newGift) { gift in
             DayTwoGiftView(gift: gift)
                 .presentationDetents([.medium])
+        }
+        // §9: "While you were away" (after the gift sheet, never both at once).
+        .sheet(item: Binding(get: { model.newGift == nil && !model.needsOnboarding ? model.awayDiary : nil },
+                             set: { model.awayDiary = $0 })) { diary in
+            AwayDiaryView(diary: diary)
+                .presentationDetents([.medium, .large])
         }
     }
 }

@@ -3,7 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(GameModel.self) private var model
 
-    enum Route: Hashable { case club, shop, odds }
+    enum Route: Hashable { case club, shop, odds, living }
     @State private var route: Route?
 
     var body: some View {
@@ -29,6 +29,7 @@ struct HomeView: View {
                         Button { route = .club } label: { Label("Mix Club", systemImage: "crown.fill") }
                         Button { route = .shop } label: { Label("Spark shop", systemImage: "bag.fill") }
                         Button { route = .odds } label: { Label("Odds", systemImage: "percent") }
+                        Button { route = .living } label: { Label("Living world", systemImage: "cloud.sun.fill") }
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .minTapTarget()
@@ -41,6 +42,7 @@ struct HomeView: View {
                 case .club: ClubView()
                 case .shop: CosmeticShopView()
                 case .odds: OddsView()
+                case .living: LivingSettingsView()
                 }
             }
         }
@@ -56,10 +58,12 @@ private struct HomeContent: View {
         let current = CareEngine.decay(creature, to: now)
         let stage = CareEngine.stage(creature, at: now)
         let condition = CareEngine.condition(creature, at: now)
+        let activity = model.activity(at: now)
 
         VStack(spacing: 16) {
             VStack(spacing: 8) {
-                CreatureSprite(creature: creature, stage: stage, condition: condition)
+                CreatureSprite(creature: creature, stage: stage, condition: condition,
+                               look: model.look(for: creature, activity: activity, now: now))
                     .frame(maxWidth: 260, maxHeight: 260)
                     .frame(maxWidth: .infinity)
                     .opacity(condition == .sleepy ? 0.85 : 1)
@@ -72,9 +76,14 @@ private struct HomeContent: View {
                     Pill(text: Text(verbatim: CollectingNames.variant(gene: PhenotypeMapper.Gene.temper,
                                                                       variant: PhenotypeMapper.traits(for: creature).temper)))
                 }
-                PersonalityLine(creature: creature, condition: condition)
+                if stage != .egg {
+                    LikesRow(likes: Likes.derive(for: creature))
+                    LivingLineBubble(creature: creature, activity: activity, now: now)
+                }
             }
             .card()
+
+            LivingHomeCard(creature: creature, activity: activity, now: now)
 
             VStack(alignment: .leading, spacing: 10) {
                 StatBar(label: "Belly", systemImage: "fork.knife", value: current.hungerValue, tint: Theme.hunger)
@@ -153,10 +162,8 @@ struct Pill: View {
     }
 }
 
-/// One personality line + C6 note that lines are AI-written on device.
-/// TODO(ai): lines come from the on-device model (Foundation Models) with ONLY the creature's
-/// traits as input. Never send personal data (name typed by the player is fine, nothing else).
-/// Until then this is a fixed local line.
+/// Legacy fixed line (superseded on Home by `LivingLineBubble` + `LineService`, §2).
+/// No AI label here: these lines are templates.
 struct PersonalityLine: View {
     let creature: Creature
     let condition: Condition
@@ -168,9 +175,6 @@ struct PersonalityLine: View {
                 .italic()
                 .foregroundStyle(Theme.ink)
                 .multilineTextAlignment(.center)
-            Text("Lines are written by on-device AI")
-                .font(Theme.caption(10))
-                .foregroundStyle(Theme.inkSoft)
         }
     }
 
