@@ -43,3 +43,16 @@ umbrella, water bottle, fan, sun hat, scarf, beanie, blanket; wet / sweat / shiv
 - iOS 17–25 fallback: time-sensitive local notification with the creature sound (does not ring in silent mode — say so in the UI).
 - Reward: "Early bird" streak and a small spark gift when the alarm is stopped on time; never punish snoozing.
 - Permission: AlarmKit authorization requested only when the user enables the feature.
+
+## 8. Boredom quests & mini-games (MVP)
+- Trigger: joy below ~40 (or random 1×/day) → bubble "I'm bored…" + suggested activity. Never a penalty if ignored.
+- Jump rope (first mini-game): player taps in rhythm, creature jumps; rope speed ramps; combo counter; 20–40 s session; rewards: joy +, sparks by combo (capped/day), personal best, optional 6 s share clip. The rope becomes a collection item.
+- Next mini-games on the same framework: catch the ball, hide-and-seek, grow a flower.
+
+## 9. Pair life — "their own world" (MVP core; more scenes in Beta)
+- Two creatures (both yours, or yours + a visiting friend's creature once trade/visits exist) share a tiny house.
+- While the phone is idle they "live": scenes drawn from a deterministic schedule seeded by `fnv1a32(pairId|day)`: painting, chess, chatting (speech bubbles with emotes), pillow fort, napping together, cooking, stargazing at night (uses local time & weather).
+- Lock Screen / Home widget: a timeline of upcoming scene entries (e.g. every 30–60 min for 12 h) so on unlock the user sees what they are doing now. Static frames; no background execution is needed or possible.
+- App open → "While you were away" diary: short entries computed from elapsed time ("Lilo and Zephyr played chess — Zephyr won", "They painted a picture").
+- Paintings (Beta): procedural pixel artwork generated from the pair's palettes + seed, saved to a Gallery (collectible, shareable as an image).
+- Chess result, chat lines and diary text come from templates (+ optional on-device AI lines within the §2 guardrails).
