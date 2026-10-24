@@ -320,7 +320,10 @@ def apply_pattern(canvas, mask, v, a, seed):
                     canvas[p] = Px("shade", True)
 
 
-def shade_body(canvas, mask):
+HIGHLIGHT_ANCHOR = [(9, 14), (13, 9), (10, 12), (9, 12), (13, 9), (6, 18)]
+
+
+def shade_body(canvas, mask, body_variant):
     xs = [x for x, _ in mask]
     ys = [y for _, y in mask]
     cx, cy = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
@@ -331,7 +334,9 @@ def shade_body(canvas, mask):
                 if canvas[(x, y)].role == "base":
                     canvas[(x, y)] = Px("shade", True)
     # highlight upper-left
-    tl = sorted(mask, key=lambda p: (p[0] - cx) + (p[1] - cy))[:1]
+    # Highlight anchor per body variant: an explicit art constant, identical in the
+    # TS and Swift ports (previously picked by CPython set order among ties).
+    tl = [HIGHLIGHT_ANCHOR[body_variant]]
     for (x, y) in tl:
         for p in ((x + 2, y + 2), (x + 3, y + 2), (x + 2, y + 3)):
             if p in mask and canvas[p].role == "base":
@@ -418,7 +423,7 @@ def render(p: Pheno, scale: int = 8) -> Image.Image:
     for pt in mask:  # body over head base so ears tuck behind
         canvas.setdefault(pt, Px("base", True))
     apply_pattern(canvas, mask, p.pattern, a, p.seed)
-    shade_body(canvas, mask)
+    shade_body(canvas, mask, p.body)
     outline(canvas)
     draw_eyes(canvas, p.eyes, a)
 
