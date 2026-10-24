@@ -58,6 +58,25 @@ export const claimDailySurprise = callable((uid) => svc().claimDailySurprise(uid
 export const checkInStreak = callable((uid) => svc().checkInStreak(uid));
 export const renameCreature = callable((uid, d) => svc().renameCreature(uid, { id: d.id, name: d.name }));
 
+// Friends graph (Beta). Inputs are picked field by field; nothing else from the client is read.
+export const createInvite = callable((uid, d) => svc().createInvite(uid, { kind: d.kind, creatureId: d.creatureId, framing: d.framing }));
+export const acceptInvite = callable((uid, d) => svc().acceptInvite(uid, { code: d.code, creatureId: d.creatureId }));
+export const removeFriend = callable((uid, d) => svc().removeFriend(uid, { friendUid: d.friendUid }));
+export const startVisit = callable((uid, d) => svc().startVisit(uid, { creatureId: d.creatureId, hostUid: d.hostUid, days: d.days }));
+export const recallVisit = callable((uid, d) => svc().recallVisit(uid, { visitId: d.visitId }));
+export const getVisitor = callable((uid, d) => svc().getVisitor(uid, { visitId: d.visitId }));
+export const morningWave = callable((uid, d) => svc().morningWave(uid, { duoId: d.duoId, localDay: d.localDay }));
+export const getDuo = callable((uid, d) => svc().getDuo(uid, { duoId: d.duoId }));
+export const sendFridgeNote = callable((uid, d) => svc().sendFridgeNote(uid, { duoId: d.duoId, emote: d.emote, prop: d.prop }));
+export const decorateSlot = callable((uid, d) => svc().decorateSlot(uid, { group: d.group, groupId: d.groupId, slot: d.slot, itemId: d.itemId }));
+export const savePainting = callable((uid, d) => svc().savePainting(uid, { group: d.group, groupId: d.groupId }));
+export const setDuoFraming = callable((uid, d) => svc().setDuoFraming(uid, { duoId: d.duoId, framing: d.framing }));
+export const unlinkDuo = callable((uid, d) => svc().unlinkDuo(uid, { duoId: d.duoId }));
+export const rollCall = callable((uid, d) => svc().rollCall(uid, { crewId: d.crewId, emote: d.emote }));
+export const getCrew = callable((uid, d) => svc().getCrew(uid, { crewId: d.crewId }));
+export const leaveCrew = callable((uid, d) => svc().leaveCrew(uid, { crewId: d.crewId }));
+export const sendPoke = callable((uid, d) => svc().sendPoke(uid, { toUid: d.toUid, emote: d.emote }));
+
 /** Apple 5.1.1(v): deletes all docs first, then the Auth user (so a retry can still authenticate). */
 export const deleteAccount = callable(async (uid) => {
   const result = await svc().deleteAccount(uid);
@@ -68,4 +87,10 @@ export const deleteAccount = callable(async (uid) => {
 export const hourlySweep = onSchedule({ schedule: "every 60 minutes", region: OPTS.region, secrets: [SIG_KEY] }, async () => {
   const r = await svc().sweep();
   logger.info("sweep", r);
+});
+
+/** Returns visitors whose 1–3 day stay is over (diary + souvenir + bond). */
+export const endVisits = onSchedule({ schedule: "every 15 minutes", region: OPTS.region, secrets: [SIG_KEY] }, async () => {
+  const r = await svc().endVisits();
+  logger.info("endVisits", r);
 });

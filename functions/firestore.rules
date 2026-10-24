@@ -4,6 +4,11 @@ rules_version = '2';
 // Clients READ only their own player doc and their own creatures.
 // ALL writes to players / creatures / offers / breeds / combos go through Cloud Functions
 // (Admin SDK bypasses rules). Reports and blocks are client-created and validated here.
+//
+// Friends graph (backend-spec "Friends graph"; living-world-spec §10–12): members read their duo / crew
+// docs and members' shared creatures read-only; a visit host reads the visitor read-only; house writes
+// are per-slot (owner only). Everything else goes through functions. RED LINES: no doc readable by
+// another user carries location, time zone, local day, presence, read receipts, steps or wake data.
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -15,9 +20,112 @@ service cloud.firestore {
       allow list, create, update, delete: if false;
     }
 
+    function links() { return get(/databases/$(database)/documents/links/$(request.auth.uid)).data; }
+    function hasLinks() { return exists(/databases/$(database)/documents/links/$(request.auth.uid)); }
+    function inDuo(duoId) { return signedIn() && hasLinks() && links().duoId == duoId; }
+    function inCrew(crewId) { return signedIn() && hasLinks() && links().crewId == crewId; }
+
     match /creatures/{id} {
       // `list` is allowed only for queries constrained to ownerUid == caller.
-      allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow list: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      // get: own creature; a co-owned duo creature / crew mascot; a creature visiting me (read-only).
+      allow get: if signedIn() && (
+        resource.data.ownerUid == request.auth.uid
+        || (hasLinks() && resource.data.ownerUid == 'duo:' + links().duoId && request.auth.uid in resource.data.coOwnerUids)
+        || (hasLinks() && resource.data.ownerUid == 'crew:' + links().crewId && request.auth.uid in resource.data.coOwnerUids)
+        || (exists(/databases/$(database)/documents/away/$(id))
+            && get(/databases/$(database)/documents/away/$(id)).data.hostUid == request.auth.uid)
+      );
+      allow write: if false;
+    }
+
+    // Invites: the code is the secret; only functions read or write them.
+    match /invites/{code} { allow read, write: if false; }
+
+    // Own friends list (read); edges are written in pairs by acceptInvite / removeFriend.
+    match /friends/{uid}/list/{friendUid} {
+      allow get, list: if isMe(uid);
+      allow write: if false;
+    }
+
+    // Own duo / crew pointers.
+    match /links/{uid} {
+      allow get: if isMe(uid);
+      allow list, write: if false;
+    }
+
+    // Visits: owner and host read; functions write. `away` markers are server-only.
+    match /visits/{id} {
+      allow read: if signedIn() && (resource.data.ownerUid == request.auth.uid || resource.data.hostUid == request.auth.uid);
+      allow write: if false;
+    }
+    match /away/{creatureId} { allow read, write: if false; }
+
+    // Creature friendship levels: read by either owner.
+    match /bonds/{id} {
+      allow read: if signedIn() && request.auth.uid in resource.data.ownerUids;
+      allow write: if false;
+    }
+
+    // House slot rule (owner pips): the caller may change ONLY slots[caller]; its keys must be the six
+    // slot names; values are null or cosmetic ids the caller owns. Paintings are function-written.
+    function slotOk(v) {
+      return v == null || (v is string && v.size() <= 64
+        && v in get(/databases/$(database)/documents/players/$(request.auth.uid)).data.cosmetics);
+    }
+    function houseWriteOk() {
+      let uid = request.auth.uid;
+      let before = resource.data;
+      let after = request.resource.data;
+      let mine = after.slots[uid];
+      return after.keys().hasOnly(['slots', 'paintings'])
+        && after.paintings == before.paintings
+        && after.slots.diff(before.slots).affectedKeys().hasOnly([uid])
+        && uid in before.slots
+        && mine.keys().hasOnly(['s1', 's2', 's3', 's4', 's5', 's6'])
+        && slotOk(mine.get('s1', null)) && slotOk(mine.get('s2', null)) && slotOk(mine.get('s3', null))
+        && slotOk(mine.get('s4', null)) && slotOk(mine.get('s5', null)) && slotOk(mine.get('s6', null));
+    }
+
+    // Duo: members read the duo doc, house and fridge notes. `framing` ("duo" | "bestFriends") is
+    // function-written: forced "bestFriends" if any member is under 16 (age bands are never exposed here). No per-member presence/time data lives here
+    // (wave days and caps are in server-only duoPrivate). Notes are created by sendFridgeNote (caps).
+    match /duos/{duoId} {
+      allow read: if inDuo(duoId) && request.auth.uid in resource.data.members;
+      allow write: if false;
+      match /house/state {
+        allow read: if inDuo(duoId);
+        allow update: if inDuo(duoId) && houseWriteOk();
+        allow create, delete: if false;
+      }
+      match /notes/{noteId} {
+        allow read: if inDuo(duoId);
+        allow write: if false;
+      }
+    }
+    match /duoPrivate/{duoId} { allow read, write: if false; }
+    match /cooldowns/{id}     { allow read, write: if false; }
+
+    // Crew: members read; per-slot house writes as above.
+    match /crews/{crewId} {
+      allow read: if inCrew(crewId) && request.auth.uid in resource.data.members;
+      allow write: if false;
+      match /house/state {
+        allow read: if inCrew(crewId);
+        allow update: if inCrew(crewId) && houseWriteOk();
+        allow create, delete: if false;
+      }
+    }
+
+    // Pokes: the recipient reads (no timestamp stored); sendPoke enforces friends-only and 3/day.
+    match /pokes/{id} {
+      allow read: if signedIn() && resource.data.toUid == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Own gallery (paintings, house memories).
+    match /gallery/{uid}/items/{itemId} {
+      allow get, list: if isMe(uid);
       allow write: if false;
     }
 

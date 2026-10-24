@@ -2,8 +2,8 @@
 // installed in dev mode); behaviour is specified by src/memory/memoryRepository.ts + its tests.
 
 import type { Firestore, Transaction, Query, DocumentReference } from "firebase-admin/firestore";
-import type { Repository, Tx } from "../domain/repository.ts";
-import { breedCodec, creatureCodec } from "./codec.ts";
+import type { Repository, Tx, Where } from "../domain/repository.ts";
+import { breedCodec, creatureCodec, genericCodec } from "./codec.ts";
 import type { BreedDoc, ComboDoc, CreatureDoc, OfferDoc, PlayerDoc } from "../domain/types.ts";
 
 const C = { players: "players", creatures: "creatures", offers: "offers", breeds: "breeds", combos: "combos" } as const;
@@ -56,6 +56,19 @@ export class FirestoreRepository implements Repository {
       deleteCreature: (id) => void t.delete(ref(C.creatures, id)),
       deleteOffer: (id) => void t.delete(ref(C.offers, id)),
       deleteBreed: (id) => void t.delete(ref(C.breeds, id)),
+      // Friends-graph docs: plain JSON, no nested arrays (genomes never stored here).
+      getDoc: async <D>(path: string) => {
+        const d = await get<Record<string, unknown>>(db.doc(path));
+        return d ? (genericCodec.fromStored(d) as D) : null;
+      },
+      queryDocs: async <D>(coll: string, where: readonly Where[], n: number, orderBy?: string) => {
+        let q: Query = db.collection(coll);
+        for (const w of where) q = q.where(w.field, w.op, w.value);
+        if (orderBy) q = q.orderBy(orderBy);
+        return (await list<Record<string, unknown>>(q.limit(n))).map((d) => genericCodec.fromStored(d) as D);
+      },
+      setDoc: (path, d) => void t.set(db.doc(path), genericCodec.toStored(d)),
+      deleteDoc: (path) => void t.delete(db.doc(path)),
     };
   }
 

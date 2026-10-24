@@ -2,7 +2,7 @@
 // reads-before-writes enforced, writes buffered and applied atomically on success, nothing on throw.
 // Transactions are serialized (a simple mutex) so concurrent calls behave like Firestore retries.
 
-import type { Repository, Tx } from "../domain/repository.ts";
+import type { Repository, Tx, Where } from "../domain/repository.ts";
 import type { BreedDoc, ComboDoc, CreatureDoc, OfferDoc, PlayerDoc } from "../domain/types.ts";
 
 type Coll = "players" | "creatures" | "offers" | "breeds" | "combos";
@@ -19,6 +19,8 @@ export class MemoryRepository implements Repository {
   };
   /** Client-created social docs (reports, blocks) keyed by author uid. */
   readonly social = new Map<string, unknown[]>();
+  /** Path-addressed docs (friends graph): "visits/v1", "friends/a/list/b", "blocks/a/list/b", ... */
+  readonly docs = new Map<string, unknown>();
   transactions = 0;
   private queue: Promise<unknown> = Promise.resolve();
 
@@ -30,11 +32,12 @@ export class MemoryRepository implements Repository {
 
   async purgeSocial(uid: string): Promise<void> {
     this.social.delete(uid);
+    for (const k of [...this.docs.keys()]) if (k.startsWith(`blocks/${uid}/`)) this.docs.delete(k);
   }
 
   private async exec<T>(fn: (tx: Tx) => Promise<T>): Promise<T> {
     this.transactions++;
-    const writes: { coll: Coll; id: string; doc: unknown | null }[] = [];
+    const writes: { coll: Coll | null; id: string; doc: unknown | null }[] = [];
     const data = this.data;
     const read = <D>(coll: Coll, id: string): D | null => {
       if (writes.length > 0) throw new Error("transaction: read after write");
@@ -47,7 +50,18 @@ export class MemoryRepository implements Repository {
       if (order) out = out.sort(order);
       return out.slice(0, limit).map(clone);
     };
-    const write = (coll: Coll, id: string, doc: unknown | null) => writes.push({ coll, id, doc: doc === null ? null : clone(doc) });
+    const write = (coll: Coll | null, id: string, doc: unknown | null) => writes.push({ coll, id, doc: doc === null ? null : clone(doc) });
+    const docs = this.docs;
+    const checkPath = (path: string, docPath: boolean) => {
+      const parts = path.split("/");
+      if (parts.some((x) => x.length === 0) || (parts.length % 2 === 0) !== docPath) throw new Error(`bad path ${path}`);
+    };
+    const matches = (d: Record<string, unknown>, w: Where) => {
+      const v = d[w.field];
+      if (w.op === "==") return v === w.value;
+      if (w.op === "<=") return typeof v === "number" && typeof w.value === "number" && v <= w.value;
+      return Array.isArray(v) && v.includes(w.value);
+    };
 
     const tx: Tx = {
       getPlayer: async (uid) => read<PlayerDoc>("players", uid),
@@ -73,12 +87,38 @@ export class MemoryRepository implements Repository {
       deleteCreature: (id) => write("creatures", id, null),
       deleteOffer: (id) => write("offers", id, null),
       deleteBreed: (id) => write("breeds", id, null),
+      getDoc: async <D>(path: string) => {
+        if (writes.length > 0) throw new Error("transaction: read after write");
+        checkPath(path, true);
+        const v = docs.get(path);
+        return v === undefined ? null : clone(v as D);
+      },
+      queryDocs: async <D>(coll: string, where: readonly Where[], limit: number, orderBy?: string) => {
+        if (writes.length > 0) throw new Error("transaction: read after write");
+        checkPath(coll, false);
+        const depth = coll.split("/").length + 1;
+        let out = [...docs.entries()]
+          .filter(([k]) => k.startsWith(coll + "/") && k.split("/").length === depth)
+          .map(([, v]) => v as Record<string, unknown>)
+          .filter((d) => where.every((w) => matches(d, w)));
+        if (orderBy) out = out.sort((a, b) => (a[orderBy] as number) - (b[orderBy] as number));
+        return out.slice(0, limit).map((d) => clone(d as D));
+      },
+      setDoc: (path, d) => {
+        checkPath(path, true);
+        write(null, path, d);
+      },
+      deleteDoc: (path) => {
+        checkPath(path, true);
+        write(null, path, null);
+      },
     };
 
     const result = await fn(tx);
     for (const w of writes) {
-      if (w.doc === null) data[w.coll].delete(w.id);
-      else data[w.coll].set(w.id, w.doc);
+      const m = w.coll === null ? docs : data[w.coll];
+      if (w.doc === null) m.delete(w.id);
+      else m.set(w.id, w.doc);
     }
     return clone(result);
   }
@@ -90,6 +130,14 @@ export class MemoryRepository implements Repository {
   }
   all<D>(coll: Coll): D[] {
     return [...this.data[coll].values()].map((v) => clone(v as D));
+  }
+  doc<D>(path: string): D | undefined {
+    const v = this.docs.get(path);
+    return v === undefined ? undefined : clone(v as D);
+  }
+  /** Docs whose path starts with `prefix`. */
+  docsUnder<D>(prefix: string): D[] {
+    return [...this.docs.entries()].filter(([k]) => k.startsWith(prefix)).map(([, v]) => clone(v as D));
   }
   /** Direct write that bypasses services (fixtures only). */
   put(coll: Coll, id: string, doc: unknown): void {

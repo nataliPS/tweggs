@@ -9,6 +9,8 @@ src/domain/       pure business logic (depends only on engine-ts + the Repositor
   engine.ts       the only import of the engine: re-exports ../../engine-ts/src/index.ts
   services.ts     registerPlayer, createOffer, cancelOffer, previewBreed, commitBreed,
                   claimDailySurprise, checkInStreak, renameCreature, deleteAccount, sweep
+  social.ts       friends graph: invites, friends, visits, Duo, Crew, pokes (living-world-spec §10–12)
+  guards.ts       shared input / ownership guards and the signed-creature factory
   repository.ts   Repository / Tx interface (Firestore-style transactions)
   config.ts       caps, TTLs, growth timings, starters, streak unlock table
   nameFilter.ts   creature name filter (retro C3)
@@ -39,7 +41,8 @@ Type-check (needs `npm install` for `@types/node` and the firebase typings): `np
 - Caps: 10 new previews and 20 offers per player per server UTC day.
 - Genomes and mutations are read only from the server records. The server ignores any genome or mutation list that the client sends.
 - Commit runs as one transaction. It recomputes the result with the stored nonce, creates both twins, sets serial = `combos.count + 1`, sets the discoverer only if empty, marks the offer as used, and burns the sibling previews. A retry is idempotent.
-- Teens and adults can breed (retro G4). Under-13 accounts get no social calls (C2).
+- Teens and adults can breed (retro G4). Under-13 accounts get no social calls (C2); see the friends-graph rule below for 13+ bands.
+- Friends graph: invites are single use (24 h). Age bands: under13 / 13to15 / 16to17 / 18plus (legacy `13to17` maps to 13to15). Under-13 is fully offline. Duo is for 13+; its `framing` is forced to `bestFriends` if any member is under 16, otherwise members choose `duo` (default) or `bestFriends` (`setDuoFraming`). There is no romantic framing. Partners never see each other's location, local day, presence or activity; wave times live only in server-only `duoPrivate`.
 - Streak unlocks are the `STREAK_UNLOCKS` table in `config.ts` (days 3/7/14/21/30). Unlocks are permanent.
 
 ## Deploy (later, founder approval required)

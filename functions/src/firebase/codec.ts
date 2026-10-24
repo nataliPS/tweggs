@@ -27,3 +27,24 @@ export const breedCodec = {
     return { ...b, previewChild: { ...b.previewChild, genome: unflattenGenome(b.previewChild.genome as unknown as number[]) } };
   },
 };
+
+/**
+ * Friends-graph docs (social.ts) hold no genomes. Firestore drops `undefined` and rejects nested
+ * arrays, so the codec strips undefined and asserts the no-nested-array rule at write time.
+ */
+export const genericCodec = {
+  toStored: (d: object): Record<string, unknown> => {
+    const walk = (v: unknown, inArray: boolean): unknown => {
+      if (Array.isArray(v)) {
+        if (inArray) throw new Error("nested array in Firestore doc");
+        return v.map((x) => walk(x, true));
+      }
+      if (v !== null && typeof v === "object") {
+        return Object.fromEntries(Object.entries(v).filter(([, x]) => x !== undefined).map(([k, x]) => [k, walk(x, false)]));
+      }
+      return v;
+    };
+    return walk(d, false) as Record<string, unknown>;
+  },
+  fromStored: (d: Record<string, unknown>): Record<string, unknown> => d,
+};

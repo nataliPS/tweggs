@@ -5,6 +5,8 @@ export * from "./domain/growth.ts";
 export * from "./domain/nameFilter.ts";
 export * from "./domain/repository.ts";
 export * from "./domain/services.ts";
+export * from "./domain/social.ts";
+export * from "./domain/guards.ts";
 export * from "./domain/signing.ts";
 export * from "./domain/time.ts";
 export * from "./domain/types.ts";

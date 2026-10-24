@@ -34,6 +34,20 @@ export interface Tx {
   deleteCreature(id: string): void;
   deleteOffer(id: string): void;
   deleteBreed(id: string): void;
+
+  // Generic path-addressed docs (friends graph collections; see social.ts for the paths).
+  // Paths are Firestore paths ("visits/v1", "friends/a/list/b"). Creatures still go through setCreature.
+  getDoc<T>(path: string): Promise<T | null>;
+  /** Docs directly in `collectionPath` matching all clauses; optional ascending orderBy. */
+  queryDocs<T>(collectionPath: string, where: readonly Where[], limit: number, orderBy?: string): Promise<T[]>;
+  setDoc(path: string, doc: object): void;
+  deleteDoc(path: string): void;
+}
+
+export interface Where {
+  field: string;
+  op: "==" | "<=" | "array-contains";
+  value: string | number | boolean | null;
 }
 
 export interface Repository {

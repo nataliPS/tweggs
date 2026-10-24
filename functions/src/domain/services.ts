@@ -3,7 +3,7 @@
 
 import {
   breed, comboKeyOfGenome, dailySurprise, fnv1a32, generation, hex8, rarity, sortMutations, starter,
-  validateGenome, type BreedResult, type Mutation, type Souvenir,
+  type BreedResult, type Mutation, type Souvenir,
 } from "./engine.ts";
 import {
   DELETED_UID, MAX_OFFERS_PER_DAY, MAX_PREVIEWS_PER_DAY, MIN_BREED_STAGE, OFFER_TTL_MS, PREVIEW_TTL_MS,
@@ -11,11 +11,15 @@ import {
 } from "./config.ts";
 import { DomainError, fail } from "./errors.ts";
 import { atLeast, stageOf } from "./growth.ts";
+import {
+  creatureFactory, id64, loadOwnedCreature, loadPlayer, requireSocial, requireString, requireUid,
+} from "./guards.ts";
 import { checkName } from "./nameFilter.ts";
+import { createSocialServices, type SocialConfig } from "./social.ts";
 import { BULK_CHUNK, type Repository, type Tx } from "./repository.ts";
 import { addDays, utcDay } from "./time.ts";
 import {
-  AGE_BANDS, type AgeBand, type BreedDoc, type ChildPreview, type CreatureDoc, type OfferDoc, type PlayerDoc,
+  normalizeAgeBand, type AgeBand, type BreedDoc, type ChildPreview, type CreatureDoc, type OfferDoc, type PlayerDoc,
 } from "./types.ts";
 
 export interface Deps {
@@ -26,19 +30,11 @@ export interface Deps {
   randomToken: () => string;
   /** Signs a creature at birth (HMAC with a server secret in prod). */
   sign: (payload: string) => string;
+  /** Friends-graph gating (duoMinAgeBand, duoFramingMinBand); defaults in social.ts. */
+  social?: Partial<SocialConfig>;
 }
 
 // MARK: helpers
-
-/** Canonical string a creature's `sig` covers: who owns what genome, and where it came from. */
-export function creatureSigPayload(c: Pick<CreatureDoc, "id" | "ownerUid" | "genome" | "parentIds" | "generation" | "specVersion">): string {
-  return [c.id, c.ownerUid, JSON.stringify(c.genome), c.parentIds.join(","), c.generation, c.specVersion].join("|");
-}
-
-/** 64-bit id (two independent FNV words) so ids stay unique across the whole player base. */
-function id64(prefix: string, key: string): string {
-  return prefix + hex8(fnv1a32("a|" + key)) + hex8(fnv1a32("b|" + key));
-}
 
 export function starterCreatureId(uid: string, slot: number): string {
   return id64("s_", "starter|" + uid + "|" + slot);
@@ -51,36 +47,6 @@ export function breedDocId(offerId: string, acceptorCreatureId: string): string 
 
 function twinId(child: BreedResult, breedId: string, shift: number): string {
   return child.id + hex8(fnv1a32(breedId + "|twin|" + shift)) + hex8(fnv1a32("twin|" + shift + "|" + breedId));
-}
-
-function requireUid(uid: string | null | undefined): string {
-  if (typeof uid !== "string" || uid.length === 0) fail("unauthenticated", "no-auth");
-  return uid as string;
-}
-
-function requireString(v: unknown, field: string, max = 200): string {
-  if (typeof v !== "string" || v.length === 0 || v.length > max || v.includes("/")) {
-    fail("invalid-argument", "bad-" + field);
-  }
-  return v as string;
-}
-
-async function loadPlayer(tx: Tx, uid: string): Promise<PlayerDoc> {
-  const p = await tx.getPlayer(uid);
-  if (!p) fail("failed-precondition", "not-registered");
-  return p as PlayerDoc;
-}
-
-function requireSocial(p: PlayerDoc): void {
-  // Retro C2: under-13 players are offline-only, no social features.
-  if (p.ageBand === "under13") fail("permission-denied", "age-restricted");
-}
-
-async function loadOwnedCreature(tx: Tx, id: string, uid: string): Promise<CreatureDoc> {
-  const c = await tx.getCreature(id);
-  if (!c) fail("not-found", "creature-not-found");
-  if ((c as CreatureDoc).ownerUid !== uid) fail("permission-denied", "not-owner");
-  return c as CreatureDoc;
 }
 
 function requireBreedable(c: CreatureDoc, now: number): void {
@@ -171,14 +137,12 @@ export function unlocksForStreak(count: number): Mutation[] {
 export function createServices(deps: Deps) {
   const { repo, now, randomToken, sign } = deps;
 
-  function newCreature(fields: Omit<CreatureDoc, "sig" | "specVersion" | "createdAt"> & { createdAt: number }): CreatureDoc {
-    validateGenome(fields.genome);
-    const doc: CreatureDoc = { ...fields, specVersion: SPEC_VERSION, sig: "" };
-    doc.sig = sign(creatureSigPayload(doc));
-    return doc;
-  }
+  const newCreature = creatureFactory(sign);
+  const social = createSocialServices(deps);
 
   return {
+    ...social,
+
     /**
      * Creates the player and persists both starters server-side (retro T2), so later breeding
      * reads genomes from the registry instead of re-deriving them from a client-supplied id.
@@ -186,10 +150,9 @@ export function createServices(deps: Deps) {
      */
     async registerPlayer(uidIn: string | null | undefined, input: { ageBand?: unknown; displayName?: unknown }) {
       const uid = requireUid(uidIn);
-      const ageBand = input?.ageBand;
-      if (typeof ageBand !== "string" || !(AGE_BANDS as readonly string[]).includes(ageBand)) {
-        fail("invalid-argument", "bad-ageBand");
-      }
+      // Old clients may still send "13to17": stored as 13to15 (conservative).
+      const ageBand = normalizeAgeBand(input?.ageBand);
+      if (ageBand === null) fail("invalid-argument", "bad-ageBand");
       let displayName = "";
       if (input?.displayName !== undefined && input.displayName !== "") {
         const v = checkName(input.displayName);
@@ -513,6 +476,8 @@ export function createServices(deps: Deps) {
     async deleteAccount(uidIn: string | null | undefined): Promise<DeleteResult> {
       const uid = requireUid(uidIn);
       const total: DeleteResult = { creatures: 0, offers: 0, breeds: 0, combosAnonymized: 0 };
+      // Friends graph first: unlink duo (partner keeps a twin), leave crew, end visits, drop edges.
+      await social.purgeAccount(uid);
       for (;;) {
         const done = await repo.runTransaction(async (tx) => {
           const creatures = await tx.creaturesByOwner(uid, BULK_CHUNK);
@@ -577,3 +542,4 @@ export function createServices(deps: Deps) {
 
 export type Services = ReturnType<typeof createServices>;
 export { DomainError };
+export { creatureSigPayload } from "./guards.ts";
