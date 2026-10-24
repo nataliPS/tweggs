@@ -69,6 +69,8 @@ private struct HomeContent: View {
 
             growthCard(stage: stage)
 
+            DailySurpriseCard(now: now)
+
             if condition == .sleepy {
                 Text("\(creature.name) is feeling sleepy. A little care will cheer them up!")
                     .font(Theme.body(14))

@@ -7,6 +7,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   CATALOG, GENE_COUNT, GENE_KEYS, breed, express, rarity, starter, fnv1a32, hex8, mulberry32,
+  SEASON_1, comboKey, dailySurprise,
   type Genome, type Mutation, type BreedInput,
 } from "../src/index.ts";
 
@@ -106,6 +107,18 @@ const rngSeqs = [0, 42, 0xdeadbeef].map((seed) => {
   return { seed, next, int7, float };
 });
 
+// Collecting (spec §8). Fixed inputs, independent of `gen`, so earlier cases never move.
+const collecting = {
+  comboKeys: [...breeding.slice(0, 10), ...starters.slice(0, 5)].map((c: any) => ({
+    expressed: c.expected.expressed, key: comboKey(c.expected.expressed),
+  })),
+  surprises: ["", "p1", "игрок", "3f2c9a1e-0000-4000-8000-000000000001"].flatMap((playerId) =>
+    ["2026-10-24", "2026-10-25", "2026-12-31", "2027-01-01", "2027-03-15"].map((day) => ({
+      playerId, day, souvenir: dailySurprise(playerId, day),
+    }))),
+  seasons: [SEASON_1],
+};
+
 const vectors = {
   specVersion: "0.1",
   generator: "engine-ts/scripts/make-golden.ts",
@@ -114,6 +127,7 @@ const vectors = {
   rng: rngSeqs,
   breeding,
   starters,
+  collecting,
 };
 
 mkdirSync(dirname(outPath), { recursive: true });

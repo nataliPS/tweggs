@@ -1,4 +1,5 @@
 import SwiftUI
+import MixlingsGenome
 
 /// Light pixel-game look: warm off-white, white rounded cards, soft ink.
 /// Values match the approved art sheet background (246, 243, 236).
@@ -13,6 +14,32 @@ enum Theme {
     static let joy = Color(red: 86 / 255, green: 196 / 255, blue: 160 / 255)
     static let mood = Color(red: 240 / 255, green: 110 / 255, blue: 150 / 255)
     static let preview = Color(red: 232 / 255, green: 240 / 255, blue: 255 / 255)
+
+    // Collecting: rarity frame colours (common grey, uncommon green, rare violet, legendary gold).
+    static let rarityCommon = Color(red: 158 / 255, green: 154 / 255, blue: 146 / 255)
+    static let rarityUncommon = Color(red: 76 / 255, green: 175 / 255, blue: 110 / 255)
+    static let rarityRare = Color(red: 128 / 255, green: 90 / 255, blue: 230 / 255)
+    static let rarityLegendary = Color(red: 232 / 255, green: 183 / 255, blue: 48 / 255)
+
+    /// Creature card face (approved mockup design/mockup/Card.dc.html).
+    static let cardFace = Color(red: 43 / 255, green: 31 / 255, blue: 92 / 255)
+    static let cardPanel = Color(red: 58 / 255, green: 44 / 255, blue: 120 / 255)
+    static let cardLabel = Color(red: 169 / 255, green: 155 / 255, blue: 230 / 255)
+    static let cardHighlight = Color(red: 255 / 255, green: 209 / 255, blue: 102 / 255)
+    /// Season album: missing-slot fill and dashed outline.
+    static let slotEmpty = Color(red: 251 / 255, green: 249 / 255, blue: 244 / 255)
+    static let slotStroke = Color(red: 211 / 255, green: 201 / 255, blue: 182 / 255)
+
+    static func rarity(_ tier: RarityTier) -> Color {
+        switch tier {
+        case .common: return rarityCommon
+        case .uncommon: return rarityUncommon
+        case .rare: return rarityRare
+        case .legendary: return rarityLegendary
+        }
+    }
+
+    static func rarity(score: Int) -> Color { rarity(Genetics.tier(forScore: score)) }
 
     static let cornerRadius: CGFloat = 18
 

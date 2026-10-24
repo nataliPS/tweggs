@@ -11,6 +11,8 @@ struct OnboardingView: View {
     @State private var taps = 0
     @State private var name = ""
     @State private var egg: Creature?
+    /// Creature whose card is shown (hatched baby).
+    @State private var cardCreature: Creature?
 
     private let tapsToHatch = 3
 
@@ -29,6 +31,9 @@ struct OnboardingView: View {
         .background(Theme.background.ignoresSafeArea())
         .onAppear {
             if egg == nil { egg = model.prepareFirstEgg() }
+        }
+        .sheet(item: $cardCreature) { c in
+            CreatureCardScreen(creature: c)
         }
     }
 
@@ -101,6 +106,14 @@ struct OnboardingView: View {
                 Text(adult.name)
                     .font(Theme.title(20))
                     .foregroundStyle(Theme.ink)
+            }
+            if let id = egg?.id, let baby = model.save.creature(id: id) {
+                Button {
+                    cardCreature = baby
+                } label: {
+                    Label("See \(baby.name)'s card", systemImage: "rectangle.portrait.fill")
+                }
+                .buttonStyle(PixelButtonStyle(tint: Theme.rarityRare))
             }
             Button("Let's play!") {
                 model.finishOnboarding()

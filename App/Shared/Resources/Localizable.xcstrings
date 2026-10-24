@@ -11,6 +11,110 @@
         }
       }
     },
+    "%lld days left": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld day left"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld days left"
+                }
+              }
+            }
+          }
+        },
+        "uk": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ще %lld день"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ще %lld дні"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ще %lld днів"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ще %lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld looks discovered": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld look discovered"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld looks discovered"
+                }
+              }
+            }
+          }
+        },
+        "uk": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Відкрито %lld комбінацію"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Відкрито %lld комбінації"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Відкрито %lld комбінацій"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Відкрито %lld комбінації"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld percent": {
       "localizations": {
         "uk": {
@@ -21,12 +125,74 @@
         }
       }
     },
+    "%lld sparks": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld spark"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sparks"
+                }
+              }
+            }
+          }
+        },
+        "uk": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld іскра"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld іскри"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld іскор"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld іскри"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld taps left": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Залишилось торкань: %lld"
+          }
+        }
+      }
+    },
+    "A free surprise is waiting!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Безкоштовний сюрприз чекає!"
           }
         }
       }
@@ -121,6 +287,16 @@
         }
       }
     },
+    "Cancel offer": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скасувати пропозицію"
+          }
+        }
+      }
+    },
     "Check on your Mixling and give it a snack or a pat.": {
       "localizations": {
         "uk": {
@@ -137,6 +313,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Обери батька"
+          }
+        }
+      }
+    },
+    "Close": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закрити"
           }
         }
       }
@@ -171,12 +357,52 @@
         }
       }
     },
+    "Creature card": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Картка істоти"
+          }
+        }
+      }
+    },
+    "Daily surprise": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Щоденний сюрприз"
+          }
+        }
+      }
+    },
+    "Discoverer": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відкривач"
+          }
+        }
+      }
+    },
     "Egg": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Яйце"
+          }
+        }
+      }
+    },
+    "Encyclopedia": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Енциклопедія"
           }
         }
       }
@@ -201,6 +427,26 @@
         }
       }
     },
+    "Find all variants to earn the badge. Breeding with friends helps!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Знайди всі варіанти, щоб отримати значок. Схрещування з друзями допоможе!"
+          }
+        }
+      }
+    },
+    "First generation": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перше покоління"
+          }
+        }
+      }
+    },
     "Fully grown — ready to breed!": {
       "localizations": {
         "uk": {
@@ -221,12 +467,62 @@
         }
       }
     },
+    "Gen %lld": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пок. %lld"
+          }
+        }
+      }
+    },
+    "Generation": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Покоління"
+          }
+        }
+      }
+    },
     "Happy": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Щасливий"
+          }
+        }
+      }
+    },
+    "Hatch and breed Mixlings to fill your encyclopedia.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вилуплюй і схрещуй мікслінгів, щоб заповнити енциклопедію."
+          }
+        }
+      }
+    },
+    "Hatch yours in Mixlings": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Виведи свого в Mixlings"
+          }
+        }
+      }
+    },
+    "Hatched": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вилуплено"
           }
         }
       }
@@ -291,6 +587,26 @@
         }
       }
     },
+    "Look": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вигляд"
+          }
+        }
+      }
+    },
+    "Make active": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зробити активним"
+          }
+        }
+      }
+    },
     "Mixling": {
       "localizations": {
         "uk": {
@@ -334,6 +650,36 @@
         }
       }
     },
+    "Next surprise in %@": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Наступний сюрприз через %@"
+          }
+        }
+      }
+    },
+    "No season right now.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зараз немає сезону."
+          }
+        }
+      }
+    },
+    "Not found yet": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ще не знайдено"
+          }
+        }
+      }
+    },
     "OK": {
       "localizations": {
         "uk": {
@@ -350,6 +696,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Пропозиція %@"
+          }
+        }
+      }
+    },
+    "Offer %@ to a friend": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запропонуй %@ другові"
           }
         }
       }
@@ -374,12 +730,32 @@
         }
       }
     },
+    "Open": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відкрити"
+          }
+        }
+      }
+    },
     "Open Mixlings to hatch your egg": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Відкрий Mixlings, щоб вилупити яйце"
+          }
+        }
+      }
+    },
+    "Parents unknown": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Батьки невідомі"
           }
         }
       }
@@ -454,12 +830,92 @@
         }
       }
     },
+    "Season": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сезон"
+          }
+        }
+      }
+    },
+    "Season badge": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Значок сезону"
+          }
+        }
+      }
+    },
+    "Season badge earned!": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Значок сезону отримано!"
+          }
+        }
+      }
+    },
+    "Season ended": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сезон завершено"
+          }
+        }
+      }
+    },
+    "Section": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Розділ"
+          }
+        }
+      }
+    },
+    "See %@'s card": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Картка: %@"
+          }
+        }
+      }
+    },
     "Share link": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Поділитися посиланням"
+          }
+        }
+      }
+    },
+    "Share to Stories": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поділитися в Stories"
+          }
+        }
+      }
+    },
+    "Share trade link": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поділитися посиланням на обмін"
           }
         }
       }
@@ -474,12 +930,92 @@
         }
       }
     },
+    "Square card for chat": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Квадратна картка для чату"
+          }
+        }
+      }
+    },
+    "Surprise waiting": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сюрприз чекає"
+          }
+        }
+      }
+    },
     "Teen": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Підліток"
+          }
+        }
+      }
+    },
+    "Temper": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Характер"
+          }
+        }
+      }
+    },
+    "This Mixling is no longer here.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Цього мікслінга тут більше немає."
+          }
+        }
+      }
+    },
+    "Trade": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обміняти"
+          }
+        }
+      }
+    },
+    "Trade Mixlings?": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обміняємося мікслінгами?"
+          }
+        }
+      }
+    },
+    "Trades are free swaps between friends. Your friend picks a Mixling to give back, and nothing moves until you both agree.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обмін — це безкоштовний обмін між друзями. Друг обирає мікслінга навзаєм, і нічого не переходить, доки ви обидва не погодитесь."
+          }
+        }
+      }
+    },
+    "Trading with friends is coming soon. For now this only creates a link.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обмін з друзями — незабаром. Поки що це лише створює посилання."
           }
         }
       }
@@ -494,12 +1030,94 @@
         }
       }
     },
+    "Want to swap Mixlings? I'm offering %@.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обміняємося мікслінгами? Пропоную %@."
+          }
+        }
+      }
+    },
     "Welcome to Mixlings": {
       "localizations": {
         "uk": {
           "stringUnit": {
             "state": "translated",
             "value": "Вітаємо в Mixlings"
+          }
+        }
+      }
+    },
+    "You got %lld sparks!": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You got %lld spark!"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You got %lld sparks!"
+                }
+              }
+            }
+          }
+        },
+        "uk": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ти отримав %lld іскру!"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ти отримав %lld іскри!"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ти отримав %lld іскор!"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ти отримав %lld іскри!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "You got a souvenir: %@": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ти отримав сувенір: %@"
+          }
+        }
+      }
+    },
+    "You were the first to hatch this look on this device.": {
+      "localizations": {
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ти перший вивів цю комбінацію на цьому пристрої."
           }
         }
       }
@@ -520,6 +1138,1179 @@
           "stringUnit": {
             "state": "translated",
             "value": "Твій гібрид і близнюк друга"
+          }
+        }
+      }
+    },
+    "cosmetic.bow_tie": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bow tie"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Метелик"
+          }
+        }
+      }
+    },
+    "cosmetic.flower_crown": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flower crown"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Віночок"
+          }
+        }
+      }
+    },
+    "cosmetic.star_pin": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Star pin"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Значок-зірочка"
+          }
+        }
+      }
+    },
+    "cosmetic.tiny_scarf": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiny scarf"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Маленький шарфик"
+          }
+        }
+      }
+    },
+    "season.s1.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First Spring"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перша весна"
+          }
+        }
+      }
+    },
+    "variant.aura.glow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glow"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сяйво"
+          }
+        }
+      }
+    },
+    "variant.aura.hearts": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hearts"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сердечка"
+          }
+        }
+      }
+    },
+    "variant.aura.none": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No aura"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Без аури"
+          }
+        }
+      }
+    },
+    "variant.aura.sparkle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sparkles"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Іскри"
+          }
+        }
+      }
+    },
+    "variant.body.bean": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bean"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Квасолька"
+          }
+        }
+      }
+    },
+    "variant.body.block": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Block"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кубик"
+          }
+        }
+      }
+    },
+    "variant.body.drop": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drop"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Крапля"
+          }
+        }
+      }
+    },
+    "variant.body.mochi": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mochi"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Моті"
+          }
+        }
+      }
+    },
+    "variant.body.pear": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pear"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Грушка"
+          }
+        }
+      }
+    },
+    "variant.body.round": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Round"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Круглий"
+          }
+        }
+      }
+    },
+    "variant.eyes.big": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Big eyes"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Великі очі"
+          }
+        }
+      }
+    },
+    "variant.eyes.cyclops": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cyclops"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Циклоп"
+          }
+        }
+      }
+    },
+    "variant.eyes.dots": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dots"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Цятки"
+          }
+        }
+      }
+    },
+    "variant.eyes.happy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Happy eyes"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Веселі очі"
+          }
+        }
+      }
+    },
+    "variant.eyes.oval": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oval eyes"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Овальні очі"
+          }
+        }
+      }
+    },
+    "variant.eyes.sleepy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sleepy eyes"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сонні очі"
+          }
+        }
+      }
+    },
+    "variant.eyes.sparkle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sparkly eyes"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Блискучі очі"
+          }
+        }
+      }
+    },
+    "variant.eyes.star": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Star eyes"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зіркові очі"
+          }
+        }
+      }
+    },
+    "variant.head.antenna": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antenna"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Антенка"
+          }
+        }
+      }
+    },
+    "variant.head.bunnyears": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bunny ears"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Заячі вуха"
+          }
+        }
+      }
+    },
+    "variant.head.catears": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cat ears"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Котячі вуха"
+          }
+        }
+      }
+    },
+    "variant.head.crest": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crest"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чубчик"
+          }
+        }
+      }
+    },
+    "variant.head.halo": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halo"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Німб"
+          }
+        }
+      }
+    },
+    "variant.head.horns": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Horns"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роги"
+          }
+        }
+      }
+    },
+    "variant.head.leaf": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leaf"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Листок"
+          }
+        }
+      }
+    },
+    "variant.head.none": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No headwear"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Без прикрас"
+          }
+        }
+      }
+    },
+    "variant.palette.aqua": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aqua"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Аква"
+          }
+        }
+      }
+    },
+    "variant.palette.bubblegum": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bubblegum"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Жуйка"
+          }
+        }
+      }
+    },
+    "variant.palette.cobalt": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cobalt"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кобальтовий"
+          }
+        }
+      }
+    },
+    "variant.palette.coral": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coral"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кораловий"
+          }
+        }
+      }
+    },
+    "variant.palette.cream": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cream"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кремовий"
+          }
+        }
+      }
+    },
+    "variant.palette.ghost": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghost"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Привид"
+          }
+        }
+      }
+    },
+    "variant.palette.lavender": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lavender"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лавандовий"
+          }
+        }
+      }
+    },
+    "variant.palette.lime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lime"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лаймовий"
+          }
+        }
+      }
+    },
+    "variant.palette.mint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mint"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мʼятний"
+          }
+        }
+      }
+    },
+    "variant.palette.night": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нічний"
+          }
+        }
+      }
+    },
+    "variant.palette.rose": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rose"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Рожевий"
+          }
+        }
+      }
+    },
+    "variant.palette.seafoam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seafoam"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Морська піна"
+          }
+        }
+      }
+    },
+    "variant.palette.sky": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sky"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Небесний"
+          }
+        }
+      }
+    },
+    "variant.palette.stone": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stone"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Камʼяний"
+          }
+        }
+      }
+    },
+    "variant.palette.sunny": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunny"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сонячний"
+          }
+        }
+      }
+    },
+    "variant.palette.tangerine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tangerine"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мандариновий"
+          }
+        }
+      }
+    },
+    "variant.pattern.belly": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Belly"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пузо"
+          }
+        }
+      }
+    },
+    "variant.pattern.cap": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cap"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Шапочка"
+          }
+        }
+      }
+    },
+    "variant.pattern.freckles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freckles"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Веснянки"
+          }
+        }
+      }
+    },
+    "variant.pattern.plain": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plain"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Однотонний"
+          }
+        }
+      }
+    },
+    "variant.pattern.spots": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spots"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Плями"
+          }
+        }
+      }
+    },
+    "variant.pattern.stripes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stripes"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Смужки"
+          }
+        }
+      }
+    },
+    "variant.tail.curly": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Curly tail"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закручений"
+          }
+        }
+      }
+    },
+    "variant.tail.flame": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flame tail"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вогняний хвіст"
+          }
+        }
+      }
+    },
+    "variant.tail.lightning": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lightning tail"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Блискавка"
+          }
+        }
+      }
+    },
+    "variant.tail.long": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Long tail"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Довгий хвіст"
+          }
+        }
+      }
+    },
+    "variant.tail.none": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No tail"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Без хвоста"
+          }
+        }
+      }
+    },
+    "variant.tail.puff": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puff tail"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пухнастик"
+          }
+        }
+      }
+    },
+    "variant.temper.brave": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brave"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сміливий"
+          }
+        }
+      }
+    },
+    "variant.temper.calm": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calm"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Спокійний"
+          }
+        }
+      }
+    },
+    "variant.temper.chaotic": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chaotic"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хаотичний"
+          }
+        }
+      }
+    },
+    "variant.temper.curious": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Curious"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Допитливий"
+          }
+        }
+      }
+    },
+    "variant.temper.dreamy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dreamy"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мрійливий"
+          }
+        }
+      }
+    },
+    "variant.temper.grumpy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grumpy"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Буркотун"
+          }
+        }
+      }
+    },
+    "variant.temper.noble": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noble"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Шляхетний"
+          }
+        }
+      }
+    },
+    "variant.temper.playful": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playful"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Грайливий"
+          }
+        }
+      }
+    },
+    "variant.temper.shy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shy"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сором'язливий"
+          }
+        }
+      }
+    },
+    "variant.temper.sneaky": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sneaky"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хитрий"
           }
         }
       }

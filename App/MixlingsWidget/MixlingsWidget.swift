@@ -31,6 +31,8 @@ struct MixlingEntry: TimelineEntry {
     let creature: Creature?
     let stage: Stage
     let condition: Condition
+    /// Today's free daily surprise is still unopened at `date`.
+    var surpriseWaiting: Bool = false
 }
 
 struct MixlingProvider: TimelineProvider {
@@ -43,19 +45,23 @@ struct MixlingProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (MixlingEntry) -> Void) {
-        var creature: Creature? = CreatureStore.shared.load().activeCreature
+        let save = CreatureStore.shared.load()
+        var creature: Creature? = save.activeCreature
         if context.isPreview && creature == nil {
             creature = Self.sampleCreature // widget gallery before onboarding
         }
-        completion(Self.entry(for: creature, at: .now))
+        completion(Self.entry(for: creature, at: .now, lastSurpriseDay: save.lastSurpriseDay))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<MixlingEntry>) -> Void) {
-        completion(Self.timeline(for: CreatureStore.shared.load().activeCreature, from: .now))
+        let save = CreatureStore.shared.load()
+        completion(Self.timeline(for: save.activeCreature, from: .now, lastSurpriseDay: save.lastSurpriseDay))
     }
 
-    /// Pure, testable timeline builder.
-    static func timeline(for creature: Creature?, from now: Date) -> Timeline<MixlingEntry> {
+    /// Pure, testable timeline builder. `lastSurpriseDay` drives the "surprise waiting" hint,
+    /// which flips on by itself at local midnight because each entry checks its own date.
+    static func timeline(for creature: Creature?, from now: Date,
+                         lastSurpriseDay: String? = nil) -> Timeline<MixlingEntry> {
         guard let creature else {
             // Not onboarded yet: one entry, refresh in an hour (the app also reloads on change).
             return Timeline(entries: [entry(for: nil, at: now)],
@@ -63,12 +69,12 @@ struct MixlingProvider: TimelineProvider {
         }
         let count = Int(horizon / step)
         let entries = (0...count).map { i in
-            entry(for: creature, at: now.addingTimeInterval(Double(i) * step))
+            entry(for: creature, at: now.addingTimeInterval(Double(i) * step), lastSurpriseDay: lastSurpriseDay)
         }
         return Timeline(entries: entries, policy: .atEnd)
     }
 
-    static func entry(for creature: Creature?, at date: Date) -> MixlingEntry {
+    static func entry(for creature: Creature?, at date: Date, lastSurpriseDay: String? = nil) -> MixlingEntry {
         guard let creature else {
             return MixlingEntry(date: date, creature: nil, stage: .egg, condition: .okay)
         }
@@ -76,7 +82,8 @@ struct MixlingProvider: TimelineProvider {
             date: date,
             creature: CareEngine.decay(creature, to: date),
             stage: CareEngine.stage(creature, at: date),
-            condition: CareEngine.condition(creature, at: date)
+            condition: CareEngine.condition(creature, at: date),
+            surpriseWaiting: CollectingEngine.canOpenSurprise(lastSurpriseDay: lastSurpriseDay, now: date)
         )
     }
 
@@ -142,6 +149,12 @@ private struct SmallView: View {
                         .foregroundStyle(Theme.ink)
                         .lineLimit(1)
                     Spacer(minLength: 0)
+                    if entry.surpriseWaiting {
+                        Image(systemName: "gift.fill")
+                            .font(Theme.caption(10))
+                            .foregroundStyle(Theme.accent)
+                            .accessibilityLabel(Text("Surprise waiting"))
+                    }
                     Image(systemName: "heart.fill")
                         .font(Theme.caption(10))
                         .foregroundStyle(Theme.mood)
@@ -179,6 +192,12 @@ private struct MediumView: View {
                     StatBar(label: "Belly", systemImage: "fork.knife", value: c.hungerValue, tint: Theme.hunger)
                     StatBar(label: "Fun", systemImage: "star.fill", value: c.joyValue, tint: Theme.joy)
                     StatBar(label: "Mood", systemImage: "heart.fill", value: c.moodValue, tint: Theme.mood)
+                    if entry.surpriseWaiting {
+                        Label("Surprise waiting", systemImage: "gift.fill")
+                            .font(Theme.caption(11))
+                            .foregroundStyle(Theme.accent)
+                            .lineLimit(1)
+                    }
                     Spacer(minLength: 0)
                     CareButtons(compact: false, canFeed: entry.stage != .egg)
                 }

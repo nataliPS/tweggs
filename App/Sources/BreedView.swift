@@ -16,6 +16,8 @@ struct BreedView: View {
     /// Stable per screen visit so the share link doesn't change on every redraw.
     @State private var offerId = BreedView.makeOfferId()
     @State private var preview: BreedPreview?
+    @State private var tradeCreature: Creature?
+    @State private var cardCreature: Creature?
 
     var body: some View {
         NavigationStack {
@@ -51,6 +53,13 @@ struct BreedView: View {
             .background(Theme.background.ignoresSafeArea())
             .navigationTitle("Breed")
             .toolbarBackground(Theme.background, for: .navigationBar)
+            .sheet(item: $tradeCreature) { c in
+                TradeView(creature: c)
+                    .presentationDetents([.medium, .large])
+            }
+            .sheet(item: $cardCreature) { c in
+                CreatureCardScreen(creature: c)
+            }
         }
     }
 
@@ -95,6 +104,14 @@ struct BreedView: View {
             .buttonStyle(PixelButtonStyle(tint: Theme.joy))
             .disabled(partner(for: parent) == nil)
 
+            // Friend trade stub (free swap, no tokens/fees). TODO(server).
+            Button {
+                tradeCreature = parent
+            } label: {
+                Label("Trade", systemImage: "arrow.left.arrow.right")
+            }
+            .buttonStyle(PixelButtonStyle(tint: Theme.mood))
+
             Text("Preview uses a local random seed. Real results are decided when your friend accepts.")
                 .font(Theme.caption(11))
                 .foregroundStyle(Theme.inkSoft)
@@ -116,8 +133,15 @@ struct BreedView: View {
             }
             HStack(spacing: 8) {
                 Pill(text: Text(p.tier.title))
+                Pill(text: Text("Gen \(p.child.generation)"))
                 if p.mutated { Pill(text: Text("Mutation!")) }
             }
+            Button {
+                cardCreature = p.child
+            } label: {
+                Label("Creature card", systemImage: "rectangle.portrait.fill")
+            }
+            .buttonStyle(PixelButtonStyle(tint: Theme.rarity(p.tier)))
             Text("Your hybrid and your friend's twin")
                 .font(Theme.caption(11))
                 .foregroundStyle(Theme.inkSoft)
@@ -152,8 +176,10 @@ struct BreedView: View {
         let friendShift = result.paletteShift["friend-preview"] ?? 1
         let now = Date.now
         func child(shift: Int) -> Creature {
-            Creature(id: result.id, name: "?", genome: result.genome, origin: .bred,
-                     paletteShift: shift, bornAt: now, hatchedAt: now)
+            // Preview only: not saved, so no serial and no discovery claim.
+            let c = Creature(id: result.id, name: "?", genome: result.genome, origin: .bred,
+                             paletteShift: shift, bornAt: now, hatchedAt: now)
+            return CollectingEngine.withLineage(c, parents: [parent, other])
         }
         return BreedPreview(parentA: parent, parentB: other,
                             child: child(shift: myShift), twin: child(shift: friendShift),

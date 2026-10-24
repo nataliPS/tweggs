@@ -91,6 +91,42 @@ final class GameModel {
         commit { $0.onboardingComplete = true }
     }
 
+    // MARK: Collecting
+
+    /// Free daily surprise: available once per local day. No purchase or re-roll path exists.
+    func canOpenSurprise(now: Date = .now) -> Bool {
+        CollectingEngine.canOpenSurprise(save, now: now)
+    }
+
+    /// Opens today's surprise; nil if it was already opened today.
+    @discardableResult
+    func openDailySurprise(now: Date = .now) -> Collecting.Souvenir? {
+        var result: Collecting.Souvenir?
+        commit { save in
+            result = CollectingEngine.openSurprise(&save, now: now)
+        }
+        return result
+    }
+
+    /// Creates a local trade offer for one of the player's creatures.
+    /// TODO(server): POST the offer; the server escrows the creature and returns the real id/link.
+    /// Free swap only: no tokens, no fees, no money.
+    func createTradeOffer(for creature: Creature, now: Date = .now) -> TradeOffer {
+        if let existing = save.tradeOffers.first(where: { $0.creatureId == creature.id && $0.status == .draft }) {
+            return existing
+        }
+        let offer = TradeOffer(creatureId: creature.id, createdAt: now)
+        commit { $0.tradeOffers.append(offer) }
+        return offer
+    }
+
+    func cancelTradeOffer(_ offer: TradeOffer) {
+        commit { save in
+            guard let i = save.tradeOffers.firstIndex(where: { $0.id == offer.id }) else { return }
+            save.tradeOffers[i].status = .cancelled
+        }
+    }
+
     // MARK: Deep links
 
     struct IncomingOffer: Identifiable, Equatable {
@@ -115,7 +151,10 @@ final class GameModel {
     // MARK: Private
 
     private func commit(_ change: (inout SaveData) -> Void) {
-        save = store.update(change)
+        save = store.update { save in
+            change(&save)
+            CollectingEngine.awardSeasonBadges(&save, now: .now)
+        }
         WidgetCenter.shared.reloadAllTimelines()
     }
 }

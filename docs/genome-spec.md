@@ -73,6 +73,22 @@ Tier: `score <= 2` common, `<= 5` uncommon, `<= 8` rare, else legendary.
 
 `starter(playerId, slot)`: rng seeded with `fnv1a32("starter|" + playerId + "|" + slot)`; for each gene pick both alleles uniformly among variants with `mutationOnly == false` (`rng.int(count)` into that filtered list, in variant order).
 
-## 7. Validation (server)
+## 7. Validation and anti-reroll (server)
 
-Server recomputes breeding from stored genomes + nonce it issued; rejects if client-sent child genome differs.
+The server is the only authority for breeding outcomes.
+
+1. **Nonce is single-use and bound.** `previewBreed(offerId, myCreatureId)` issues one nonce per (offer, acceptor creature), stores it, and returns the preview. Re-requesting a preview for the same pair returns the SAME nonce (no rerolls). Cancelling burns the offer.
+2. **Daily caps:** max 10 previews and 20 offers per player per UTC day; one commit per offer.
+3. **Mutations are server-owned:** `unlockedMutations` are read from the player's server record (earned by server-time streaks/biomes/events); any client-sent list is ignored.
+4. **Genomes are server-owned:** parents' genomes come from the server registry (`creatures/{id}`, signed at birth); the client never sends genomes for validation.
+5. **Commit:** `commitBreed(breedId)` recomputes `breed(...)` with the stored nonce, creates both twin creatures in one transaction, assigns the global serial number from `combos/{comboKey}.count`, and sets the discoverer only if empty.
+6. The Swift engine computes the same result locally only for instant preview rendering; the server result always wins.
+
+## 8. Collecting (cards, seasons, discoverer, daily surprise)
+
+Implemented in `engine-ts/src/collecting.ts` and mirrored in `MixlingsKit/Sources/MixlingsGenome/Collecting.swift`; covered by `collecting` in the golden vectors.
+
+- **comboKey** = the 7 visible expressed variants (body, eyes, head, pattern, tail, palette, aura) as decimal, joined by `-`, e.g. `"4-7-1-3-0-15-1"`. Temper and palette shift are excluded.
+- **generation** = `0` without parents, else `max(parent generations) + 1`.
+- **Season** = id, inclusive `startDay`/`endDay` (`yyyy-MM-dd`), 10–15 `(gene, variant)` entries. An entry is found when any owned creature *expresses* it. Season 1 `s1` "Перша весна": 12 entries, 5 common / 4 uncommon / 3 rare, no mutation-only variants.
+- **Daily surprise** (free, once per day, no purchase or re-roll path): `rng = mulberry32(fnv1a32("surprise|" + playerId + "|" + day))`; `roll = rng.int(100)`; `roll < 80` gives sparks `5 + rng.int(21)`, else cosmetic `SURPRISE_COSMETICS[rng.int(4)]`.

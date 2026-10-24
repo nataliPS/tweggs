@@ -9029,5 +9029,423 @@
         }
       }
     }
-  ]
+  ],
+  "collecting": {
+    "comboKeys": [
+      {
+        "expressed": [
+          0,
+          5,
+          0,
+          1,
+          5,
+          1,
+          0,
+          9
+        ],
+        "key": "0-5-0-1-5-1-0"
+      },
+      {
+        "expressed": [
+          2,
+          1,
+          0,
+          0,
+          1,
+          7,
+          3,
+          6
+        ],
+        "key": "2-1-0-0-1-7-3"
+      },
+      {
+        "expressed": [
+          5,
+          0,
+          1,
+          2,
+          2,
+          5,
+          0,
+          4
+        ],
+        "key": "5-0-1-2-2-5-0"
+      },
+      {
+        "expressed": [
+          2,
+          3,
+          5,
+          1,
+          4,
+          0,
+          0,
+          1
+        ],
+        "key": "2-3-5-1-4-0-0"
+      },
+      {
+        "expressed": [
+          1,
+          6,
+          2,
+          0,
+          2,
+          10,
+          1,
+          0
+        ],
+        "key": "1-6-2-0-2-10-1"
+      },
+      {
+        "expressed": [
+          2,
+          7,
+          2,
+          2,
+          1,
+          9,
+          3,
+          3
+        ],
+        "key": "2-7-2-2-1-9-3"
+      },
+      {
+        "expressed": [
+          1,
+          3,
+          3,
+          3,
+          0,
+          6,
+          0,
+          7
+        ],
+        "key": "1-3-3-3-0-6-0"
+      },
+      {
+        "expressed": [
+          2,
+          1,
+          3,
+          0,
+          2,
+          8,
+          1,
+          9
+        ],
+        "key": "2-1-3-0-2-8-1"
+      },
+      {
+        "expressed": [
+          5,
+          0,
+          1,
+          2,
+          3,
+          3,
+          1,
+          7
+        ],
+        "key": "5-0-1-2-3-3-1"
+      },
+      {
+        "expressed": [
+          2,
+          3,
+          1,
+          2,
+          1,
+          8,
+          3,
+          1
+        ],
+        "key": "2-3-1-2-1-8-3"
+      },
+      {
+        "expressed": [
+          1,
+          0,
+          3,
+          3,
+          2,
+          1,
+          1,
+          2
+        ],
+        "key": "1-0-3-3-2-1-1"
+      },
+      {
+        "expressed": [
+          0,
+          0,
+          2,
+          3,
+          1,
+          14,
+          1,
+          3
+        ],
+        "key": "0-0-2-3-1-14-1"
+      },
+      {
+        "expressed": [
+          2,
+          3,
+          3,
+          1,
+          3,
+          2,
+          2,
+          1
+        ],
+        "key": "2-3-3-1-3-2-2"
+      },
+      {
+        "expressed": [
+          0,
+          3,
+          1,
+          2,
+          1,
+          5,
+          0,
+          0
+        ],
+        "key": "0-3-1-2-1-5-0"
+      },
+      {
+        "expressed": [
+          5,
+          0,
+          5,
+          2,
+          3,
+          6,
+          1,
+          0
+        ],
+        "key": "5-0-5-2-3-6-1"
+      }
+    ],
+    "surprises": [
+      {
+        "playerId": "",
+        "day": "2026-10-24",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 15
+        }
+      },
+      {
+        "playerId": "",
+        "day": "2026-10-25",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 6
+        }
+      },
+      {
+        "playerId": "",
+        "day": "2026-12-31",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 22
+        }
+      },
+      {
+        "playerId": "",
+        "day": "2027-01-01",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 17
+        }
+      },
+      {
+        "playerId": "",
+        "day": "2027-03-15",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 10
+        }
+      },
+      {
+        "playerId": "p1",
+        "day": "2026-10-24",
+        "souvenir": {
+          "kind": "cosmetic",
+          "id": "tiny_scarf"
+        }
+      },
+      {
+        "playerId": "p1",
+        "day": "2026-10-25",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 24
+        }
+      },
+      {
+        "playerId": "p1",
+        "day": "2026-12-31",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 8
+        }
+      },
+      {
+        "playerId": "p1",
+        "day": "2027-01-01",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 10
+        }
+      },
+      {
+        "playerId": "p1",
+        "day": "2027-03-15",
+        "souvenir": {
+          "kind": "cosmetic",
+          "id": "tiny_scarf"
+        }
+      },
+      {
+        "playerId": "игрок",
+        "day": "2026-10-24",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 9
+        }
+      },
+      {
+        "playerId": "игрок",
+        "day": "2026-10-25",
+        "souvenir": {
+          "kind": "cosmetic",
+          "id": "star_pin"
+        }
+      },
+      {
+        "playerId": "игрок",
+        "day": "2026-12-31",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 22
+        }
+      },
+      {
+        "playerId": "игрок",
+        "day": "2027-01-01",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 12
+        }
+      },
+      {
+        "playerId": "игрок",
+        "day": "2027-03-15",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 17
+        }
+      },
+      {
+        "playerId": "3f2c9a1e-0000-4000-8000-000000000001",
+        "day": "2026-10-24",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 24
+        }
+      },
+      {
+        "playerId": "3f2c9a1e-0000-4000-8000-000000000001",
+        "day": "2026-10-25",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 12
+        }
+      },
+      {
+        "playerId": "3f2c9a1e-0000-4000-8000-000000000001",
+        "day": "2026-12-31",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 18
+        }
+      },
+      {
+        "playerId": "3f2c9a1e-0000-4000-8000-000000000001",
+        "day": "2027-01-01",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 25
+        }
+      },
+      {
+        "playerId": "3f2c9a1e-0000-4000-8000-000000000001",
+        "day": "2027-03-15",
+        "souvenir": {
+          "kind": "sparks",
+          "amount": 18
+        }
+      }
+    ],
+    "seasons": [
+      {
+        "id": "s1",
+        "startDay": "2026-10-01",
+        "endDay": "2027-05-31",
+        "entries": [
+          {
+            "gene": 2,
+            "variant": 1
+          },
+          {
+            "gene": 3,
+            "variant": 1
+          },
+          {
+            "gene": 5,
+            "variant": 0
+          },
+          {
+            "gene": 4,
+            "variant": 1
+          },
+          {
+            "gene": 1,
+            "variant": 3
+          },
+          {
+            "gene": 2,
+            "variant": 5
+          },
+          {
+            "gene": 3,
+            "variant": 2
+          },
+          {
+            "gene": 2,
+            "variant": 3
+          },
+          {
+            "gene": 6,
+            "variant": 1
+          },
+          {
+            "gene": 4,
+            "variant": 4
+          },
+          {
+            "gene": 1,
+            "variant": 6
+          },
+          {
+            "gene": 5,
+            "variant": 12
+          }
+        ]
+      }
+    ]
+  }
 }
