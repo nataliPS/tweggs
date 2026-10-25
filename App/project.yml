@@ -17,7 +17,7 @@ settings:
     # Swift 5 language mode (tools 5.9+). Xcode only accepts major versions here (5 / 6).
     SWIFT_VERSION: "5.0"
     MARKETING_VERSION: "0.1.0"
-    # Xcode Cloud overrides this with its own build number on archive.
+    # Codemagic replaces this with $BUILD_NUMBER before generating (codemagic.yaml).
     CURRENT_PROJECT_VERSION: "1"
     # TODO: set your Apple Developer Team ID (or pick the team in Xcode > Signing & Capabilities).
     DEVELOPMENT_TEAM: ""
@@ -70,7 +70,7 @@ targets:
     info:
       path: Generated/Mixlings-Info.plist
       properties:
-        CFBundleDisplayName: Mixlings
+        CFBundleDisplayName: Tweggs
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDevelopmentRegion: en
@@ -134,7 +134,7 @@ targets:
     info:
       path: Generated/MixlingsWidget-Info.plist
       properties:
-        CFBundleDisplayName: Mixlings
+        CFBundleDisplayName: Tweggs
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDevelopmentRegion: en

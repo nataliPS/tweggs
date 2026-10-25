@@ -1,0 +1,73 @@
+# Tweggs: iOS build in Codemagic → TestFlight (same pipeline as 2000-fraz).
+# The Xcode project is generated from App/project.yml with XcodeGen on the build machine.
+# Before the first run (once):
+#   1. developer.apple.com → Identifiers: App Group  group.com.orizolabs.mixlings,
+#      App IDs  com.orizolabs.mixlings  and  com.orizolabs.mixlings.widget  (both with App Groups → that group).
+#   2. App Store Connect → Apps → "+" → bundle ID com.orizolabs.mixlings.
+#   3. Codemagic → add repository nataliPS/tweggs; the team integration "Codemagic API key" is reused.
+workflows:
+  ios-testflight:
+    name: iOS → TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: Codemagic API key
+    environment:
+      xcode: latest
+      ios_signing:
+        distribution_type: app_store
+        # Also matches the widget extension com.orizolabs.mixlings.widget.
+        bundle_identifier: com.orizolabs.mixlings
+    scripts:
+      - name: Generate Xcode project
+        script: |
+          export HOMEBREW_NO_AUTO_UPDATE=1
+          command -v xcodegen >/dev/null || brew install xcodegen
+          # Unique, increasing build number for TestFlight.
+          sed -i '' "s/CURRENT_PROJECT_VERSION: \"1\"/CURRENT_PROJECT_VERSION: \"$BUILD_NUMBER\"/" App/project.yml
+          cd App && xcodegen generate --spec project.yml
+      - name: Set up code signing
+        script: xcode-project use-profiles --project App/Mixlings.xcodeproj
+      - name: Build IPA
+        script: |
+          xcode-project build-ipa \
+            --project App/Mixlings.xcodeproj \
+            --scheme Mixlings \
+            --config Release
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+
+  # Compile + unit tests without an Apple account or signing (first-compile check).
+  ios-check:
+    name: iOS check (без підпису)
+    max_build_duration: 40
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      node: 22
+    scripts:
+      - name: Engine tests (TypeScript)
+        script: cd engine-ts && npm install && npm test
+      - name: Swift package tests (MixlingsKit)
+        script: cd MixlingsKit && swift test
+      - name: Generate Xcode project
+        script: |
+          export HOMEBREW_NO_AUTO_UPDATE=1
+          command -v xcodegen >/dev/null || brew install xcodegen
+          cd App && xcodegen generate --spec project.yml
+      - name: Build and test app
+        script: |
+          set -o pipefail
+          mkdir -p /tmp/xcodebuild_logs
+          xcodebuild test \
+            -project App/Mixlings.xcodeproj \
+            -scheme Mixlings \
+            -destination "platform=iOS Simulator,name=$(xcrun simctl list devices available | grep -m1 -o 'iPhone [0-9][0-9]* Pro' || echo 'iPhone 16')" \
+            CODE_SIGNING_ALLOWED=NO | tee /tmp/xcodebuild_logs/test.log
+    artifacts:
+      - /tmp/xcodebuild_logs/*.log

@@ -3,3 +3,6 @@ node_modules/
 *.xcodeproj/xcuserdata/
 .DS_Store
 art/out/
+tools/xcodegen/
+App/Mixlings.xcodeproj/
+App/Generated/
