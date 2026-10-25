@@ -4,7 +4,10 @@
 #   1. developer.apple.com → Identifiers: App Group  group.com.orizolabs.mixlings,
 #      App IDs  com.orizolabs.mixlings  and  com.orizolabs.mixlings.widget  (both with App Groups → that group).
 #   2. App Store Connect → Apps → "+" → bundle ID com.orizolabs.mixlings.
-#   3. Codemagic → add repository nataliPS/tweggs; the team integration "Codemagic API key" is reused.
+#   3. developer.apple.com → Profiles: two "App Store Connect" profiles (app + widget) with the existing
+#      Distribution certificate; then Codemagic → Code signing identities → iOS provisioning profiles →
+#      Fetch profiles → select both (Codemagic only uses signing files already stored there).
+#   4. Codemagic → add repository nataliPS/tweggs; the team integration "Codemagic API key" is reused.
 workflows:
   ios-testflight:
     name: iOS → TestFlight
@@ -32,8 +35,7 @@ workflows:
         script: |
           xcode-project build-ipa \
             --project App/Mixlings.xcodeproj \
-            --scheme Mixlings \
-            --config Release
+            --scheme Mixlings
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -49,7 +51,7 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       xcode: latest
-      node: 22
+      node: 22.18
     scripts:
       - name: Engine tests (TypeScript)
         script: cd engine-ts && npm install && npm test
